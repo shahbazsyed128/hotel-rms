@@ -76,10 +76,10 @@ $active_record = TRUE;//ci version 2.x
 
 $db['default'] = array(
     'dsn'   => '',
-    'hostname' => 'hostname',
-    'username' => 'username',
-    'password' => 'password',
-    'database' => 'database',
+    'hostname' => 'localhost',
+    'username' => 'root',
+    'password' => '',
+    'database' => 'bhojan3x',
     'dbdriver' => 'mysqli',
     'dbprefix' => '',
     'pconnect' => FALSE,
