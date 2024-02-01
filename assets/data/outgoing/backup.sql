@@ -26542,3 +26542,26 @@ DELETE FROM `tbl_updateitems`
 WHERE `ordid` = '39';
 UPDATE `order_menu` SET `isupdate` = NULL
 WHERE `order_id` = '39';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '38';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '37';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '39';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
