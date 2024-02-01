@@ -1356,9 +1356,9 @@ $(document).on("keypress", '#itemqty_1', function(e){
       });
   }
   var intervalc = 0;
-  setInterval(function() {
-      load_unseen_notification(intervalc);
-  }, 700);
+//   setInterval(function() {
+//       load_unseen_notification(intervalc);
+//   }, 700);
 
   function load_unseen_notificationqr(view = '') {
       var csrf = $('#csrfhashresarvation').val();
@@ -1384,10 +1384,10 @@ $(document).on("keypress", '#itemqty_1', function(e){
           }
       });
   }
-  setInterval(function() {
-      $('li.active').trigger('click');
-      load_unseen_notificationqr();
-  }, 700);
+//   setInterval(function() {
+//       $('li.active').trigger('click');
+//       load_unseen_notificationqr();
+//   }, 700);
 
   function detailspop(orderid) {
       var csrf = $('#csrfhashresarvation').val();

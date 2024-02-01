@@ -755,9 +755,9 @@ $('#mysreport2').click(function(){
   });
  }
 	  load_unseen_reservation();
-	 setInterval(function(){ 
-	  load_unseen_reservation(); 
-	 }, 1000);
+	//  setInterval(function(){ 
+	//   load_unseen_reservation(); 
+	//  }, 1000);
 
                         $('#fullscreen').on('click', function () {
                             $('.pe-7s-expand1').toggleClass('fullscreen-active');

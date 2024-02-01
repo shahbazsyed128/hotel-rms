@@ -372,7 +372,7 @@ body
 			<div class="invoice_address">
                 <div class="row-data">
                     <div class="item-info">
-                        <h5 class="item-title"><?php echo display('date');?>: <?php echo date("M d, Y", strtotime($orderinfo->order_date));?></h5>
+                        <h5 class="item-title"><?php echo display('date');?>: <?php echo date("M d, Y", strtotime($orderinfo->order_date)) . " - ". date("h:i:s A");?></h5>
                     </div>
                     <?php if($storeinfo->isvatnumshow==1){?><h5 class="item-title"><?php echo display('tinvat');?>: <?php echo $storeinfo->vattinno;?></h5><?php } ?>
                 </div>
@@ -434,8 +434,8 @@ body
                         <div class="row-data">
                             <div class="item-info">
                                 <h5 class="item-title"><?php echo $item->ProductName;?></h5>
-                                <p class="item-size"><?php echo $item->variantName;?></p>
-                                <p class="item-number"><?php echo $singleprice;?> x <?php echo $item->menuqty;?></p>
+                                <div class="item-size"><?php echo $item->variantName;?> |  <span class="item-number"><?php echo $singleprice;?> x <?php echo $item->menuqty;?></span></div>
+                               
                             </div>
                             <h5><?php if($currency->position==1){echo $currency->curr_icon;}?> <?php echo $itemprice;?> <?php if($currency->position==2){echo $currency->curr_icon;}?></h5>
                         </div>
@@ -497,6 +497,8 @@ body
                     <h5 class="my-5"><?php if($currency->position==1){echo $currency->curr_icon;}?> <?php echo $billinfo->total_amount;?> <?php if($currency->position==2){echo $currency->curr_icon;}?></h5>
                 </div>
                 <?php if(empty($taxinfos)){?>
+
+<?php /*
       <div class="row-data">
         <div class="item-info">
           <h5 class="item-title"><?php echo display('vat_tax')?>(<?php echo $storeinfo->vat;?>%)</h5>
@@ -507,6 +509,8 @@ body
           <?php if($currency->position==2){echo $currency->curr_icon;}?>
         </h5>
       </div>
+*/?>
+
       <?php }else{
 			$i=0;
 			foreach($taxinfos as $mvat){
@@ -525,18 +529,20 @@ body
         </h5>
       </div>
       <?php $i++;} }}?>
-                <div class="row-data">
+                <?php /* <div class="row-data">
                     <div class="item-info">
                         <h5 class="item-title"><?php echo display('service_chrg')?></h5>
                     </div>
                     <h5 class="my-5"><?php if($currency->position==1){echo $currency->curr_icon;}?><?php $sdcharge=0; if(empty($billinfo)){ echo $sdcharge;} else{echo $sdcharge=$billinfo->service_charge;} ?><?php if($currency->position==2){echo $currency->curr_icon;}?></h5>
                 </div>
+
                 <div class="row-data">
                     <div class="item-info">
                         <h5 class="item-title"><?php echo display('discount')?></h5>
                     </div>
                     <h5 class="my-5"><?php if($currency->position==1){echo $currency->curr_icon;}?>  <?php $discount=0; if(empty($billinfo)){ echo $discount;} else{echo $discount=$billinfo->discount;} ?> <?php if($currency->position==2){echo $currency->curr_icon;}?></h5>
                 </div>
+                */?>
                 
                 <div class="row-data border-top">
                     <div class="item-info">
@@ -612,10 +618,12 @@ body
                     </h5>
                   </div>
                 </div>
-                <div class="text-center">
+                <?php /*
+                 <div class="text-center">
                     <h3 class="mt-10"><?php echo display('thanks_you')?></h3>
                     <p class="b_top"><?php echo display('powerbybdtask')?></p>
-                </div>
+                </div> 
+                */?>
             </div>
         </div>
     </div>

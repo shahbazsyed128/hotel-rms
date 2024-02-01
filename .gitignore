@@ -1,0 +1,5 @@
+# Ignore application cache
+application/cache/
+
+# Ignore outgoing backup SQL file
+assets/data/outgoing/backup.sql
