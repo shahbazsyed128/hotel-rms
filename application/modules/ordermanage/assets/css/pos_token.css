@@ -14,8 +14,9 @@ body
     /* this affects the margin on the content before sending to printer */ 
     margin: 0px;  
 } 
-@media screen {
-    .header, .footer {
-        display: none;
-    }
-}
+
+
+
+
+
+
