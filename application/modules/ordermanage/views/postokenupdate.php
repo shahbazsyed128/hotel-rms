@@ -40,6 +40,18 @@
 	<?php
 
 
+	function formatNumber($number)
+	{
+		// Check if the number is an integer
+		if ($number == intval($number)) {
+			// If it's an integer, convert it to an integer
+			return intval($number);
+		} else {
+			// If it's not an integer, keep the decimal part
+			return rtrim(sprintf('%.8F', $number), '0');
+		}
+	}
+
 	$itemsByKitchen = [];
 
 	// Check if $iteminfo is not empty, use $iteminfo, otherwise use $exitsitem
@@ -57,9 +69,48 @@
 		$loopVariableName = 'exitsitem';
 	}
 
-	?>
 
-	<?php foreach ($itemsByKitchen as $$loopVariableName) {
+	
+	$tokenHeader = "<div id='printableArea' class='print_area section'>
+	<div class='panel-body'>
+		<div class='table-responsive m-b-20'>
+			<table border='0' class='font-18 wpr_100' style='width:100%; font-size:18px;'>
+				<tr>
+					<td>
+						<table border='0' class='wpr_100' style='width:100%'>
+							<tr>
+								<td align='center'>
+									<nobr>
+										<date>" . display('token_no') . " : " . $orderinfo->tokenno . "
+									</nobr><br />" . $customerinfo->customer_name . "
+								</td>
+							</tr>
+						</table>
+						<table width='100%'>
+							<tr>
+								<td>Q</th>
+								<td>" . display('item') . "</td>
+								<td>" . display('size') . "</td>
+							</tr>";
+
+	$tokenFooter = "<tr>
+					<td colspan='5' class='border-top-gray'>
+						<nobr></nobr>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td align='center'>" . ((!empty($tableinfo)) ? (display('table') . ': ' . $tableinfo->tablename) : "") . " | " . display('ord_number') . ":" . $orderinfo->order_id . "</td>
+	</tr>
+</table>
+</div>
+</div>
+</div>";
+
+
+	foreach ($itemsByKitchen as $$loopVariableName) {
 
 		$i = 0;
 		$totalamount = 0;
@@ -76,6 +127,15 @@
 			$servicecharge = $billinfo->service_charge;
 		}
 
+
+	?>
+
+
+	<?php
+
+
+		$content = "";
+
 		foreach ($exitsitem as $exititem) {
 			$newitem = $this->order_model->read('*', 'order_menu', array('row_id' => $exititem->row_id, 'isupdate' => 1));
 
@@ -85,61 +145,27 @@
 					$itemprice = $exititem->price * $isexitsitem->qty;
 					if ($newitem->isupdate == 1) {
 						echo "";
-					} else { ?>
-
-						<div id="printableArea" class="print_area section">
-							<div class="panel-body">
-								<div class="table-responsive m-b-20">
-									<table border="0" class="font-18 wpr_100" style="width:100%; font-size:18px;">
-										<tr>
-											<td>
-
-												<table border="0" class="wpr_100" style="width:100%">
-
-													<tr>
-														<td align="center">
-															<nobr>
-																<date><?php echo display('token_no') ?>:<?php echo $orderinfo->tokenno; ?>
-															</nobr><br /><?php echo $customerinfo->customer_name; ?>
-														</td>
-													</tr>
-												</table>
-												<table width="100%">
-													<tr>
-														<td>Q</th>
-														<td><?php echo display('item') ?></td>
-														<td><?php echo display('size') ?></td>
-													</tr>
-													<tr>
-														<td align="left"><?php echo $isexitsitem->isupdate; ?> <?php echo $isexitsitem->totalqty; ?></td>
-														<td align="left"><?php echo $exititem->ProductName; ?><br><?php echo $exititem->notes; ?></td>
-														<td align="left"><?php echo $exititem->variantName; ?></td>
-													</tr>
-
-													<tr>
-														<td colspan="5" class="border-top-gray">
-															<nobr></nobr>
-														</td>
-													</tr>
-												</table>
-											</td>
-										</tr>
-										<tr>
-											<td align="center"><?php if (!empty($tableinfo)) {
-																	echo display('table') . ': ' . $tableinfo->tablename;
-																} ?> | <?php echo display('ord_number'); ?>:<?php echo $orderinfo->order_id; ?></td>
-										</tr>
-									</table>
-								</div>
-							</div>
-						</div><?php
-							}
-						}
 					} else {
+
+						$content .= "	<tr>
+											<td align='left'>" . $isexitsitem->isupdate . " " . formatNumber($isexitsitem->totalqty) . " </td>
+											<td align='left'>" . $exititem->ProductName . " " . $exititem->notes . "</td>
+											<td align='left'>" . $exititem->variantName . "</td>
+										</tr>";
 					}
 				}
+			} 
+			else {
 			}
-								?>
+		}
+
+		if (!empty($content)) {
+			echo $tokenHeader;
+			echo $content;
+			echo $tokenFooter;
+		}
+	}
+	?>
 </body>
 
 </html>

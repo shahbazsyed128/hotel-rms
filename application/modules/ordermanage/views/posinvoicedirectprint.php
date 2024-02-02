@@ -362,6 +362,20 @@ body
 .text-bold{font-weight:bold !important;}
 </style>
 
+<?php
+function formatNumber($number) {
+    // Check if the number is an integer
+    if ($number == intval($number)) {
+        // If it's an integer, convert it to an integer
+        return intval($number);
+    } else {
+        // If it's not an integer, keep the decimal part
+        return rtrim(sprintf('%.8F', $number), '0');
+    }
+}
+
+?>
+
 <div class="page-wrapper">
         <div class="invoice-card">
             <div class="invoice-head">
@@ -434,7 +448,7 @@ body
                         <div class="row-data">
                             <div class="item-info">
                                 <h5 class="item-title"><?php echo $item->ProductName;?></h5>
-                                <div class="item-size"><?php echo $item->variantName;?> |  <span class="item-number"><?php echo $singleprice;?> x <?php echo $item->menuqty;?></span></div>
+                                <div class="item-size"><?php echo $item->variantName;?> |  <span class="item-number"><?php echo $singleprice;?> x <?php echo formatNumber($item->menuqty);?></span></div>
                                
                             </div>
                             <h5><?php if($currency->position==1){echo $currency->curr_icon;}?> <?php echo $itemprice;?> <?php if($currency->position==2){echo $currency->curr_icon;}?></h5>
@@ -618,12 +632,11 @@ body
                     </h5>
                   </div>
                 </div>
-                <?php /*
                  <div class="text-center">
                     <h3 class="mt-10"><?php echo display('thanks_you')?></h3>
-                    <p class="b_top"><?php echo display('powerbybdtask')?></p>
+                    <p class="b_top">Powered By info@shahbazkazmi.com</p>
                 </div> 
-                */?>
+                
             </div>
         </div>
     </div>
