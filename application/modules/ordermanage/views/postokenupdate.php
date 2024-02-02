@@ -54,23 +54,13 @@
 
 	$itemsByKitchen = [];
 
-	// Check if $iteminfo is not empty, use $iteminfo, otherwise use $exitsitem
-	if (!empty($iteminfo)) {
-		foreach ($iteminfo as $item) {
-			$itemsByKitchen[$item->kitchenid][] = $item;
-		}
-		// Set the loop variable name based on whether $iteminfo is empty or not
-		$loopVariableName = 'iteminfo';
-	} else {
-		foreach ($exitsitem as $exititem) {
-			$itemsByKitchen[$exititem->kitchenid][] = $exititem;
-		}
-		// Set the loop variable name based on whether $iteminfo is empty or not
-		$loopVariableName = 'exitsitem';
+	foreach ($exitsitem as $exititem) {
+		$itemsByKitchen[$exititem->kitchenid][] = $exititem;
 	}
 
 
-	
+
+
 	$tokenHeader = "<div id='printableArea' class='print_area section'>
 	<div class='panel-body'>
 		<div class='table-responsive m-b-20'>
@@ -109,14 +99,11 @@
 </div>
 </div>";
 
-
-	foreach ($itemsByKitchen as $$loopVariableName) {
-
+	foreach ($itemsByKitchen as $exitsitem) {
 		$i = 0;
 		$totalamount = 0;
 		$subtotal = 0;
 		$total = $orderinfo->totalamount;
-
 		$itemtotal = $totalamount + $subtotal;
 		$calvat = $itemtotal * 15 / 100;
 
@@ -127,42 +114,35 @@
 			$servicecharge = $billinfo->service_charge;
 		}
 
-
-	?>
-
-
-	<?php
-
-
 		$content = "";
-
 		foreach ($exitsitem as $exititem) {
 			$newitem = $this->order_model->read('*', 'order_menu', array('row_id' => $exititem->row_id, 'isupdate' => 1));
-
 			$isexitsitem = $this->order_model->readupdate('tbl_updateitems.*,SUM(tbl_updateitems.qty) as totalqty', 'tbl_updateitems', array('ordid' => $orderinfo->order_id, 'menuid' => $exititem->menu_id, 'varientid' => $exititem->varientid, 'addonsuid' => $exititem->addonsuid));
 			if (!empty($isexitsitem)) {
 				if ($isexitsitem->qty > 0) {
 					$itemprice = $exititem->price * $isexitsitem->qty;
 					if ($newitem->isupdate == 1) {
 						echo "";
-					} else {
+					} 
+					else{
 
-						$content .= "	<tr>
-											<td align='left'>" . $isexitsitem->isupdate . " " . formatNumber($isexitsitem->totalqty) . " </td>
-											<td align='left'>" . $exititem->ProductName . " " . $exititem->notes . "</td>
-											<td align='left'>" . $exititem->variantName . "</td>
-										</tr>";
+						$content.="<tr>
+										<td align='left'>" . $isexitsitem->isupdate . " " . formatNumber($isexitsitem->totalqty) . " </td>
+										<td align='left'>" . $exititem->ProductName . " " . $exititem->notes . "</td>
+										<td align='left'>" . $exititem->variantName . "</td>
+									</tr>";
 					}
 				}
 			} 
-			else {
-			}
+			else {}
 		}
+
 
 		if (!empty($content)) {
 			echo $tokenHeader;
 			echo $content;
 			echo $tokenFooter;
+			$content = "";
 		}
 	}
 	?>
