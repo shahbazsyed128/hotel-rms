@@ -33280,3 +33280,3365 @@ SET SESSION sql_mode = "";
 SET SESSION sql_mode = "";
 UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
 WHERE `order_id` = '50';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `user` SET `last_login` = '2024-02-03 14:52:30', `ip_address` = '127.0.0.1'
+WHERE `id` = '178';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0051', '1', '168', '', NULL, '2024-02-03', '16:03:33', 630, '9', '', '01', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('9', '1', 51, '16:03:33', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (51, '2', '', 1, 200, '27', '', '', '7');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (51, '3', '', 1, 150, '38', '', '', '8');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (51, '4', '', 1, 200, '49', '', '', '9');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (51, '9', '', 1, 50, '917', '', '', '17');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (51, '8', '', 1, 30, '812', '', '', '12');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 51, '630', 0, '0', '0', 630, '2024-02-03', '16:03:34', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 16:03:33');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '51';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('51', '1', '1', '80.00', '11', '', '', '1', 1);
+UPDATE `customer_order` SET `order_id` = '51', `totalamount` = 710
+WHERE `order_id` = '51';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0051'
+AND `menu_id` = '3'
+AND `varientid` = '8'
+AND `addonsuid` = '38';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0051', '3', 1, '8');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0051', '3', 1, '', '38', '0', '8', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0051', `totalamount` = 860
+WHERE `order_id` = '0051';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 2, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '51'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('51', '1', '1', '1');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('51', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '51', `totalamount` = 940
+WHERE `order_id` = '51';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0051'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0051', '8', 1, '12');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0051', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0051', `totalamount` = 970
+WHERE `order_id` = '0051';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '3', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0051'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+UPDATE `tbl_cancelitem` SET `quantity` = 2
+WHERE `orderid` = '0051'
+AND `foodid` = '8'
+AND `varientid` = '12';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0051', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0051', `totalamount` = 1000
+WHERE `order_id` = '0051';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '4', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0051'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+UPDATE `tbl_cancelitem` SET `quantity` = 3
+WHERE `orderid` = '0051'
+AND `foodid` = '8'
+AND `varientid` = '12';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0051', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0051', `totalamount` = 1030
+WHERE `order_id` = '0051';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0051', '7', '1', '60.00', '711', '', '', '11', 1);
+UPDATE `customer_order` SET `order_id` = '0051', `totalamount` = 1090
+WHERE `order_id` = '0051';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0051'
+AND `menu_id` = '7'
+AND `varientid` = '11'
+AND `addonsuid` = '711';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0051', '7', 1, '11');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0051', '7', 1, '', '711', '0', '11', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0051', `totalamount` = 1150
+WHERE `order_id` = '0051';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '9', `order_status` = '1', `totalamount` = '1150'
+WHERE `order_id` = '51';
+UPDATE `bill` SET `total_amount` = '1150', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '1150', `create_by` = '178'
+WHERE `order_id` = '51';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 16:04:08');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '51';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '51';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '51';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 3, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '51'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+UPDATE `tbl_cancelitem` SET `quantity` = 2
+WHERE `orderid` = '51'
+AND `foodid` = '1'
+AND `varientid` = '1';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('51', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '51', `totalamount` = 1230
+WHERE `order_id` = '51';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 4, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '51'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+UPDATE `tbl_cancelitem` SET `quantity` = 3
+WHERE `orderid` = '51'
+AND `foodid` = '1'
+AND `varientid` = '1';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('51', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '51', `totalamount` = 1310
+WHERE `order_id` = '51';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '3', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0051'
+AND `menu_id` = '3'
+AND `varientid` = '8'
+AND `addonsuid` = '38';
+UPDATE `tbl_cancelitem` SET `quantity` = 2
+WHERE `orderid` = '0051'
+AND `foodid` = '3'
+AND `varientid` = '8';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0051', '3', 1, '', '38', '0', '8', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0051', `totalamount` = 1460
+WHERE `order_id` = '0051';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '5', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0051'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+UPDATE `tbl_cancelitem` SET `quantity` = 4
+WHERE `orderid` = '0051'
+AND `foodid` = '8'
+AND `varientid` = '12';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0051', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0051', `totalamount` = 1490
+WHERE `order_id` = '0051';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0051', '11', '1', '100.00', '1116', '', '', '16', 1);
+UPDATE `customer_order` SET `order_id` = '0051', `totalamount` = 1590
+WHERE `order_id` = '0051';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '9', `order_status` = '1', `totalamount` = '1590'
+WHERE `order_id` = '51';
+UPDATE `bill` SET `total_amount` = '1590', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '1590', `create_by` = '178'
+WHERE `order_id` = '51';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 16:04:34');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '51';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '51';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `table_details`
+WHERE `order_id` = '51';
+UPDATE `customer_order` SET `totalamount` = '1590', `customerpaid` = '1590'
+WHERE `order_id` = '51';
+UPDATE `bill` SET `discount` = '0', `bill_amount` = '1590'
+WHERE `order_id` = '51';
+INSERT INTO `multipay_bill` (`order_id`, `payment_type_id`, `amount`) VALUES ('51', '4', '1590');
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0051', 'Sales Products', '2024-02-03', 1020101, 'Sale Income For Online paymentcusL-0001-Walkin', '1590', 0, 1, '178', '2024-02-03', 1);
+UPDATE `customer_order` SET `order_status` = 4, `customerpaid` = 1590
+WHERE `order_id` = '51';
+UPDATE `bill` SET `bill_status` = 1, `payment_method_id` = '4', `create_by` = '178', `create_at` = '2024-02-03 16:04:50'
+WHERE `order_id` = '51';
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0051', 'CIV', '2024-02-03', '102030101', 'Customer debit for Product Invoice#0051', '1590', 0, 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0051', 'CIV', '2024-02-03', 10107, 'Inventory Credit for Product Invoice#0051', 0, '1590', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0051', 'CIV', '2024-02-03', '102030101', 'Customer Credit for Product Invoice#0051', 0, '1590', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0051', 'Sales Products', '2024-02-03', 303, 'Sale Income For cusL-0001-Walkin', 0, 1590, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0051', 'Sales Products Vat', '2024-02-03', 502030101, 'Sale TAX For cusL-0001-Walkin', '0', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Order List', 'Insert Data', 'Order is Update', '', '2024-02-03 16:04:50');
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('1', '51', '2', '7');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '51';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('1', '51', '3', '8');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '51';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('1', '51', '4', '9');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '51';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('13', '51', '9', '17');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '51';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('1', '51', '8', '12');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '51';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('11', '51', '1', '1');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '51';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('13', '51', '7', '11');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '51';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('13', '51', '11', '16');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '51';
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '51';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0052', '1', '168', '', NULL, '2024-02-03', '16:05:45', 750, '7', '', '02', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('7', '1', 52, '16:05:45', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (52, '1', '', 1, 80, '11', '', '', '1');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (52, '2', '', 1, 200, '27', '', '', '7');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (52, '8', '', 3, 30, '812', '', '', '12');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (52, '7', '', 1, 60, '711', '', '', '11');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (52, '11', '', 1, 100, '1116', '', '', '16');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (52, '10', '', 1, 220, '1015', '', '', '15');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 52, '750', 0, '0', '0', 750, '2024-02-03', '16:05:46', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 16:05:45');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '52';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '4', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0052'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0052', '8', 1, '12');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0052', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0052', `totalamount` = 780
+WHERE `order_id` = '0052';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '5', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0052'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+UPDATE `tbl_cancelitem` SET `quantity` = 2
+WHERE `orderid` = '0052'
+AND `foodid` = '8'
+AND `varientid` = '12';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0052', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0052', `totalamount` = 810
+WHERE `order_id` = '0052';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '6', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0052'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+UPDATE `tbl_cancelitem` SET `quantity` = 3
+WHERE `orderid` = '0052'
+AND `foodid` = '8'
+AND `varientid` = '12';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0052', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0052', `totalamount` = 840
+WHERE `order_id` = '0052';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0052'
+AND `menu_id` = '7'
+AND `varientid` = '11'
+AND `addonsuid` = '711';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0052', '7', 1, '11');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0052', '7', 1, '', '711', '0', '11', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0052', `totalamount` = 900
+WHERE `order_id` = '0052';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0052', '9', '1', '50.00', '917', '', '', '17', 1);
+UPDATE `customer_order` SET `order_id` = '0052', `totalamount` = 950
+WHERE `order_id` = '0052';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 2, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '52'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('52', '1', '1', '1');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('52', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '52', `totalamount` = 1030
+WHERE `order_id` = '52';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 3, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '52'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+UPDATE `tbl_cancelitem` SET `quantity` = 2
+WHERE `orderid` = '52'
+AND `foodid` = '1'
+AND `varientid` = '1';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('52', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '52', `totalamount` = 1110
+WHERE `order_id` = '52';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('52', '1', '1', '30.00', '13', '', '', '3', 1);
+UPDATE `customer_order` SET `order_id` = '52', `totalamount` = 1140
+WHERE `order_id` = '52';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 2, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '52'
+AND `menu_id` = '1'
+AND `varientid` = '3'
+AND `addonsuid` = '13';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('52', '1', '1', '3');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('52', '1', '1', '', '13', '0', '3', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '52', `totalamount` = 1170
+WHERE `order_id` = '52';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '7', `order_status` = '1', `totalamount` = '1170'
+WHERE `order_id` = '52';
+UPDATE `bill` SET `total_amount` = '1170', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '1170', `create_by` = '178'
+WHERE `order_id` = '52';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 16:07:00');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '52';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '52';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `table_details`
+WHERE `order_id` = '52';
+UPDATE `customer_order` SET `totalamount` = '1170', `customerpaid` = '1170'
+WHERE `order_id` = '52';
+UPDATE `bill` SET `discount` = '0', `bill_amount` = '1170'
+WHERE `order_id` = '52';
+INSERT INTO `multipay_bill` (`order_id`, `payment_type_id`, `amount`) VALUES ('52', '4', '1170');
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0052', 'Sales Products', '2024-02-03', 1020101, 'Sale Income For Online paymentcusL-0001-Walkin', '1170', 0, 1, '178', '2024-02-03', 1);
+UPDATE `customer_order` SET `order_status` = 4, `customerpaid` = 1170
+WHERE `order_id` = '52';
+UPDATE `bill` SET `bill_status` = 1, `payment_method_id` = '4', `create_by` = '178', `create_at` = '2024-02-03 16:07:25'
+WHERE `order_id` = '52';
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0052', 'CIV', '2024-02-03', '102030101', 'Customer debit for Product Invoice#0052', '1170', 0, 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0052', 'CIV', '2024-02-03', 10107, 'Inventory Credit for Product Invoice#0052', 0, '1170', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0052', 'CIV', '2024-02-03', '102030101', 'Customer Credit for Product Invoice#0052', 0, '1170', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0052', 'Sales Products', '2024-02-03', 303, 'Sale Income For cusL-0001-Walkin', 0, 1170, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0052', 'Sales Products Vat', '2024-02-03', 502030101, 'Sale TAX For cusL-0001-Walkin', '0', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Order List', 'Insert Data', 'Order is Update', '', '2024-02-03 16:07:25');
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('11', '52', '1', '1');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '52';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('1', '52', '2', '7');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '52';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('1', '52', '8', '12');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '52';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('13', '52', '7', '11');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '52';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('13', '52', '11', '16');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '52';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('13', '52', '10', '15');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '52';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('13', '52', '9', '17');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '52';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('11', '52', '1', '3');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '52';
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '52';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '52';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0053', '1', '168', '', NULL, '2024-02-03', '17:58:40', 300, '9', '', '03', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('9', '1', 53, '17:58:40', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (53, '12', '', 1, 30, '1213', '', '', '13');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (53, '13', '', 1, 30, '1314', '', '', '14');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (53, '8', '', 2, 30, '812', '', '', '12');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (53, '1', '', 1, 80, '11', '', '', '1');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (53, '11', '', 1, 100, '1116', '', '', '16');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 53, '300', 0, '0', '0', 300, '2024-02-03', '17:58:41', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 17:58:40');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '53';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 2, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '53'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('53', '1', '1', '1');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('53', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '53', `totalamount` = 380
+WHERE `order_id` = '53';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('53', '1', '1', '30.00', '13', '', '', '3', 1);
+UPDATE `customer_order` SET `order_id` = '53', `totalamount` = 410
+WHERE `order_id` = '53';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0053', '7', '1', '60.00', '711', '', '', '11', 1);
+UPDATE `customer_order` SET `order_id` = '0053', `totalamount` = 470
+WHERE `order_id` = '0053';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0053'
+AND `menu_id` = '11'
+AND `varientid` = '16'
+AND `addonsuid` = '1116';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0053', '11', 1, '16');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0053', '11', 1, '', '1116', '0', '16', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0053', `totalamount` = 570
+WHERE `order_id` = '0053';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '3', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0053'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0053', '8', 1, '12');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0053', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0053', `totalamount` = 600
+WHERE `order_id` = '0053';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '9', `order_status` = '1', `totalamount` = '600'
+WHERE `order_id` = '53';
+UPDATE `bill` SET `total_amount` = '600', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '600', `create_by` = '178'
+WHERE `order_id` = '53';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 17:59:09');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '53';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '53';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '53';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 3, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '53'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+UPDATE `tbl_cancelitem` SET `quantity` = 2
+WHERE `orderid` = '53'
+AND `foodid` = '1'
+AND `varientid` = '1';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('53', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '53', `totalamount` = 680
+WHERE `order_id` = '53';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0053', '2', '1', '200.00', '27', '', '', '7', 1);
+UPDATE `customer_order` SET `order_id` = '0053', `totalamount` = 880
+WHERE `order_id` = '0053';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0053', '3', '1', '150.00', '38', '', '', '8', 1);
+UPDATE `customer_order` SET `order_id` = '0053', `totalamount` = 1030
+WHERE `order_id` = '0053';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0053'
+AND `menu_id` = '12'
+AND `varientid` = '13'
+AND `addonsuid` = '1213';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0053', '12', 1, '13');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0053', '12', 1, '', '1213', '0', '13', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0053', `totalamount` = 1060
+WHERE `order_id` = '0053';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '9', `order_status` = '1', `totalamount` = '1060'
+WHERE `order_id` = '53';
+UPDATE `bill` SET `total_amount` = '1060', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '1060', `create_by` = '178'
+WHERE `order_id` = '53';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 18:00:40');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '53';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '53';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '53';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('53', '1', '1', '60.00', '12', '', '', '2', 1);
+UPDATE `customer_order` SET `order_id` = '53', `totalamount` = 1120
+WHERE `order_id` = '53';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 2, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '53'
+AND `menu_id` = '1'
+AND `varientid` = '3'
+AND `addonsuid` = '13';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('53', '1', '1', '3');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('53', '1', '1', '', '13', '0', '3', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '53', `totalamount` = 1150
+WHERE `order_id` = '53';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 4, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '53'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+UPDATE `tbl_cancelitem` SET `quantity` = 3
+WHERE `orderid` = '53'
+AND `foodid` = '1'
+AND `varientid` = '1';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('53', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '53', `totalamount` = 1230
+WHERE `order_id` = '53';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '3', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0053'
+AND `menu_id` = '12'
+AND `varientid` = '13'
+AND `addonsuid` = '1213';
+UPDATE `tbl_cancelitem` SET `quantity` = 2
+WHERE `orderid` = '0053'
+AND `foodid` = '12'
+AND `varientid` = '13';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0053', '12', 1, '', '1213', '0', '13', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0053', `totalamount` = 1260
+WHERE `order_id` = '0053';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '3', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0053'
+AND `menu_id` = '11'
+AND `varientid` = '16'
+AND `addonsuid` = '1116';
+UPDATE `tbl_cancelitem` SET `quantity` = 2
+WHERE `orderid` = '0053'
+AND `foodid` = '11'
+AND `varientid` = '16';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0053', '11', 1, '', '1116', '0', '16', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0053', `totalamount` = 1360
+WHERE `order_id` = '0053';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '9', `order_status` = '1', `totalamount` = '1360'
+WHERE `order_id` = '53';
+UPDATE `bill` SET `total_amount` = '1360', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '1360', `create_by` = '178'
+WHERE `order_id` = '53';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 18:01:07');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '53';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '53';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `table_details`
+WHERE `order_id` = '53';
+UPDATE `customer_order` SET `totalamount` = '1360', `customerpaid` = '1360'
+WHERE `order_id` = '53';
+UPDATE `bill` SET `discount` = '0', `bill_amount` = '1360'
+WHERE `order_id` = '53';
+INSERT INTO `multipay_bill` (`order_id`, `payment_type_id`, `amount`) VALUES ('53', '4', '1360');
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0053', 'Sales Products', '2024-02-03', 1020101, 'Sale Income For Online paymentcusL-0001-Walkin', '1360', 0, 1, '178', '2024-02-03', 1);
+UPDATE `customer_order` SET `order_status` = 4, `customerpaid` = 1360
+WHERE `order_id` = '53';
+UPDATE `bill` SET `bill_status` = 1, `payment_method_id` = '4', `create_by` = '178', `create_at` = '2024-02-03 18:01:19'
+WHERE `order_id` = '53';
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0053', 'CIV', '2024-02-03', '102030101', 'Customer debit for Product Invoice#0053', '1360', 0, 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0053', 'CIV', '2024-02-03', 10107, 'Inventory Credit for Product Invoice#0053', 0, '1360', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0053', 'CIV', '2024-02-03', '102030101', 'Customer Credit for Product Invoice#0053', 0, '1360', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0053', 'Sales Products', '2024-02-03', 303, 'Sale Income For cusL-0001-Walkin', 0, 1360, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0053', 'Sales Products Vat', '2024-02-03', 502030101, 'Sale TAX For cusL-0001-Walkin', '0', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Order List', 'Insert Data', 'Order is Update', '', '2024-02-03 18:01:19');
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('1', '53', '12', '13');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '53';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('1', '53', '13', '14');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '53';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('1', '53', '8', '12');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '53';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('11', '53', '1', '1');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '53';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('13', '53', '11', '16');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '53';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('11', '53', '1', '3');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '53';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('13', '53', '7', '11');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '53';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('1', '53', '2', '7');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '53';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('1', '53', '3', '8');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '53';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('11', '53', '1', '2');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '53';
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '53';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0054', '1', '168', '', NULL, '2024-02-03', '18:01:51', 1000, '9', '', '04', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('9', '1', 54, '18:01:51', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (54, '2', '', 1, 200, '27', '', '', '7');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (54, '3', '', 1, 150, '38', '', '', '8');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (54, '8', '', 3, 30, '812', '', '', '12');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (54, '7', '', 2, 60, '711', '', '', '11');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (54, '12', '', 2, 30, '1213', '', '', '13');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (54, '13', '', 2, 30, '1314', '', '', '14');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (54, '11', '', 1, 100, '1116', '', '', '16');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (54, '10', '', 1, 220, '1015', '', '', '15');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 54, '1000', 0, '0', '0', 1000, '2024-02-03', '18:01:53', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 18:01:51');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0055', '1', '168', '', NULL, '2024-02-03', '18:02:43', 160, '7', '', '05', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('7', '1', 55, '18:02:43', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (55, '1', '', 2, 80, '11', '', '', '1');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 55, '160', 0, '0', '0', 160, '2024-02-03', '18:02:43', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 18:02:43');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '55';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 3, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '55'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('55', '1', '1', '1');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('55', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '55', `totalamount` = 240
+WHERE `order_id` = '55';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('55', '1', '1', '60.00', '12', '', '', '2', 1);
+UPDATE `customer_order` SET `order_id` = '55', `totalamount` = 300
+WHERE `order_id` = '55';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('55', '1', '1', '30.00', '13', '', '', '3', 1);
+UPDATE `customer_order` SET `order_id` = '55', `totalamount` = 330
+WHERE `order_id` = '55';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '7', `order_status` = '1', `totalamount` = '330'
+WHERE `order_id` = '55';
+UPDATE `bill` SET `total_amount` = '330', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '330', `create_by` = '178'
+WHERE `order_id` = '55';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 18:03:06');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '55';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '55';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '55';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 4, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '55'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+UPDATE `tbl_cancelitem` SET `quantity` = 2
+WHERE `orderid` = '55'
+AND `foodid` = '1'
+AND `varientid` = '1';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('55', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '55', `totalamount` = 410
+WHERE `order_id` = '55';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 5, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '55'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+UPDATE `tbl_cancelitem` SET `quantity` = 3
+WHERE `orderid` = '55'
+AND `foodid` = '1'
+AND `varientid` = '1';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('55', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '55', `totalamount` = 490
+WHERE `order_id` = '55';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '7', `order_status` = '1', `totalamount` = '490'
+WHERE `order_id` = '55';
+UPDATE `bill` SET `total_amount` = '490', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '490', `create_by` = '178'
+WHERE `order_id` = '55';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 18:03:36');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '55';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '55';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `table_details`
+WHERE `order_id` = '55';
+UPDATE `customer_order` SET `totalamount` = '490', `customerpaid` = '490'
+WHERE `order_id` = '55';
+UPDATE `bill` SET `discount` = '0', `bill_amount` = '490'
+WHERE `order_id` = '55';
+INSERT INTO `multipay_bill` (`order_id`, `payment_type_id`, `amount`) VALUES ('55', '4', '490');
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0055', 'Sales Products', '2024-02-03', 1020101, 'Sale Income For Online paymentcusL-0001-Walkin', '490', 0, 1, '178', '2024-02-03', 1);
+UPDATE `customer_order` SET `order_status` = 4, `customerpaid` = 490
+WHERE `order_id` = '55';
+UPDATE `bill` SET `bill_status` = 1, `payment_method_id` = '4', `create_by` = '178', `create_at` = '2024-02-03 18:03:45'
+WHERE `order_id` = '55';
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0055', 'CIV', '2024-02-03', '102030101', 'Customer debit for Product Invoice#0055', '490', 0, 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0055', 'CIV', '2024-02-03', 10107, 'Inventory Credit for Product Invoice#0055', 0, '490', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0055', 'CIV', '2024-02-03', '102030101', 'Customer Credit for Product Invoice#0055', 0, '490', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0055', 'Sales Products', '2024-02-03', 303, 'Sale Income For cusL-0001-Walkin', 0, 490, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0055', 'Sales Products Vat', '2024-02-03', 502030101, 'Sale TAX For cusL-0001-Walkin', '0', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Order List', 'Insert Data', 'Order is Update', '', '2024-02-03 18:03:45');
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('11', '55', '1', '1');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '55';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('11', '55', '1', '2');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '55';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('11', '55', '1', '3');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '55';
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '55';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `table_details`
+WHERE `order_id` = '54';
+UPDATE `customer_order` SET `totalamount` = '1000', `customerpaid` = '1000'
+WHERE `order_id` = '54';
+UPDATE `bill` SET `discount` = '0', `bill_amount` = '1000'
+WHERE `order_id` = '54';
+INSERT INTO `multipay_bill` (`order_id`, `payment_type_id`, `amount`) VALUES ('54', '4', '1000');
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0054', 'Sales Products', '2024-02-03', 1020101, 'Sale Income For Online paymentcusL-0001-Walkin', '1000', 0, 1, '178', '2024-02-03', 1);
+UPDATE `customer_order` SET `order_status` = 4, `customerpaid` = 1000
+WHERE `order_id` = '54';
+UPDATE `bill` SET `bill_status` = 1, `payment_method_id` = '4', `create_by` = '178', `create_at` = '2024-02-03 18:03:56'
+WHERE `order_id` = '54';
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0054', 'CIV', '2024-02-03', '102030101', 'Customer debit for Product Invoice#0054', '1000', 0, 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0054', 'CIV', '2024-02-03', 10107, 'Inventory Credit for Product Invoice#0054', 0, '1000', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0054', 'CIV', '2024-02-03', '102030101', 'Customer Credit for Product Invoice#0054', 0, '1000', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0054', 'Sales Products', '2024-02-03', 303, 'Sale Income For cusL-0001-Walkin', 0, 1000, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0054', 'Sales Products Vat', '2024-02-03', 502030101, 'Sale TAX For cusL-0001-Walkin', '0', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Order List', 'Insert Data', 'Order is Update', '', '2024-02-03 18:03:56');
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('1', '54', '2', '7');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '54';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('1', '54', '3', '8');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '54';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('1', '54', '8', '12');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '54';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('13', '54', '7', '11');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '54';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('1', '54', '12', '13');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '54';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('1', '54', '13', '14');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '54';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('13', '54', '11', '16');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '54';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('13', '54', '10', '15');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '54';
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '54';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0056', '1', '168', '', NULL, '2024-02-03', '18:04:21', 120, '7', '', '06', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('7', '1', 56, '18:04:21', '2024-02-03', '3');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (56, '1', '', 2, 60, '12', '', '', '2');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 56, '120', 0, '0', '0', 120, '2024-02-03', '18:04:22', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 18:04:20');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '56';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('56', '1', '1', '30.00', '13', '', '', '3', 1);
+UPDATE `customer_order` SET `order_id` = '56', `totalamount` = 150
+WHERE `order_id` = '56';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0056', '3', '1', '150.00', '38', '', '', '8', 1);
+UPDATE `customer_order` SET `order_id` = '0056', `totalamount` = 300
+WHERE `order_id` = '0056';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 2, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '56'
+AND `menu_id` = '1'
+AND `varientid` = '3'
+AND `addonsuid` = '13';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('56', '1', '1', '3');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('56', '1', '1', '', '13', '0', '3', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '56', `totalamount` = 330
+WHERE `order_id` = '56';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('56', '1', '1', '80.00', '11', '', '', '1', 1);
+UPDATE `customer_order` SET `order_id` = '56', `totalamount` = 410
+WHERE `order_id` = '56';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '7', `order_status` = '1', `totalamount` = '410'
+WHERE `order_id` = '56';
+UPDATE `bill` SET `total_amount` = '410', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '410', `create_by` = '178'
+WHERE `order_id` = '56';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 18:04:55');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '56';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '56';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '56';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 2, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '56'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('56', '1', '1', '1');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('56', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '56', `totalamount` = 490
+WHERE `order_id` = '56';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 3, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '56'
+AND `menu_id` = '1'
+AND `varientid` = '2'
+AND `addonsuid` = '12';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('56', '1', '1', '2');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('56', '1', '1', '', '12', '0', '2', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '56', `totalamount` = 550
+WHERE `order_id` = '56';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '7', `order_status` = '1', `totalamount` = '550'
+WHERE `order_id` = '56';
+UPDATE `bill` SET `total_amount` = '550', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '550', `create_by` = '178'
+WHERE `order_id` = '56';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 18:06:50');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '56';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '56';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `table_details`
+WHERE `order_id` = '56';
+UPDATE `customer_order` SET `totalamount` = '550', `customerpaid` = '550'
+WHERE `order_id` = '56';
+UPDATE `bill` SET `discount` = '0', `bill_amount` = '550'
+WHERE `order_id` = '56';
+INSERT INTO `multipay_bill` (`order_id`, `payment_type_id`, `amount`) VALUES ('56', '4', '550');
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0056', 'Sales Products', '2024-02-03', 1020101, 'Sale Income For Online paymentcusL-0001-Walkin', '550', 0, 1, '178', '2024-02-03', 1);
+UPDATE `customer_order` SET `order_status` = 4, `customerpaid` = 550
+WHERE `order_id` = '56';
+UPDATE `bill` SET `bill_status` = 1, `payment_method_id` = '4', `create_by` = '178', `create_at` = '2024-02-03 18:07:08'
+WHERE `order_id` = '56';
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0056', 'CIV', '2024-02-03', '102030101', 'Customer debit for Product Invoice#0056', '550', 0, 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0056', 'CIV', '2024-02-03', 10107, 'Inventory Credit for Product Invoice#0056', 0, '550', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `StoreID`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('0056', 'CIV', '2024-02-03', '102030101', 'Customer Credit for Product Invoice#0056', 0, '550', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0056', 'Sales Products', '2024-02-03', 303, 'Sale Income For cusL-0001-Walkin', 0, 550, 1, '178', '2024-02-03', 1);
+INSERT INTO `acc_transaction` (`VNo`, `Vtype`, `VDate`, `COAID`, `Narration`, `Debit`, `Credit`, `IsPosted`, `CreateBy`, `CreateDate`, `IsAppove`) VALUES ('Sale0056', 'Sales Products Vat', '2024-02-03', 502030101, 'Sale TAX For cusL-0001-Walkin', '0', 0, 1, '178', '2024-02-03', 1);
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Order List', 'Insert Data', 'Order is Update', '', '2024-02-03 18:07:08');
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('11', '56', '1', '2');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '56';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('11', '56', '1', '3');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '56';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('1', '56', '3', '8');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '56';
+INSERT INTO `tbl_kitchen_order` (`kitchenid`, `orderid`, `itemid`, `varient`) VALUES ('11', '56', '1', '1');
+UPDATE `order_menu` SET `food_status` = 1, `allfoodready` = 1
+WHERE `order_id` = '56';
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '56';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0057', '1', '168', '', NULL, '2024-02-03', '18:07:31', 200, '7', '', '07', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('7', '1', 57, '18:07:31', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (57, '1', '', 1, 80, '11', '', '', '1');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (57, '7', '', 2, 60, '711', '', '', '11');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 57, '200', 0, '0', '0', 200, '2024-02-03', '18:07:32', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 18:07:31');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '57';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('57', '1', '1', '60.00', '12', '', '', '2', 1);
+UPDATE `customer_order` SET `order_id` = '57', `totalamount` = 260
+WHERE `order_id` = '57';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('57', '1', '1', '30.00', '13', '', '', '3', 1);
+UPDATE `customer_order` SET `order_id` = '57', `totalamount` = 290
+WHERE `order_id` = '57';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '7', `order_status` = '1', `totalamount` = '290'
+WHERE `order_id` = '57';
+UPDATE `bill` SET `total_amount` = '290', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '290', `create_by` = '178'
+WHERE `order_id` = '57';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 18:08:00');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '57';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '57';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '57';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `user` SET `last_login` = '2024-02-03 20:14:11', `ip_address` = '127.0.0.1'
+WHERE `id` = '178';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0058', '1', '168', '', NULL, '2024-02-03', '20:14:45', 440, '7', '', '08', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('7', '1', 58, '20:14:45', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (58, '3', '', 2, 150, '38', '', '', '8');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (58, '7', '', 1, 60, '711', '', '', '11');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (58, '8', '', 1, 30, '812', '', '', '12');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (58, '9', '', 1, 50, '917', '', '', '17');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 58, '440', 0, '0', '0', 440, '2024-02-03', '20:14:46', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 20:14:45');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '58';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('58', '1', '1', '80.00', '11', '', '', '1', 1);
+UPDATE `customer_order` SET `order_id` = '58', `totalamount` = 520
+WHERE `order_id` = '58';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0058', '2', '1', '200.00', '27', '', '', '7', 1);
+UPDATE `customer_order` SET `order_id` = '0058', `totalamount` = 720
+WHERE `order_id` = '0058';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '3', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0058'
+AND `menu_id` = '3'
+AND `varientid` = '8'
+AND `addonsuid` = '38';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0058', '3', 1, '8');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0058', '3', 1, '', '38', '0', '8', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0058', `totalamount` = 870
+WHERE `order_id` = '0058';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 2, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '58'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('58', '1', '1', '1');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('58', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '58', `totalamount` = 950
+WHERE `order_id` = '58';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '7', `order_status` = '1', `totalamount` = '950'
+WHERE `order_id` = '58';
+UPDATE `bill` SET `total_amount` = '950', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '950', `create_by` = '178'
+WHERE `order_id` = '58';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 20:15:40');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '58';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '58';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '58';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 3, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '58'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+UPDATE `tbl_cancelitem` SET `quantity` = 2
+WHERE `orderid` = '58'
+AND `foodid` = '1'
+AND `varientid` = '1';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('58', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '58', `totalamount` = 1030
+WHERE `order_id` = '58';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 4, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '58'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+UPDATE `tbl_cancelitem` SET `quantity` = 3
+WHERE `orderid` = '58'
+AND `foodid` = '1'
+AND `varientid` = '1';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('58', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '58', `totalamount` = 1110
+WHERE `order_id` = '58';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('58', '6', '1', '1800.00', '64', '', '', '4', 1);
+UPDATE `customer_order` SET `order_id` = '58', `totalamount` = 2910
+WHERE `order_id` = '58';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0058', '12', '1', '30.00', '1213', '', '', '13', 1);
+UPDATE `customer_order` SET `order_id` = '0058', `totalamount` = 2940
+WHERE `order_id` = '0058';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0058', '11', '1', '100.00', '1116', '', '', '16', 1);
+UPDATE `customer_order` SET `order_id` = '0058', `totalamount` = 3040
+WHERE `order_id` = '0058';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '7', `order_status` = '1', `totalamount` = '3040'
+WHERE `order_id` = '58';
+UPDATE `bill` SET `total_amount` = '3040', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '3040', `create_by` = '178'
+WHERE `order_id` = '58';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 20:16:11');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '58';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '58';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0059', '1', '168', '', NULL, '2024-02-03', '20:16:36', 180, '9', '', '09', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('9', '1', 59, '20:16:36', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (59, '12', '', 1, 30, '1213', '', '', '13');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (59, '7', '', 1, 60, '711', '', '', '11');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (59, '8', '', 3, 30, '812', '', '', '12');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 59, '180', 0, '0', '0', 180, '2024-02-03', '20:16:37', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 20:16:36');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '59';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('59', '1', '1', '80.00', '11', '', '', '1', 1);
+UPDATE `customer_order` SET `order_id` = '59', `totalamount` = 260
+WHERE `order_id` = '59';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('59', '1', '1', '60.00', '12', '', '', '2', 1);
+UPDATE `customer_order` SET `order_id` = '59', `totalamount` = 320
+WHERE `order_id` = '59';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('59', '1', '1', '30.00', '13', '', '', '3', 1);
+UPDATE `customer_order` SET `order_id` = '59', `totalamount` = 350
+WHERE `order_id` = '59';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0059', '11', '1', '100.00', '1116', '', '', '16', 1);
+UPDATE `customer_order` SET `order_id` = '0059', `totalamount` = 450
+WHERE `order_id` = '0059';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0059'
+AND `menu_id` = '7'
+AND `varientid` = '11'
+AND `addonsuid` = '711';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0059', '7', 1, '11');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0059', '7', 1, '', '711', '0', '11', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0059', `totalamount` = 510
+WHERE `order_id` = '0059';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0059', '10', '1', '220.00', '1015', '', '', '15', 1);
+UPDATE `customer_order` SET `order_id` = '0059', `totalamount` = 730
+WHERE `order_id` = '0059';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0059', '9', '1', '50.00', '917', '', '', '17', 1);
+UPDATE `customer_order` SET `order_id` = '0059', `totalamount` = 780
+WHERE `order_id` = '0059';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '9', `order_status` = '1', `totalamount` = '780'
+WHERE `order_id` = '59';
+UPDATE `bill` SET `total_amount` = '780', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '780', `create_by` = '178'
+WHERE `order_id` = '59';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 20:17:24');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '59';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '59';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '59';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '58';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '57';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0060', '1', '168', '', NULL, '2024-02-03', '20:19:14', 270, '3', '', '10', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('3', '1', 60, '20:19:14', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (60, '3', '', 1, 150, '38', '', '', '8');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (60, '8', '', 2, 30, '812', '', '', '12');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (60, '13', '', 1, 30, '1314', '', '', '14');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (60, '12', '', 1, 30, '1213', '', '', '13');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 60, '270', 0, '0', '0', 270, '2024-02-03', '20:19:15', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 20:19:14');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '60';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('60', '1', '1', '80.00', '11', '', '', '1', 1);
+UPDATE `customer_order` SET `order_id` = '60', `totalamount` = 350
+WHERE `order_id` = '60';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 2, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '60'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('60', '1', '1', '1');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('60', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '60', `totalamount` = 430
+WHERE `order_id` = '60';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '3', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0060'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0060', '8', 1, '12');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0060', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0060', `totalamount` = 460
+WHERE `order_id` = '0060';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '4', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0060'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+UPDATE `tbl_cancelitem` SET `quantity` = 2
+WHERE `orderid` = '0060'
+AND `foodid` = '8'
+AND `varientid` = '12';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0060', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0060', `totalamount` = 490
+WHERE `order_id` = '0060';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '3', `order_status` = '1', `totalamount` = '490'
+WHERE `order_id` = '60';
+UPDATE `bill` SET `total_amount` = '490', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '490', `create_by` = '178'
+WHERE `order_id` = '60';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 20:19:38');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '60';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '60';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0061', '1', '168', '', NULL, '2024-02-03', '20:33:58', 410, '6', '', '11', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('6', '1', 61, '20:33:58', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (61, '2', '', 1, 200, '27', '', '', '7');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (61, '3', '', 1, 150, '38', '', '', '8');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (61, '8', '', 2, 30, '812', '', '', '12');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 61, '410', 0, '0', '0', 410, '2024-02-03', '20:33:59', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 20:33:58');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '61';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('61', '1', '1', '80.00', '11', '', '', '1', 1);
+UPDATE `customer_order` SET `order_id` = '61', `totalamount` = 490
+WHERE `order_id` = '61';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '3', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0061'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0061', '8', 1, '12');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0061', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0061', `totalamount` = 520
+WHERE `order_id` = '0061';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '4', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0061'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+UPDATE `tbl_cancelitem` SET `quantity` = 2
+WHERE `orderid` = '0061'
+AND `foodid` = '8'
+AND `varientid` = '12';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0061', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0061', `totalamount` = 550
+WHERE `order_id` = '0061';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '6', `order_status` = '1', `totalamount` = '550'
+WHERE `order_id` = '61';
+UPDATE `bill` SET `total_amount` = '550', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '550', `create_by` = '178'
+WHERE `order_id` = '61';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 20:34:13');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '61';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '61';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0062', '1', '168', '', NULL, '2024-02-03', '20:39:08', 380, '2', '', '12', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('2', '1', 62, '20:39:08', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (62, '2', '', 1, 200, '27', '', '', '7');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (62, '3', '', 1, 150, '38', '', '', '8');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (62, '8', '', 1, 30, '812', '', '', '12');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 62, '380', 0, '0', '0', 380, '2024-02-03', '20:39:09', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 20:39:08');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '62';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('62', '1', '1', '80.00', '11', '', '', '1', 1);
+UPDATE `customer_order` SET `order_id` = '62', `totalamount` = 460
+WHERE `order_id` = '62';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0062'
+AND `menu_id` = '2'
+AND `varientid` = '7'
+AND `addonsuid` = '27';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0062', '2', 1, '7');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0062', '2', 1, '', '27', '0', '7', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0062', `totalamount` = 660
+WHERE `order_id` = '0062';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0062'
+AND `menu_id` = '3'
+AND `varientid` = '8'
+AND `addonsuid` = '38';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0062', '3', 1, '8');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0062', '3', 1, '', '38', '0', '8', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0062', `totalamount` = 810
+WHERE `order_id` = '0062';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0062'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0062', '8', 1, '12');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0062', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0062', `totalamount` = 840
+WHERE `order_id` = '0062';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0062', '11', '1', '100.00', '1116', '', '', '16', 1);
+UPDATE `customer_order` SET `order_id` = '0062', `totalamount` = 940
+WHERE `order_id` = '0062';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '2', `order_status` = '1', `totalamount` = '940'
+WHERE `order_id` = '62';
+UPDATE `bill` SET `total_amount` = '940', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '940', `create_by` = '178'
+WHERE `order_id` = '62';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 20:39:28');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '62';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '62';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '62';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '61';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '60';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `table_details`
+WHERE `id` = '62';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `table_details`
+WHERE `id` = '60';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `table_details`
+WHERE `id` = '59';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `table_details`
+WHERE `id` = '57';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `table_details`
+WHERE `id` = '58';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0063', '1', '168', '', NULL, '2024-02-03', '20:41:19', 470, '7', '', '13', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('7', '1', 63, '20:41:19', '2024-02-03', '1');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (63, '2', '', 1, 200, '27', '', '', '7');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (63, '3', '', 1, 150, '38', '', '', '8');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (63, '12', '', 1, 30, '1213', '', '', '13');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (63, '13', '', 1, 30, '1314', '', '', '14');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (63, '8', '', 2, 30, '812', '', '', '12');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 63, '470', 0, '0', '0', 470, '2024-02-03', '20:41:19', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 20:41:19');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '63';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('63', '1', '1', '80.00', '11', '', '', '1', 1);
+UPDATE `customer_order` SET `order_id` = '63', `totalamount` = 550
+WHERE `order_id` = '63';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '3', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0063'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0063', '8', 1, '12');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0063', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0063', `totalamount` = 580
+WHERE `order_id` = '0063';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0063', '11', '1', '100.00', '1116', '', '', '16', 1);
+UPDATE `customer_order` SET `order_id` = '0063', `totalamount` = 680
+WHERE `order_id` = '0063';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0063', '7', '1', '60.00', '711', '', '', '11', 1);
+UPDATE `customer_order` SET `order_id` = '0063', `totalamount` = 740
+WHERE `order_id` = '0063';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '7', `order_status` = '1', `totalamount` = '740'
+WHERE `order_id` = '63';
+UPDATE `bill` SET `total_amount` = '740', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '740', `create_by` = '178'
+WHERE `order_id` = '63';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 20:41:41');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '63';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '63';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0064', '1', '168', '', NULL, '2024-02-03', '20:42:52', 410, '9', '', '14', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('9', '1', 64, '20:42:52', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (64, '2', '', 1, 200, '27', '', '', '7');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (64, '3', '', 1, 150, '38', '', '', '8');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (64, '8', '', 2, 30, '812', '', '', '12');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 64, '410', 0, '0', '0', 410, '2024-02-03', '20:42:53', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 20:42:52');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '64';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('64', '1', '1', '80.00', '11', '', '', '1', 1);
+UPDATE `customer_order` SET `order_id` = '64', `totalamount` = 490
+WHERE `order_id` = '64';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 2, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '64'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('64', '1', '1', '1');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('64', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '64', `totalamount` = 570
+WHERE `order_id` = '64';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0064', '11', '1', '100.00', '1116', '', '', '16', 1);
+UPDATE `customer_order` SET `order_id` = '0064', `totalamount` = 670
+WHERE `order_id` = '0064';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0064'
+AND `menu_id` = '11'
+AND `varientid` = '16'
+AND `addonsuid` = '1116';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0064', '11', 1, '16');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0064', '11', 1, '', '1116', '0', '16', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0064', `totalamount` = 770
+WHERE `order_id` = '0064';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '3', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0064'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0064', '8', 1, '12');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0064', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0064', `totalamount` = 800
+WHERE `order_id` = '0064';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '3', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0064'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+UPDATE `customer_order` SET `order_id` = '0064', `totalamount` = 800
+WHERE `order_id` = '0064';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '9', `order_status` = '1', `totalamount` = '800'
+WHERE `order_id` = '64';
+UPDATE `bill` SET `total_amount` = '800', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '800', `create_by` = '178'
+WHERE `order_id` = '64';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 20:43:12');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '64';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '64';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '64';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('64', '6', '1', '1800.00', '64', '', '', '4', 1);
+UPDATE `customer_order` SET `order_id` = '64', `totalamount` = 2600
+WHERE `order_id` = '64';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0064', '7', '1', '60.00', '711', '', '', '11', 1);
+UPDATE `customer_order` SET `order_id` = '0064', `totalamount` = 2660
+WHERE `order_id` = '0064';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '3', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0064'
+AND `menu_id` = '11'
+AND `varientid` = '16'
+AND `addonsuid` = '1116';
+UPDATE `tbl_cancelitem` SET `quantity` = 2
+WHERE `orderid` = '0064'
+AND `foodid` = '11'
+AND `varientid` = '16';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0064', '11', 1, '', '1116', '0', '16', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0064', `totalamount` = 2760
+WHERE `order_id` = '0064';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0064', '12', '1', '30.00', '1213', '', '', '13', 1);
+UPDATE `customer_order` SET `order_id` = '0064', `totalamount` = 2790
+WHERE `order_id` = '0064';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '9', `order_status` = '1', `totalamount` = '2790'
+WHERE `order_id` = '64';
+UPDATE `bill` SET `total_amount` = '2790', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '2790', `create_by` = '178'
+WHERE `order_id` = '64';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 20:44:17');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '64';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '64';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0065', '1', '168', '', NULL, '2024-02-03', '20:45:49', 640, '9', '', '15', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('9', '1', 65, '20:45:49', '2024-02-03', '1');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (65, '2', '', 1, 200, '27', '', '', '7');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (65, '3', '', 1, 150, '38', '', '', '8');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (65, '4', '', 1, 200, '49', '', '', '9');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (65, '8', '', 3, 30, '812', '', '', '12');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 65, '640', 0, '0', '0', 640, '2024-02-03', '20:45:50', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 20:45:49');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0066', '1', '168', '', NULL, '2024-02-03', '20:46:26', 320, '3', '', '16', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('3', '1', 66, '20:46:26', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (66, '1', '', 2, 80, '11', '', '', '1');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (66, '7', '', 1, 60, '711', '', '', '11');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (66, '11', '', 1, 100, '1116', '', '', '16');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 66, '320', 0, '0', '0', 320, '2024-02-03', '20:46:27', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 20:46:26');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '65';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('65', '1', '1', '80.00', '11', '', '', '1', 1);
+UPDATE `customer_order` SET `order_id` = '65', `totalamount` = 720
+WHERE `order_id` = '65';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0065', '7', '1', '60.00', '711', '', '', '11', 1);
+UPDATE `customer_order` SET `order_id` = '0065', `totalamount` = 780
+WHERE `order_id` = '0065';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0065', '11', '1', '100.00', '1116', '', '', '16', 1);
+UPDATE `customer_order` SET `order_id` = '0065', `totalamount` = 880
+WHERE `order_id` = '0065';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '9', `order_status` = '1', `totalamount` = '880'
+WHERE `order_id` = '65';
+UPDATE `bill` SET `total_amount` = '880', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '880', `create_by` = '178'
+WHERE `order_id` = '65';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 20:46:43');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '65';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '65';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '66';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0066', '8', '1', '30.00', '812', '', '', '12', 1);
+UPDATE `customer_order` SET `order_id` = '0066', `totalamount` = 350
+WHERE `order_id` = '0066';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0066'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0066', '8', 1, '12');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0066', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0066', `totalamount` = 380
+WHERE `order_id` = '0066';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0066', '12', '1', '30.00', '1213', '', '', '13', 1);
+UPDATE `customer_order` SET `order_id` = '0066', `totalamount` = 410
+WHERE `order_id` = '0066';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '3', `order_status` = '1', `totalamount` = '410'
+WHERE `order_id` = '66';
+UPDATE `bill` SET `total_amount` = '410', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '410', `create_by` = '178'
+WHERE `order_id` = '66';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 20:46:58');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '66';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '66';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '66';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '65';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '64';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '63';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0067', '1', '168', '', NULL, '2024-02-03', '20:49:37', 460, '7', '', '17', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('7', '1', 67, '20:49:37', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (67, '9', '', 1, 50, '917', '', '', '17');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (67, '3', '', 1, 150, '38', '', '', '8');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (67, '2', '', 1, 200, '27', '', '', '7');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (67, '7', '', 1, 60, '711', '', '', '11');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 67, '460', 0, '0', '0', 460, '2024-02-03', '20:49:38', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 20:49:37');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0068', '1', '168', '', NULL, '2024-02-03', '20:50:09', 220, '2', '', '18', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('2', '1', 68, '20:50:09', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (68, '1', '', 2, 80, '11', '', '', '1');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (68, '8', '', 2, 30, '812', '', '', '12');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 68, '220', 0, '0', '0', 220, '2024-02-03', '20:50:09', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 20:50:09');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '68';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0068', '3', '1', '150.00', '38', '', '', '8', 1);
+UPDATE `customer_order` SET `order_id` = '0068', `totalamount` = 370
+WHERE `order_id` = '0068';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0068'
+AND `menu_id` = '3'
+AND `varientid` = '8'
+AND `addonsuid` = '38';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0068', '3', 1, '8');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0068', '3', 1, '', '38', '0', '8', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0068', `totalamount` = 520
+WHERE `order_id` = '0068';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0068', '2', '1', '200.00', '27', '', '', '7', 1);
+UPDATE `customer_order` SET `order_id` = '0068', `totalamount` = 720
+WHERE `order_id` = '0068';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 3, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '68'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('68', '1', '1', '1');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('68', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '68', `totalamount` = 800
+WHERE `order_id` = '68';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0068', '11', '1', '100.00', '1116', '', '', '16', 1);
+UPDATE `customer_order` SET `order_id` = '0068', `totalamount` = 900
+WHERE `order_id` = '0068';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '2', `order_status` = '1', `totalamount` = '900'
+WHERE `order_id` = '68';
+UPDATE `bill` SET `total_amount` = '900', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '900', `create_by` = '178'
+WHERE `order_id` = '68';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 20:50:29');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '68';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '68';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0069', '1', '168', '', NULL, '2024-02-03', '20:56:26', 440, '2', '', '19', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('2', '1', 69, '20:56:26', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (69, '2', '', 1, 200, '27', '', '', '7');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (69, '3', '', 1, 150, '38', '', '', '8');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (69, '8', '', 1, 30, '812', '', '', '12');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (69, '13', '', 1, 30, '1314', '', '', '14');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (69, '12', '', 1, 30, '1213', '', '', '13');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 69, '440', 0, '0', '0', 440, '2024-02-03', '20:56:27', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 20:56:26');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '69';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('69', '1', '1', '80.00', '11', '', '', '1', 1);
+UPDATE `customer_order` SET `order_id` = '69', `totalamount` = 520
+WHERE `order_id` = '69';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0069'
+AND `menu_id` = '2'
+AND `varientid` = '7'
+AND `addonsuid` = '27';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0069', '2', 1, '7');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0069', '2', 1, '', '27', '0', '7', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0069', `totalamount` = 720
+WHERE `order_id` = '0069';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0069'
+AND `menu_id` = '3'
+AND `varientid` = '8'
+AND `addonsuid` = '38';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0069', '3', 1, '8');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0069', '3', 1, '', '38', '0', '8', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0069', `totalamount` = 870
+WHERE `order_id` = '0069';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0069', '7', '1', '60.00', '711', '', '', '11', 1);
+UPDATE `customer_order` SET `order_id` = '0069', `totalamount` = 930
+WHERE `order_id` = '0069';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0069', '11', '1', '100.00', '1116', '', '', '16', 1);
+UPDATE `customer_order` SET `order_id` = '0069', `totalamount` = 1030
+WHERE `order_id` = '0069';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '2', `order_status` = '1', `totalamount` = '1030'
+WHERE `order_id` = '69';
+UPDATE `bill` SET `total_amount` = '1030', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '1030', `create_by` = '178'
+WHERE `order_id` = '69';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 20:56:45');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '69';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '69';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '69';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 2, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '69'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('69', '1', '1', '1');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('69', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '69', `totalamount` = 1110
+WHERE `order_id` = '69';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '2', `order_status` = '1', `totalamount` = '1110'
+WHERE `order_id` = '69';
+UPDATE `bill` SET `total_amount` = '1110', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '1110', `create_by` = '178'
+WHERE `order_id` = '69';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 20:59:12');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '69';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '69';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '69';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '68';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '67';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `table_details`
+WHERE `id` = '68';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `table_details`
+WHERE `id` = '69';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0070', '1', '168', '', NULL, '2024-02-03', '20:59:57', 410, '2', '', '20', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('2', '1', 70, '20:59:57', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (70, '3', '', 1, 150, '38', '', '', '8');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (70, '2', '', 1, 200, '27', '', '', '7');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (70, '8', '', 2, 30, '812', '', '', '12');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 70, '410', 0, '0', '0', 410, '2024-02-03', '20:59:58', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 20:59:57');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '70';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('70', '1', '1', '80.00', '11', '', '', '1', 1);
+UPDATE `customer_order` SET `order_id` = '70', `totalamount` = 490
+WHERE `order_id` = '70';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 2, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '70'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('70', '1', '1', '1');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('70', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '70', `totalamount` = 570
+WHERE `order_id` = '70';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0070', '7', '1', '60.00', '711', '', '', '11', 1);
+UPDATE `customer_order` SET `order_id` = '0070', `totalamount` = 630
+WHERE `order_id` = '0070';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0070', '11', '1', '100.00', '1116', '', '', '16', 1);
+UPDATE `customer_order` SET `order_id` = '0070', `totalamount` = 730
+WHERE `order_id` = '0070';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '2', `order_status` = '1', `totalamount` = '730'
+WHERE `order_id` = '70';
+UPDATE `bill` SET `total_amount` = '730', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '730', `create_by` = '178'
+WHERE `order_id` = '70';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 21:00:19');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '70';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '70';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0071', '1', '168', '', NULL, '2024-02-03', '21:03:20', 440, '2', '', '21', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('2', '1', 71, '21:03:20', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (71, '2', '', 1, 200, '27', '', '', '7');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (71, '3', '', 1, 150, '38', '', '', '8');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (71, '8', '', 3, 30, '812', '', '', '12');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 71, '440', 0, '0', '0', 440, '2024-02-03', '21:03:21', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 21:03:20');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '71';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('71', '1', '1', '80.00', '11', '', '', '1', 1);
+UPDATE `customer_order` SET `order_id` = '71', `totalamount` = 520
+WHERE `order_id` = '71';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '4', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0071'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0071', '8', 1, '12');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0071', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0071', `totalamount` = 550
+WHERE `order_id` = '0071';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '5', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0071'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+UPDATE `tbl_cancelitem` SET `quantity` = 2
+WHERE `orderid` = '0071'
+AND `foodid` = '8'
+AND `varientid` = '12';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0071', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0071', `totalamount` = 580
+WHERE `order_id` = '0071';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 2, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '71'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('71', '1', '1', '1');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('71', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '71', `totalamount` = 660
+WHERE `order_id` = '71';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '2', `order_status` = '1', `totalamount` = '660'
+WHERE `order_id` = '71';
+UPDATE `bill` SET `total_amount` = '660', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '660', `create_by` = '178'
+WHERE `order_id` = '71';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 21:04:03');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '71';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '71';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '71';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '70';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `table_details`
+WHERE `id` = '63';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `table_details`
+WHERE `id` = '67';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0072', '1', '168', '', NULL, '2024-02-03', '21:08:55', 550, '7', '', '22', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('7', '1', 72, '21:08:55', '2024-02-03', '2');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (72, '3', '', 1, 150, '38', '', '', '8');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (72, '2', '', 1, 200, '27', '', '', '7');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (72, '4', '', 1, 200, '49', '', '', '9');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 72, '550', 0, '0', '0', 550, '2024-02-03', '21:08:55', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 21:08:55');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '72';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('72', '1', '1', '80.00', '11', '', '', '1', 1);
+UPDATE `customer_order` SET `order_id` = '72', `totalamount` = 630
+WHERE `order_id` = '72';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0072', '7', '1', '60.00', '711', '', '', '11', 1);
+UPDATE `customer_order` SET `order_id` = '0072', `totalamount` = 690
+WHERE `order_id` = '0072';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0072', '11', '1', '100.00', '1116', '', '', '16', 1);
+UPDATE `customer_order` SET `order_id` = '0072', `totalamount` = 790
+WHERE `order_id` = '0072';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0072', '8', '1', '30.00', '812', '', '', '12', 1);
+UPDATE `customer_order` SET `order_id` = '0072', `totalamount` = 820
+WHERE `order_id` = '0072';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0072'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0072', '8', 1, '12');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0072', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0072', `totalamount` = 850
+WHERE `order_id` = '0072';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0072'
+AND `menu_id` = '3'
+AND `varientid` = '8'
+AND `addonsuid` = '38';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0072', '3', 1, '8');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0072', '3', 1, '', '38', '0', '8', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0072', `totalamount` = 1000
+WHERE `order_id` = '0072';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '7', `order_status` = '1', `totalamount` = '1000'
+WHERE `order_id` = '72';
+UPDATE `bill` SET `total_amount` = '1000', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '1000', `create_by` = '178'
+WHERE `order_id` = '72';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 21:09:51');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '72';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '72';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '72';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `customer_order` (`customer_id`, `saleinvoice`, `cutomertype`, `waiter_id`, `isthirdparty`, `thirdpartyinvoiceid`, `order_date`, `order_time`, `totalamount`, `table_no`, `customer_note`, `tokenno`, `cookedtime`, `order_status`) VALUES ('1', '0073', '1', '168', '', NULL, '2024-02-03', '21:13:10', 620, '7', '', '23', '00:15:00', 1);
+INSERT INTO `table_details` (`table_id`, `customer_id`, `order_id`, `time_enter`, `created_at`, `total_people`) VALUES ('7', '1', 73, '21:13:10', '2024-02-03', '1');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (73, '2', '', 1, 200, '27', '', '', '7');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (73, '8', '', 3, 30, '812', '', '', '12');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (73, '7', '', 1, 60, '711', '', '', '11');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (73, '9', '', 1, 50, '917', '', '', '17');
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `notes`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`) VALUES (73, '10', '', 1, 220, '1015', '', '', '15');
+INSERT INTO `bill` (`customer_id`, `order_id`, `total_amount`, `discount`, `service_charge`, `VAT`, `bill_amount`, `bill_date`, `bill_time`, `bill_status`, `payment_method_id`, `create_by`, `create_date`) VALUES ('1', 73, '620', 0, '0', '0', 620, '2024-02-03', '21:13:10', 0, '4', '178', '2024-02-03');
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Add New Order', 'Insert Data', 'Item New Order Created', '', '2024-02-03 21:13:10');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '73';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('73', '1', '1', '80.00', '11', '', '', '1', 1);
+UPDATE `customer_order` SET `order_id` = '73', `totalamount` = 700
+WHERE `order_id` = '73';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('73', '1', '1', '60.00', '12', '', '', '2', 1);
+UPDATE `customer_order` SET `order_id` = '73', `totalamount` = 760
+WHERE `order_id` = '73';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('73', '1', '1', '30.00', '13', '', '', '3', 1);
+UPDATE `customer_order` SET `order_id` = '73', `totalamount` = 790
+WHERE `order_id` = '73';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '4', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0073'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0073', '8', 1, '12');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0073', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0073', `totalamount` = 820
+WHERE `order_id` = '0073';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '5', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0073'
+AND `menu_id` = '8'
+AND `varientid` = '12'
+AND `addonsuid` = '812';
+UPDATE `tbl_cancelitem` SET `quantity` = 2
+WHERE `orderid` = '0073'
+AND `foodid` = '8'
+AND `varientid` = '12';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0073', '8', 1, '', '812', '0', '12', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0073', `totalamount` = 850
+WHERE `order_id` = '0073';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0073'
+AND `menu_id` = '7'
+AND `varientid` = '11'
+AND `addonsuid` = '711';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0073', '7', 1, '11');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0073', '7', 1, '', '711', '0', '11', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0073', `totalamount` = 910
+WHERE `order_id` = '0073';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '3', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0073'
+AND `menu_id` = '7'
+AND `varientid` = '11'
+AND `addonsuid` = '711';
+UPDATE `tbl_cancelitem` SET `quantity` = 2
+WHERE `orderid` = '0073'
+AND `foodid` = '7'
+AND `varientid` = '11';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0073', '7', 1, '', '711', '0', '11', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0073', `totalamount` = 970
+WHERE `order_id` = '0073';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '7', `order_status` = '1', `totalamount` = '970'
+WHERE `order_id` = '73';
+UPDATE `bill` SET `total_amount` = '970', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '970', `create_by` = '178'
+WHERE `order_id` = '73';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 21:13:39');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '73';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '73';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `nofification` = 1
+WHERE `order_id` = '73';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = 2, `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '73'
+AND `menu_id` = '1'
+AND `varientid` = '1'
+AND `addonsuid` = '11';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('73', '1', '1', '1');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('73', '1', '1', '', '11', '0', '1', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '73', `totalamount` = 1050
+WHERE `order_id` = '73';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '2', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0073'
+AND `menu_id` = '2'
+AND `varientid` = '7'
+AND `addonsuid` = '27';
+INSERT INTO `tbl_cancelitem` (`orderid`, `foodid`, `quantity`, `varientid`) VALUES ('0073', '2', 1, '7');
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0073', '2', 1, '', '27', '0', '7', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0073', `totalamount` = 1250
+WHERE `order_id` = '0073';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `order_menu` SET `menuqty` = '4', `add_on_id` = '', `addonsqty` = '0'
+WHERE `order_id` = '0073'
+AND `menu_id` = '7'
+AND `varientid` = '11'
+AND `addonsuid` = '711';
+UPDATE `tbl_cancelitem` SET `quantity` = 3
+WHERE `orderid` = '0073'
+AND `foodid` = '7'
+AND `varientid` = '11';
+INSERT INTO `tbl_updateitems` (`ordid`, `menuid`, `qty`, `addonsid`, `addonsuid`, `adonsqty`, `varientid`, `insertdate`) VALUES ('0073', '7', 1, '', '711', '0', '11', '2024-02-03');
+UPDATE `customer_order` SET `order_id` = '0073', `totalamount` = 1310
+WHERE `order_id` = '0073';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0073', '11', '1', '100.00', '1116', '', '', '16', 1);
+UPDATE `customer_order` SET `order_id` = '0073', `totalamount` = 1410
+WHERE `order_id` = '0073';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+INSERT INTO `order_menu` (`order_id`, `menu_id`, `menuqty`, `price`, `addonsuid`, `add_on_id`, `addonsqty`, `varientid`, `isupdate`) VALUES ('0073', '4', '1', '200.00', '49', '', '', '9', 1);
+UPDATE `customer_order` SET `order_id` = '0073', `totalamount` = 1610
+WHERE `order_id` = '0073';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `cutomertype` = '1', `waiter_id` = '168', `isthirdparty` = NULL, `table_no` = '7', `order_status` = '1', `totalamount` = '1610'
+WHERE `order_id` = '73';
+UPDATE `bill` SET `total_amount` = '1610', `discount` = '0', `service_charge` = '0', `VAT` = '0', `bill_amount` = '1610', `create_by` = '178'
+WHERE `order_id` = '73';
+INSERT INTO `accesslog` (`action_page`, `action_done`, `remarks`, `user_name`, `entry_date`) VALUES ('Pending Order', 'Insert Data', 'Pending Order is Update', '', '2024-02-03 21:14:05');
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+DELETE FROM `tbl_updateitems`
+WHERE `ordid` = '73';
+UPDATE `order_menu` SET `isupdate` = NULL
+WHERE `order_id` = '73';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+UPDATE `customer_order` SET `anyreason` = '', `order_status` = 5, `nofification` = '1', `orderacceptreject` = 0
+WHERE `order_id` = '73';
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";
+SET SESSION sql_mode = "";

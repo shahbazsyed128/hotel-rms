@@ -52,13 +52,15 @@
 		}
 	}
 
-	$itemsByKitchen = [];
 
-	foreach ($exitsitem as $exititem) {
-		$itemsByKitchen[$exititem->kitchenid][] = $exititem;
+	$itemsByKitchen = [];
+	foreach ($iteminfo as $iteminf) {
+		$itemsByKitchen[$iteminf->kitchenid]['iteminfo'][] = $iteminf;
 	}
 
-
+	foreach ($exitsitem as $exititem) {
+		$itemsByKitchen[$exititem->kitchenid]['exitsitem'][] = $exititem;
+	}
 
 
 	$tokenHeader = "<div id='printableArea' class='print_area section'>
@@ -99,7 +101,60 @@
 </div>
 </div>";
 
-	foreach ($itemsByKitchen as $exitsitem) {
+
+
+
+
+
+	foreach ($itemsByKitchen as $allItems) {
+		$i = 0;
+		$totalamount = 0;
+		$subtotal = 0;
+		$total = $orderinfo->totalamount;
+
+		$itemcontent = "";
+
+		foreach ($allItems['iteminfo'] as $item) {
+			$i++;
+			$itemprice = $item->price * $item->menuqty;
+			$discount = 0;
+			$adonsprice = 0;
+			$newitem = $this->order_model->read('*', 'order_menu', array('row_id' => $item->row_id, 'isupdate' => 1));
+			$isexitsitem = $this->order_model->readupdate('tbl_updateitems.*,SUM(tbl_updateitems.qty) as totalqty', 'tbl_updateitems', array('ordid' => $item->order_id, 'menuid' => $item->menu_id, 'varientid' => $item->varientid, 'addonsuid' => $item->addonsuid));
+			if (!empty($item->add_on_id)) {
+				$addons = explode(",", $item->add_on_id);
+				$addonsqty = explode(",", $item->addonsqty);
+				$x = 0;
+				foreach ($addons as $addonsid) {
+					$adonsinfo = $this->order_model->read('*', 'add_ons', array('add_on_id' => $addonsid));
+					$adonsprice = $adonsprice + $adonsinfo->price * $addonsqty[$x];
+					$x++;
+				}
+				$nittotal = $adonsprice;
+				$itemprice = $itemprice;
+			} else {
+				$nittotal = 0;
+				$text = '';
+			}
+			$totalamount = $totalamount + $nittotal;
+			$subtotal = $subtotal + $item->price * $item->menuqty;
+			if ($newitem->menu_id == $isexitsitem->menuid && $newitem->isupdate == 1) {
+				$itemcontent .= "<tr>
+						<td align='left'>" . $item->menuqty . "</td>
+						<td align='left'>" . $item->ProductName . "<br>" . $item->notes . "</td>
+						<td align='left'>" . $item->variantName . "</td>
+					</tr>";
+			} else {
+				$itemcontent .= "<tr>
+						<td align='left'>" . $item->menuqty . "</td>
+						<td align='left'>" . $item->ProductName . "<br>" . $item->notes . "</td>
+						<td align='left'>" . $item->variantName . "</td>
+					</tr>";
+			}
+		}
+
+
+		$content = "";
 		$i = 0;
 		$totalamount = 0;
 		$subtotal = 0;
@@ -114,8 +169,7 @@
 			$servicecharge = $billinfo->service_charge;
 		}
 
-		$content = "";
-		foreach ($exitsitem as $exititem) {
+		foreach ($allItems['exitsitem'] as $exititem) {
 			$newitem = $this->order_model->read('*', 'order_menu', array('row_id' => $exititem->row_id, 'isupdate' => 1));
 			$isexitsitem = $this->order_model->readupdate('tbl_updateitems.*,SUM(tbl_updateitems.qty) as totalqty', 'tbl_updateitems', array('ordid' => $orderinfo->order_id, 'menuid' => $exititem->menu_id, 'varientid' => $exititem->varientid, 'addonsuid' => $exititem->addonsuid));
 			if (!empty($isexitsitem)) {
@@ -123,26 +177,27 @@
 					$itemprice = $exititem->price * $isexitsitem->qty;
 					if ($newitem->isupdate == 1) {
 						echo "";
-					} 
-					else{
+					} else {
 
-						$content.="<tr>
-										<td align='left'>" . $isexitsitem->isupdate . " " . formatNumber($isexitsitem->totalqty) . " </td>
-										<td align='left'>" . $exititem->ProductName . " " . $exititem->notes . "</td>
-										<td align='left'>" . $exititem->variantName . "</td>
-									</tr>";
+						$content .= "<tr>
+											<td align='left'>" . $isexitsitem->isupdate . " " . formatNumber($isexitsitem->totalqty) . " </td>
+											<td align='left'>" . $exititem->ProductName . " " . $exititem->notes . "</td>
+											<td align='left'>" . $exititem->variantName . "</td>
+										</tr>";
 					}
 				}
-			} 
-			else {}
+			} else {
+			}
 		}
 
 
-		if (!empty($content)) {
+		if (!empty($content || !empty($itemcontent))) {
 			echo $tokenHeader;
 			echo $content;
+			echo  $itemcontent;
 			echo $tokenFooter;
 			$content = "";
+			$itemcontent = "";
 		}
 	}
 	?>
