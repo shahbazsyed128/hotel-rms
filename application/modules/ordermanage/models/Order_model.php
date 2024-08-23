@@ -1620,15 +1620,22 @@ class Order_model extends CI_Model
 	
 		return $query->result();
 	}
-	
-	public function count_filtertorder()
+
+	public function count_filtertorder($type=null)
 	{
-		$this->get_alltodayorder_query();
+		$this->get_alltodayorder_query($type);
 		$query = $this->db->get();
 		return $query->num_rows();
 	}
 
-	public function count_alltodayorder()
+	// public function count_filtertorder()
+	// {
+	// 	$this->get_alltodayorder_query();
+	// 	$query = $this->db->get();
+	// 	return $query->num_rows();
+	// }
+
+	public function count_alltodayorder($type=null)
 	{
 		$cdate = date('Y-m-d');
 		$this->db->select('customer_order.*,customer_info.customer_name,customer_type.customer_type,employee_history.first_name,employee_history.last_name,rest_table.tablename,bill.bill_status');
@@ -1640,8 +1647,28 @@ class Order_model extends CI_Model
 		$this->db->join('bill', 'customer_order.order_id=bill.order_id', 'left');
 		$this->db->where('customer_order.order_date', $cdate);
 		$this->db->where('bill.bill_status', 1);
+		if ($type === null) {
+			$this->db->where_not_in('customer_order.cutomertype', array(5, 6, 7));
+		} else {
+			$this->db->where('customer_order.cutomertype', $type);
+		}
 		return $this->db->count_all_results();
 	}
+
+	// public function count_alltodayorder()
+	// {
+	// 	$cdate = date('Y-m-d');
+	// 	$this->db->select('customer_order.*,customer_info.customer_name,customer_type.customer_type,employee_history.first_name,employee_history.last_name,rest_table.tablename,bill.bill_status');
+	// 	$this->db->from('customer_order');
+	// 	$this->db->join('customer_info', 'customer_order.customer_id=customer_info.customer_id', 'left');
+	// 	$this->db->join('customer_type', 'customer_order.cutomertype=customer_type.customer_type_id', 'left');
+	// 	$this->db->join('employee_history', 'customer_order.waiter_id=employee_history.emp_his_id', 'left');
+	// 	$this->db->join('rest_table', 'customer_order.table_no=rest_table.tableid', 'left');
+	// 	$this->db->join('bill', 'customer_order.order_id=bill.order_id', 'left');
+	// 	$this->db->where('customer_order.order_date', $cdate);
+	// 	$this->db->where('bill.bill_status', 1);
+	// 	return $this->db->count_all_results();
+	// }
 
 	private function get_completeonlineorder_query()
 	{

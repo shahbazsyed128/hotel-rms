@@ -1635,29 +1635,29 @@ public function todayallorder()
 public function todayallguestorder()
 {
     $list = $this->order_model->get_completeorder(6);
-    $this->generate_order_data($list);
+    $this->generate_order_data($list,6);
 }
 
 public function todayallemployeeorder()
 {
     $list = $this->order_model->get_completeorder(5);
-    $this->generate_order_data($list);
+    $this->generate_order_data($list,5);
 }
 
 
 public function todayallemployeeorder2()
 {
     $list = $this->order_model->get_completeorder(6);
-    $this->generate_order_data($list);
+    $this->generate_order_data($list,6);
 }
 
 public function todayallcharityorder()
 {
     $list = $this->order_model->get_completeorder(7);
-    $this->generate_order_data($list);
+    $this->generate_order_data($list,7);
 }
 
-private function generate_order_data($list)
+private function generate_order_data($list,$type = null)
 {
     $data = array();
     $no = $_POST['start'];
@@ -1696,8 +1696,8 @@ private function generate_order_data($list)
     }
     $output = array(
         "draw" => $_POST['draw'],
-        "recordsTotal" => $this->order_model->count_alltodayorder(),
-        "recordsFiltered" => $this->order_model->count_filtertorder(),
+        "recordsTotal" => $this->order_model->count_alltodayorder($type),
+        "recordsFiltered" => $this->order_model->count_filtertorder($type),
         "data" => $data,
     );
     echo json_encode($output);
