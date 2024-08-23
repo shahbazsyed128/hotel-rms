@@ -432,6 +432,28 @@ class Order extends MX_Controller
 	{
 		$this->load->view('todayorder');
 	}
+
+	public function showtodayguestorder()
+	{
+		$this->load->view('todayguestorder');
+	}
+
+	public function showtodayemployeeorder()
+	{
+		$this->load->view('todayemployeeorder');
+	}
+
+	public function showtodayemployeeorder2()
+	{
+		$this->load->view('todayemployeeorder2');
+	}
+
+	public function showtodaycharityorder()
+	{
+		$this->load->view('todaycharityorder');
+	}
+
+
 	public function showonlineorder()
 	{
 		$this->load->view('onlineordertable');
@@ -1555,53 +1577,133 @@ class Order extends MX_Controller
 		);
 		echo json_encode($output);
 	}
-	public function todayallorder()
-	{
+	// public function todayallorder()
+	// {
 
-		$list = $this->order_model->get_completeorder();
-		$data = array();
-		$no = $_POST['start'];
-		foreach ($list as $rowdata) {
-			$no++;
-			$row = array();
-			$update = '';
-			$details = '';
-			$print = '';
-			$posprint = '';
-			$split = '';
-			$kot = '';
-			if ($this->permission->method('ordermanage', 'update')->access()) :
-				$update = '<a href="javascript:;" onclick="editposorder(' . $rowdata->order_id . ',2)" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="Update" id="table-today-' . $rowdata->order_id . '"><i class="ti-pencil"></i></a>&nbsp;&nbsp;';
-			endif;
-			if ($rowdata->splitpay_status == 1) :
-				$split = '<a href="javascript:;" onclick="showsplit(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="Update" id="table-split-' . $rowdata->order_id . '">' . display('split') . '</a>&nbsp;&nbsp;';
-			endif;
-			if ($this->permission->method('ordermanage', 'read')->access()) :
-				$details = '&nbsp;<a href="javascript:;" onclick="detailspop(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Details"><i class="fa fa-eye"></i></a>&nbsp;';
-				$print = '<a href="javascript:;" onclick="pos_order_invoice(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Invoice"><i class="fa fa-window-restore"></i></a>&nbsp;';
-				$posprint = '<a href="javascript:;" onclick="pospageprint(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Pos Invoice"><i class="fa fa-window-maximize"></i></a>';
-				$kot = '<a href="javascript:;" onclick="postokenprint(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="KOT"><i class="fa fa-print"></i></a>';
-			endif;
+	// 	$list = $this->order_model->get_completeorder();
+	// 	$data = array();
+	// 	$no = $_POST['start'];
+	// 	foreach ($list as $rowdata) {
+	// 		$no++;
+	// 		$row = array();
+	// 		$update = '';
+	// 		$details = '';
+	// 		$print = '';
+	// 		$posprint = '';
+	// 		$split = '';
+	// 		$kot = '';
+	// 		if ($this->permission->method('ordermanage', 'update')->access()) :
+	// 			$update = '<a href="javascript:;" onclick="editposorder(' . $rowdata->order_id . ',2)" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="Update" id="table-today-' . $rowdata->order_id . '"><i class="ti-pencil"></i></a>&nbsp;&nbsp;';
+	// 		endif;
+	// 		if ($rowdata->splitpay_status == 1) :
+	// 			$split = '<a href="javascript:;" onclick="showsplit(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="Update" id="table-split-' . $rowdata->order_id . '">' . display('split') . '</a>&nbsp;&nbsp;';
+	// 		endif;
+	// 		if ($this->permission->method('ordermanage', 'read')->access()) :
+	// 			$details = '&nbsp;<a href="javascript:;" onclick="detailspop(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Details"><i class="fa fa-eye"></i></a>&nbsp;';
+	// 			$print = '<a href="javascript:;" onclick="pos_order_invoice(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Invoice"><i class="fa fa-window-restore"></i></a>&nbsp;';
+	// 			$posprint = '<a href="javascript:;" onclick="pospageprint(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Pos Invoice"><i class="fa fa-window-maximize"></i></a>';
+	// 			$kot = '<a href="javascript:;" onclick="postokenprint(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="KOT"><i class="fa fa-print"></i></a>';
+	// 		endif;
 
-			$row[] = $no;
-			$row[] = $rowdata->saleinvoice;
-			$row[] = $rowdata->customer_name;
-			$row[] = $rowdata->customer_type;
-			$row[] = $rowdata->first_name . $rowdata->last_name;
-			$row[] = $rowdata->tablename;
-			$row[] = $rowdata->order_date;
-			$row[] = $rowdata->totalamount;
-			$row[] = $update . $print . $posprint . $details . $split . $kot;
-			$data[] = $row;
-		}
-		$output = array(
-			"draw" => $_POST['draw'],
-			"recordsTotal" => $this->order_model->count_alltodayorder(),
-			"recordsFiltered" => $this->order_model->count_filtertorder(),
-			"data" => $data,
-		);
-		echo json_encode($output);
-	}
+	// 		$row[] = $no;
+	// 		$row[] = $rowdata->saleinvoice;
+	// 		$row[] = $rowdata->customer_name;
+	// 		$row[] = $rowdata->customer_type;
+	// 		$row[] = $rowdata->first_name . $rowdata->last_name;
+	// 		$row[] = $rowdata->tablename;
+	// 		$row[] = $rowdata->order_date;
+	// 		$row[] = $rowdata->totalamount;
+	// 		$row[] = $update . $print . $posprint . $details . $split . $kot;
+	// 		$data[] = $row;
+	// 	}
+	// 	$output = array(
+	// 		"draw" => $_POST['draw'],
+	// 		"recordsTotal" => $this->order_model->count_alltodayorder(),
+	// 		"recordsFiltered" => $this->order_model->count_filtertorder(),
+	// 		"data" => $data,
+	// 	);
+	// 	echo json_encode($output);
+	// }
+
+
+public function todayallorder()
+{
+    $list = $this->order_model->get_completeorder(null);
+    $this->generate_order_data($list);
+}
+
+public function todayallguestorder()
+{
+    $list = $this->order_model->get_completeorder(6);
+    $this->generate_order_data($list);
+}
+
+public function todayallemployeeorder()
+{
+    $list = $this->order_model->get_completeorder(5);
+    $this->generate_order_data($list);
+}
+
+
+public function todayallemployeeorder2()
+{
+    $list = $this->order_model->get_completeorder(6);
+    $this->generate_order_data($list);
+}
+
+public function todayallcharityorder()
+{
+    $list = $this->order_model->get_completeorder(7);
+    $this->generate_order_data($list);
+}
+
+private function generate_order_data($list)
+{
+    $data = array();
+    $no = $_POST['start'];
+    foreach ($list as $rowdata) {
+        $no++;
+        $row = array();
+        $update = '';
+        $details = '';
+        $print = '';
+        $posprint = '';
+        $split = '';
+        $kot = '';
+        if ($this->permission->method('ordermanage', 'update')->access()) :
+            $update = '<a href="javascript:;" onclick="editposorder(' . $rowdata->order_id . ',2)" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="Update" id="table-today-' . $rowdata->order_id . '"><i class="ti-pencil"></i></a>&nbsp;&nbsp;';
+        endif;
+        if ($rowdata->splitpay_status == 1) :
+            $split = '<a href="javascript:;" onclick="showsplit(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="Update" id="table-split-' . $rowdata->order_id . '">' . display('split') . '</a>&nbsp;&nbsp;';
+        endif;
+        if ($this->permission->method('ordermanage', 'read')->access()) :
+            $details = '&nbsp;<a href="javascript:;" onclick="detailspop(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Details"><i class="fa fa-eye"></i></a>&nbsp;';
+            $print = '<a href="javascript:;" onclick="pos_order_invoice(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Invoice"><i class="fa fa-window-restore"></i></a>&nbsp;';
+            $posprint = '<a href="javascript:;" onclick="pospageprint(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Pos Invoice"><i class="fa fa-window-maximize"></i></a>';
+            $kot = '<a href="javascript:;" onclick="postokenprint(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="KOT"><i class="fa fa-print"></i></a>';
+        endif;
+
+        $row[] = $no;
+        $row[] = $rowdata->saleinvoice;
+        $row[] = $rowdata->customer_name;
+        $row[] = $rowdata->customer_type;
+        $row[] = $rowdata->first_name . $rowdata->last_name;
+        $row[] = $rowdata->tablename;
+        $row[] = $rowdata->order_date;
+        $row[] = $rowdata->totalamount;
+        $row[] = $update . $print . $posprint . $details . $split . $kot;
+        $data[] = $row;
+    }
+    $output = array(
+        "draw" => $_POST['draw'],
+        "recordsTotal" => $this->order_model->count_alltodayorder(),
+        "recordsFiltered" => $this->order_model->count_filtertorder(),
+        "data" => $data,
+    );
+    echo json_encode($output);
+}
+
+
 	public function notification()
 	{
 		$tdata = date('Y-m-d');

@@ -1510,12 +1510,60 @@ class Order_model extends CI_Model
 		$orderdetails = $query->result();
 		return $orderdetails;
 	}
-	private function get_alltodayorder_query()
+	// private function get_alltodayorder_query()
+	// {
+	// 	$column_order = array(null, 'customer_order.saleinvoice', 'customer_info.customer_name', 'customer_type.customer_type', 'employee_history.first_name', 'employee_history.last_name', 'rest_table.tablename', 'customer_order.order_date', 'customer_order.totalamount'); //set column field database for datatable orderable
+	// 	$column_search = array('customer_order.saleinvoice', 'customer_info.customer_name', 'customer_type.customer_type', 'employee_history.first_name', 'employee_history.last_name', 'rest_table.tablename', 'customer_order.order_date', 'customer_order.totalamount'); //set column field database for datatable searchable 
+	// 	$order = array('customer_order.order_id' => 'asc');
+
+	// 	$cdate = date('Y-m-d');
+	// 	$this->db->select('customer_order.*,customer_info.customer_name,customer_type.customer_type,employee_history.first_name,employee_history.last_name,rest_table.tablename,bill.bill_status');
+	// 	$this->db->from('customer_order');
+	// 	$this->db->join('customer_info', 'customer_order.customer_id=customer_info.customer_id', 'left');
+	// 	$this->db->join('customer_type', 'customer_order.cutomertype=customer_type.customer_type_id', 'left');
+	// 	$this->db->join('employee_history', 'customer_order.waiter_id=employee_history.emp_his_id', 'left');
+	// 	$this->db->join('rest_table', 'customer_order.table_no=rest_table.tableid', 'left');
+	// 	$this->db->join('bill', 'customer_order.order_id=bill.order_id', 'left');
+	// 	$this->db->where('customer_order.order_date', $cdate);
+	// 	$this->db->where('bill.bill_status', 1);
+	// 	$this->db->order_by('customer_order.order_id', 'desc');
+	// 	$i = 0;
+
+	// 	foreach ($column_search as $item) // loop column 
+	// 	{
+	// 		if ($_POST['search']['value']) // if datatable send POST for search
+	// 		{
+
+	// 			if ($i === 0) // first loop
+	// 			{
+	// 				$this->db->group_start();
+	// 				$this->db->like($item, $_POST['search']['value']);
+	// 			} else {
+	// 				$this->db->or_like($item, $_POST['search']['value']);
+	// 			}
+
+	// 			if (count($column_search) - 1 == $i) //last loop
+	// 				$this->db->group_end(); //close bracket
+	// 		}
+	// 		$i++;
+	// 	}
+
+	// 	if (isset($_POST['order'])) // here order processing
+	// 	{
+	// 		$this->db->order_by($column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+	// 	} else if (isset($order)) {
+	// 		$order = $order;
+	// 		$this->db->order_by(key($order), $order[key($order)]);
+	// 	}
+	// }
+
+
+	private function get_alltodayorder_query($customer_type = null)
 	{
 		$column_order = array(null, 'customer_order.saleinvoice', 'customer_info.customer_name', 'customer_type.customer_type', 'employee_history.first_name', 'employee_history.last_name', 'rest_table.tablename', 'customer_order.order_date', 'customer_order.totalamount'); //set column field database for datatable orderable
 		$column_search = array('customer_order.saleinvoice', 'customer_info.customer_name', 'customer_type.customer_type', 'employee_history.first_name', 'employee_history.last_name', 'rest_table.tablename', 'customer_order.order_date', 'customer_order.totalamount'); //set column field database for datatable searchable 
 		$order = array('customer_order.order_id' => 'asc');
-
+	
 		$cdate = date('Y-m-d');
 		$this->db->select('customer_order.*,customer_info.customer_name,customer_type.customer_type,employee_history.first_name,employee_history.last_name,rest_table.tablename,bill.bill_status');
 		$this->db->from('customer_order');
@@ -1526,14 +1574,20 @@ class Order_model extends CI_Model
 		$this->db->join('bill', 'customer_order.order_id=bill.order_id', 'left');
 		$this->db->where('customer_order.order_date', $cdate);
 		$this->db->where('bill.bill_status', 1);
+	
+		if ($customer_type === null) {
+			$this->db->where_not_in('customer_order.cutomertype', array(5, 6, 7));
+		} else {
+			$this->db->where('customer_order.cutomertype', $customer_type);
+		}
+	
 		$this->db->order_by('customer_order.order_id', 'desc');
 		$i = 0;
-
+	
 		foreach ($column_search as $item) // loop column 
 		{
 			if ($_POST['search']['value']) // if datatable send POST for search
 			{
-
 				if ($i === 0) // first loop
 				{
 					$this->db->group_start();
@@ -1541,13 +1595,13 @@ class Order_model extends CI_Model
 				} else {
 					$this->db->or_like($item, $_POST['search']['value']);
 				}
-
+	
 				if (count($column_search) - 1 == $i) //last loop
 					$this->db->group_end(); //close bracket
 			}
 			$i++;
 		}
-
+	
 		if (isset($_POST['order'])) // here order processing
 		{
 			$this->db->order_by($column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
@@ -1556,15 +1610,17 @@ class Order_model extends CI_Model
 			$this->db->order_by(key($order), $order[key($order)]);
 		}
 	}
-	public function get_completeorder()
+
+	public function get_completeorder($customer_type = null)
 	{
-		$this->get_alltodayorder_query();
+		$this->get_alltodayorder_query($customer_type);
 		if ($_POST['length'] != -1)
 			$this->db->limit($_POST['length'], $_POST['start']);
 		$query = $this->db->get();
-
+	
 		return $query->result();
 	}
+	
 	public function count_filtertorder()
 	{
 		$this->get_alltodayorder_query();

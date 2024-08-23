@@ -724,6 +724,66 @@ $(document).ready(function () {
 
 
     });
+
+
+        /* all todayguestorder product as ajax */
+        $(document).on('click', '#todayguestorder', function () {
+            var url = 'showtodayguestorder';
+            var csrf = $('#csrfhashresarvation').val();
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: { csrf_test_name: csrf },
+                success: function (data) {
+                    $('#guestorders').html(data);
+                }
+            });
+        });
+
+        /* all todayemployeeorder product as ajax */
+        $(document).on('click', '#todayemployeeorder', function () {
+            var url = 'showtodayemployeeorder';
+            var csrf = $('#csrfhashresarvation').val();
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: { csrf_test_name: csrf },
+                success: function (data) {
+                    $('#employeeorders').html(data);
+                }
+            });
+        });
+
+
+         /* all todayemployeeorder product as ajax */
+         $(document).on('click', '#todayemployeeorder2', function () {
+            var url = 'showtodayemployeeorder2';
+            var csrf = $('#csrfhashresarvation').val();
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: { csrf_test_name: csrf },
+                success: function (data) {
+                    $('#employeeorders2').html(data);
+                }
+            });
+        });
+
+        /* all todaycharityorder product as ajax */
+        $(document).on('click', '#todaycharityorder', function () {
+            var url = 'showtodaycharityorder';
+            var csrf = $('#csrfhashresarvation').val();
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: { csrf_test_name: csrf },
+                success: function (data) {
+                    $('#charityorders').html(data);
+                }
+            });
+        });
+
+
     /*all todayorder product as ajax*/
     $(document).on('click', '#todayonlieorder', function () {
 
@@ -898,7 +958,6 @@ function placeorder() {
     var csrf = $('#csrfhashresarvation').val();
     var errormessage = '';
 
-    alert(customernote);
     if (customer_name == '') {
         errormessage = errormessage + '<span>Please Select Customer Name.</span>';
         alert("Please Select Customer Name!!!");

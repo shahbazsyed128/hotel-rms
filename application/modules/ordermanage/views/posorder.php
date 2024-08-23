@@ -360,7 +360,7 @@ $ptdiscount = 0; ?>
             <input class="form-control" name="mobile" id="mobile" type="number" placeholder="Customer Mobile" required="" min="0">
           </div>
         </div>
-        
+
         <div class="form-group row">
           <label for="customer_type" class="col-sm-3 col-form-label"><?php echo display('customer_type'); ?> <i class="text-danger">*</i></label>
           <div class="col-sm-6">
@@ -481,12 +481,16 @@ foreach ($scan as $file) {
           <li><a href="<?php echo base_url() ?>dashboard/home" class="maindashboard"><i class="fa fa-home"></i></a></li>
           <li class="active"> <a href="#home" role="tab" data-toggle="tab" title="New Order" id="fhome" autofocus class="home newtab" onclick="giveselecttab(this)"><i class="fa fa-plus smallview"></i> <span class="responsiveview"><?php echo display('nw_order'); ?></span> </a></li>
           <li><a href="#profile" role="tab" data-toggle="tab" class="ongord newtab" id="ongoingorder" onclick="giveselecttab(this)"><i class="fa fa-hourglass-start smallview"></i> <span class="responsiveview"><?php echo display('ongoingorder'); ?></span> </a> </li>
-          <li><a href="#kitchen" role="tab" data-toggle="tab" class="torder newtab" id="kitchenorder" onclick="giveselecttab(this)"><i class="fa fa-coffee smallview"></i> <span class="responsiveview"><?php echo display('kitchen_status'); ?></span> </a> </li>
+          <!-- <li><a href="#kitchen" role="tab" data-toggle="tab" class="torder newtab" id="kitchenorder" onclick="giveselecttab(this)"><i class="fa fa-coffee smallview"></i> <span class="responsiveview"><?php echo display('kitchen_status'); ?></span> </a> </li> -->
           <?php if ($qrapp == 1) { ?>
             <li class="seelist2"> <a href="#qrorder" role="tab" data-toggle="tab" id="todayqrorder" class="home newtab" onclick="giveselecttab(this)"><i class="fa fa-qrcode smallview"></i> <span class="responsiveview"><?php echo display('qr-order'); ?></span> </a> <a href="" class="notif2"><span class="label label-danger count2">0</span></a> </li>
           <?php } ?>
-          <li class="seelist"> <a href="#settings" role="tab" data-toggle="tab" class="comorder newtab" id="todayonlieorder" onclick="giveselecttab(this)"><i class="fa fa-shopping-bag smallview"></i> <span class="responsiveview"><?php echo display('onlineord'); ?></span> </a> <a href="" class="notif"><span class="label label-danger count">0</span></a> </li>
+          <!-- <li class="seelist"> <a href="#settings" role="tab" data-toggle="tab" class="comorder newtab" id="todayonlieorder" onclick="giveselecttab(this)"><i class="fa fa-shopping-bag smallview"></i> <span class="responsiveview"><?php echo display('onlineord'); ?></span> </a> <a href="" class="notif"><span class="label label-danger count">0</span></a> </li> -->
           <li> <a href="#messages" role="tab" data-toggle="tab" class="torder newtab" id="todayorder" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview"><?php echo display('tdayorder'); ?></span> </a> </li>
+          <!-- <li> <a href="#guestorders" role="tab" data-toggle="tab" class="guestorder newtab" id="todayguestorder" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Today Guest Orders</span> </a> </li> -->
+          <li> <a href="#employeeorders" role="tab" data-toggle="tab" class="employeeorder newtab" id="todayemployeeorder" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Today Employee's Orders</span> </a> </li>
+          <li> <a href="#employeeorders2" role="tab" data-toggle="tab" class="employeeorder2 newtab" id="todayemployeeorder2" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Today Guest's Orders</span> </a> </li>
+          <li> <a href="#charityorders" role="tab" data-toggle="tab" class="charityorder newtab" id="todaycharityorder" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Today Charity's Orders</span> </a> </li>
           <?php if ($new_version != $myversion) {
             if ($versioncheck->version != $new_version) {
           ?><li class="mobiletag">
@@ -886,7 +890,7 @@ foreach ($scan as $file) {
                               <label for="Customer Note">Note</label>
                               <textarea name="customernote" class="form-control" id="customernote" placeholder="Enter customer note"></textarea>
                             </div>
-                            
+
 
                           </div>
                         </div>
@@ -1173,6 +1177,10 @@ foreach ($scan as $file) {
         <?php } ?>
         <div class="tab-pane fade" id="settings"> </div>
         <div class="tab-pane fade" id="messages"> </div>
+        <div class="tab-pane fade" id="guestorder"> </div>
+        <div class="tab-pane fade" id="employeeorders"> </div>
+        <div class="tab-pane fade" id="employeeorders2"> </div>
+        <div class="tab-pane fade" id="charityorders"> </div>
       </div>
     </div>
   </div>
