@@ -1228,29 +1228,93 @@ class Order_model extends CI_Model
 			->get()
 			->row();
 	}
+	// public function get_ongoingorder()
+	// {
+	// 	$cdate = date("Y-m-d", strtotime("- 1 day"));
+	// 	$today = date("Y-m-d");
+
+	// 	$where = "customer_order.order_date Between '" . $cdate . "' AND '" . $today . "' AND ((customer_order.order_status = 1 OR customer_order.order_status = 2 OR customer_order.order_status = 3) AND ((customer_order.cutomertype = 99 AND customer_order.orderacceptreject = 1) || (customer_order.cutomertype = 3 || customer_order.orderacceptreject != 1) || (customer_order.cutomertype = 4 || customer_order.orderacceptreject != 1) || (customer_order.cutomertype = 1 || customer_order.orderacceptreject != 1)))";
+	// 	$sql = "SELECT customer_order.*,customer_order.order_id as mid,customer_info.customer_name,customer_type.customer_type,employee_history.first_name,employee_history.last_name,rest_table.tablename FROM customer_order Left JOIN customer_info ON customer_order.customer_id=customer_info.customer_id Left Join customer_type ON customer_order.cutomertype=customer_type.customer_type_id left join employee_history ON customer_order.waiter_id=employee_history.emp_his_id Left Join rest_table ON customer_order.table_no=rest_table.tableid Where {$where} AND customer_order.marge_order_id IS NULL UNION SELECT customer_order.*,customer_order.order_id as mid,customer_info.customer_name,customer_type.customer_type,employee_history.first_name,employee_history.last_name,rest_table.tablename FROM customer_order Left JOIN customer_info ON customer_order.customer_id=customer_info.customer_id Left Join customer_type ON customer_order.cutomertype=customer_type.customer_type_id left join employee_history ON customer_order.waiter_id=employee_history.emp_his_id Left Join rest_table ON customer_order.table_no=rest_table.tableid Where {$where} AND customer_order.marge_order_id IS NOT NULL GROUP BY customer_order.marge_order_id order by mid desc";
+
+	// 	$query = $this->db->query($sql);
+
+	// 	$orderdetails = $query->result();
+	// 	return $orderdetails;
+	// }
+
+
+
 	public function get_ongoingorder()
 	{
 		$cdate = date("Y-m-d", strtotime("- 1 day"));
 		$today = date("Y-m-d");
 
-		$where = "customer_order.order_date Between '" . $cdate . "' AND '" . $today . "' AND ((customer_order.order_status = 1 OR customer_order.order_status = 2 OR customer_order.order_status = 3) AND ((customer_order.cutomertype = 99 AND customer_order.orderacceptreject = 1) || (customer_order.cutomertype = 3 || customer_order.orderacceptreject != 1) || (customer_order.cutomertype = 4 || customer_order.orderacceptreject != 1) || (customer_order.cutomertype = 1 || customer_order.orderacceptreject != 1)))";
-		$sql = "SELECT customer_order.*,customer_order.order_id as mid,customer_info.customer_name,customer_type.customer_type,employee_history.first_name,employee_history.last_name,rest_table.tablename FROM customer_order Left JOIN customer_info ON customer_order.customer_id=customer_info.customer_id Left Join customer_type ON customer_order.cutomertype=customer_type.customer_type_id left join employee_history ON customer_order.waiter_id=employee_history.emp_his_id Left Join rest_table ON customer_order.table_no=rest_table.tableid Where {$where} AND customer_order.marge_order_id IS NULL UNION SELECT customer_order.*,customer_order.order_id as mid,customer_info.customer_name,customer_type.customer_type,employee_history.first_name,employee_history.last_name,rest_table.tablename FROM customer_order Left JOIN customer_info ON customer_order.customer_id=customer_info.customer_id Left Join customer_type ON customer_order.cutomertype=customer_type.customer_type_id left join employee_history ON customer_order.waiter_id=employee_history.emp_his_id Left Join rest_table ON customer_order.table_no=rest_table.tableid Where {$where} AND customer_order.marge_order_id IS NOT NULL GROUP BY customer_order.marge_order_id order by mid desc";
+		$where = "customer_order.order_date Between '" . $cdate . "' AND '" . $today . "' AND ((customer_order.order_status = 1 OR customer_order.order_status = 2 OR customer_order.order_status = 3) AND ((customer_order.cutomertype = 99 AND customer_order.orderacceptreject = 1) || (customer_order.cutomertype IN (1, 3, 4, 5, 6) || customer_order.orderacceptreject != 1)))";
+		
+		$sql = "SELECT customer_order.*, customer_order.order_id as mid, customer_info.customer_name, customer_type.customer_type, employee_history.first_name, employee_history.last_name, rest_table.tablename 
+				FROM customer_order 
+				Left JOIN customer_info ON customer_order.customer_id = customer_info.customer_id 
+				Left Join customer_type ON customer_order.cutomertype = customer_type.customer_type_id 
+				left join employee_history ON customer_order.waiter_id = employee_history.emp_his_id 
+				Left Join rest_table ON customer_order.table_no = rest_table.tableid 
+				Where {$where} AND customer_order.marge_order_id IS NULL 
+				UNION 
+				SELECT customer_order.*, customer_order.order_id as mid, customer_info.customer_name, customer_type.customer_type, employee_history.first_name, employee_history.last_name, rest_table.tablename 
+				FROM customer_order 
+				Left JOIN customer_info ON customer_order.customer_id = customer_info.customer_id 
+				Left Join customer_type ON customer_order.cutomertype = customer_type.customer_type_id 
+				left join employee_history ON customer_order.waiter_id = employee_history.emp_his_id 
+				Left Join rest_table ON customer_order.table_no = rest_table.tableid 
+				Where {$where} AND customer_order.marge_order_id IS NOT NULL 
+				GROUP BY customer_order.marge_order_id 
+				order by mid desc";
 
 		$query = $this->db->query($sql);
 
 		$orderdetails = $query->result();
 		return $orderdetails;
 	}
-	public function get_unique_ongoingorder_id($id)
-	{
-		$where = "customer_order.order_id = '" . $id . "'";
+	
+	// public function get_unique_ongoingorder_id($id)
+	// {
+	// 	$where = "customer_order.order_id = '" . $id . "'";
 
-		$sql = "SELECT customer_order.*,customer_order.order_id as mid,customer_info.customer_name,customer_type.customer_type,employee_history.first_name,employee_history.last_name,rest_table.tablename FROM customer_order Left JOIN customer_info ON customer_order.customer_id=customer_info.customer_id Left Join customer_type ON customer_order.cutomertype=customer_type.customer_type_id left join employee_history ON customer_order.waiter_id=employee_history.emp_his_id Left Join rest_table ON customer_order.table_no=rest_table.tableid Where {$where} AND customer_order.marge_order_id IS NULL UNION SELECT customer_order.*,customer_order.order_id as mid,customer_info.customer_name,customer_type.customer_type,employee_history.first_name,employee_history.last_name,rest_table.tablename FROM customer_order Left JOIN customer_info ON customer_order.customer_id=customer_info.customer_id Left Join customer_type ON customer_order.cutomertype=customer_type.customer_type_id left join employee_history ON customer_order.waiter_id=employee_history.emp_his_id Left Join rest_table ON customer_order.table_no=rest_table.tableid Where {$where} AND customer_order.marge_order_id IS NOT NULL GROUP BY customer_order.marge_order_id order by mid desc";
-		$query = $this->db->query($sql);
+	// 	$sql = "SELECT customer_order.*,customer_order.order_id as mid,customer_info.customer_name,customer_type.customer_type,employee_history.first_name,employee_history.last_name,rest_table.tablename FROM customer_order Left JOIN customer_info ON customer_order.customer_id=customer_info.customer_id Left Join customer_type ON customer_order.cutomertype=customer_type.customer_type_id left join employee_history ON customer_order.waiter_id=employee_history.emp_his_id Left Join rest_table ON customer_order.table_no=rest_table.tableid Where {$where} AND customer_order.marge_order_id IS NULL UNION SELECT customer_order.*,customer_order.order_id as mid,customer_info.customer_name,customer_type.customer_type,employee_history.first_name,employee_history.last_name,rest_table.tablename FROM customer_order Left JOIN customer_info ON customer_order.customer_id=customer_info.customer_id Left Join customer_type ON customer_order.cutomertype=customer_type.customer_type_id left join employee_history ON customer_order.waiter_id=employee_history.emp_his_id Left Join rest_table ON customer_order.table_no=rest_table.tableid Where {$where} AND customer_order.marge_order_id IS NOT NULL GROUP BY customer_order.marge_order_id order by mid desc";
+	// 	$query = $this->db->query($sql);
 
-		$orderdetails = $query->result();
-		return $orderdetails;
-	}
+	// 	$orderdetails = $query->result();
+	// 	return $orderdetails;
+	// }
+
+
+		public function get_unique_ongoingorder_id($id)
+		{
+			$where = "customer_order.order_id = '" . $id . "'";
+
+			$sql = "SELECT customer_order.*, customer_order.order_id as mid, customer_info.customer_name, customer_type.customer_type, employee_history.first_name, employee_history.last_name, rest_table.tablename 
+					FROM customer_order 
+					LEFT JOIN customer_info ON customer_order.customer_id = customer_info.customer_id 
+					LEFT JOIN customer_type ON customer_order.cutomertype = customer_type.customer_type_id 
+					LEFT JOIN employee_history ON customer_order.waiter_id = employee_history.emp_his_id 
+					LEFT JOIN rest_table ON customer_order.table_no = rest_table.tableid 
+					WHERE {$where} AND customer_order.marge_order_id IS NULL 
+					UNION 
+					SELECT customer_order.*, customer_order.order_id as mid, customer_info.customer_name, customer_type.customer_type, employee_history.first_name, employee_history.last_name, rest_table.tablename 
+					FROM customer_order 
+					LEFT JOIN customer_info ON customer_order.customer_id = customer_info.customer_id 
+					LEFT JOIN customer_type ON customer_order.cutomertype = customer_type.customer_type_id 
+					LEFT JOIN employee_history ON customer_order.waiter_id = employee_history.emp_his_id 
+					LEFT JOIN rest_table ON customer_order.table_no = rest_table.tableid 
+					WHERE {$where} AND customer_order.marge_order_id IS NOT NULL 
+					GROUP BY customer_order.marge_order_id 
+					ORDER BY mid DESC";
+			
+			$query = $this->db->query($sql);
+
+			$orderdetails = $query->result();
+			return $orderdetails;
+		}
+
 	public function get_unique_ongoingtable_id($id)
 	{
 		$cdate = date('Y-m-d');

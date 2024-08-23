@@ -12,7 +12,7 @@
 	<style>
 		@media print {
 			body {
-				font-weight: bold;
+				/* font-weight: bold; */
 			}
 
 			.section {
@@ -74,7 +74,7 @@
 										<tr>
 											<td align="center">
 												<nobr>
-													<date><?php echo display('token_no') ?>:<?php echo $orderinfo->tokenno; ?>
+													<date><?php echo display('date');?>: <?php echo date("M d, Y", strtotime($orderinfo->order_date)) . " - ". date("h:i:s A");?> -- <?php echo display('token_no') ?>:<?php echo $orderinfo->tokenno; ?>
 												</nobr><br /><?php echo $customerinfo->customer_name; ?>
 											</td>
 										</tr>
@@ -205,7 +205,7 @@
 							<tr>
 								<td align="center"><?php if (!empty($tableinfo)) {
 														echo display('table') . ': ' . $tableinfo->tablename;
-													} ?> | <?php echo display('ord_number'); ?>:<?php echo $orderinfo->order_id; ?></td>
+													} ?> | <?php echo display('ord_number'); ?>:<?php echo $orderinfo->order_id; ?> | <?php echo $waiterinfo->first_name;?> </td>
 							</tr>
 						</table>
 					</div>
