@@ -747,6 +747,7 @@ CREATE TABLE IF NOT EXISTS `customer_info` (
   `membership_type` int(11) DEFAULT NULL COMMENT '1=bronze,2=silver,3=gold,4=platinum,5vip',
   `customer_name` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `customer_email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `customer_type` int(11) DEFAULT 1,
   `password` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `customer_token` text COLLATE utf8_unicode_ci DEFAULT NULL,
   `customer_address` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
