@@ -26,6 +26,20 @@
                                 <input name="mobile" class="form-control" type="text" placeholder="Add <?php echo display('mobile') ?>" id="mobile" value="<?php echo (!empty($intinfo->customer_phone)?$intinfo->customer_phone:null) ?>">
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                            <label for="customer_type" class="col-sm-4 col-form-label"><?php echo display('customer_type') ?> <i class="text-danger">*</i></label>
+                            <div class="col-sm-8">
+                                <select name="customer_type" class="form-control" id="customer_type">
+                                <?php foreach ($curtomertype as $type_id => $type_name) { ?>
+                                    <option value="<?php echo $type_id; ?>" <?php echo ($type_id == $intinfo->customer_type) ? 'selected' : ''; ?>>
+                                    <?php echo $type_name; ?>
+                                    </option>
+                                <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                            
                         <div class="form-group row">
                                 <label for="address " class="col-sm-4 col-form-label"><?php echo display('password');?> </label>
                                 <div class="col-sm-8">

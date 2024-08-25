@@ -1,220 +1,157 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<!-- Printable area start -->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Token</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            width: 80mm;
+            margin: 0;
+            padding: 0;
+        }
 
-	<title>Print Invoice</title>
-	<style>
-		@media print {
-			body {
-				font-weight: bold;
-			}
+        .token {
+            width: 100%;
+            border-bottom: 1px dashed #000;
+            padding: 5px 0;
+            page-break-after: always;
+        }
 
-			.section {
-				page-break-after: always;
-			}
-		}
-	</style>
-	<script type="text/javascript">
-		var pstatus = "<?php echo $this->uri->segment(5); ?>";
-		if (pstatus == 0) {
-			var returnurl = "<?php echo base_url('ordermanage/order/pos_invoice'); ?>";
-		} else {
-			var returnurl = "<?php echo base_url('ordermanage/order/pos_invoice'); ?>?tokenorder=<?php echo $orderinfo->order_id; ?>";
-		}
-		window.print();
-		setInterval(function() {
-			document.location.href = returnurl;
-		}, 3000);
-	</script>
-	<link rel="stylesheet" type="text/css" href="<?php echo base_url('application/modules/ordermanage/assets/css/pos_token.css'); ?>">
+        .token-header {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .token-header h1 {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .token-header p {
+            margin: 0;
+            font-size: 10px;
+        }
+
+        .token-details {
+            margin-bottom: 5px;
+        }
+
+        .token-details p {
+            margin: 0;
+            font-size: 10px;
+        }
+
+        .token-items {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .token-items th,
+        .token-items td {
+            text-align: left;
+            padding: 2px;
+            font-size: 10px;
+        }
+
+        .token-items th {
+            border-bottom: 1px solid #000;
+        }
+
+        .token-footer {
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .token-footer p {
+            margin: 0;
+            font-size: 10px;
+        }
+    </style>
+    <script type="text/javascript">
+        var pstatus = "<?php echo $this->uri->segment(5); ?>";
+        if (pstatus == 0) {
+            var returnurl = "<?php echo base_url('ordermanage/order/pos_invoice'); ?>";
+        } else {
+            var returnurl = "<?php echo base_url('ordermanage/order/pos_invoice'); ?>?tokenorder=<?php echo $orderinfo->order_id; ?>";
+        }
+        window.print();
+        setInterval(function() {
+            document.location.href = returnurl;
+        }, 3000);
+    </script>
 </head>
 
 <body>
+    <?php
+    $itemsByKitchen = [];
 
-	<?php
+    // Check if $iteminfo is not empty, use $iteminfo, otherwise use $exitsitem
+    if (!empty($iteminfo)) {
+        foreach ($iteminfo as $item) {
+            $itemsByKitchen[$item->kitchenid][] = $item;
+        }
+        $loopVariableName = 'iteminfo';
+    } else {
+        foreach ($exitsitem as $exititem) {
+            $itemsByKitchen[$exititem->kitchenid][] = $exititem;
+        }
+        $loopVariableName = 'exitsitem';
+    }
 
-
-	$itemsByKitchen = [];
-
-	// Check if $iteminfo is not empty, use $iteminfo, otherwise use $exitsitem
-	if (!empty($iteminfo)) {
-		foreach ($iteminfo as $item) {
-			$itemsByKitchen[$item->kitchenid][] = $item;
-		}
-		// Set the loop variable name based on whether $iteminfo is empty or not
-		$loopVariableName = 'iteminfo';
-	} else {
-		foreach ($exitsitem as $exititem) {
-			$itemsByKitchen[$exititem->kitchenid][] = $exititem;
-		}
-		// Set the loop variable name based on whether $iteminfo is empty or not
-		$loopVariableName = 'exitsitem';
-	}
-
-	?>
-
-	<?php foreach ($itemsByKitchen as $$loopVariableName) {
-		
-		if (!empty($$loopVariableName)) {  ?>
-			<div id="printableArea" class="print_area section">
-				<div class="panel-body">
-					<div class="table-responsive m-b-20">
-						<table border="0" class="font-18 wpr_100" style="width:100%; font-size:18px;">
-							<tr>
-								<td>
-
-									<table border="0" class="wpr_100" style="width:100%">
-
-										<tr>
-											<td align="center">
-												<nobr>
-													<date><?php echo display('token_no') ?>:<?php echo $orderinfo->tokenno; ?>
-												</nobr><br /><?php echo $customerinfo->customer_name; ?>
-											</td>
-										</tr>
-									</table>
-									<table width="100%">
-										<tr>
-											<td>Q</th>
-											<td><?php echo display('item') ?></td>
-											<td><?php echo display('size') ?></td>
-										</tr>
-										<?php $i = 0;
-										$totalamount = 0;
-										$subtotal = 0;
-										$total = $orderinfo->totalamount;
-
-										foreach ($iteminfo as $item) {
-											$i++;
-											$itemprice = $item->price * $item->menuqty;
-											$discount = 0;
-											$adonsprice = 0;
-											$newitem = $this->order_model->read('*', 'order_menu', array('row_id' => $item->row_id, 'isupdate' => 1));
-											$isexitsitem = $this->order_model->readupdate('tbl_updateitems.*,SUM(tbl_updateitems.qty) as totalqty', 'tbl_updateitems', array('ordid' => $item->order_id, 'menuid' => $item->menu_id, 'varientid' => $item->varientid, 'addonsuid' => $item->addonsuid));
-											if (!empty($item->add_on_id)) {
-												$addons = explode(",", $item->add_on_id);
-												$addonsqty = explode(",", $item->addonsqty);
-												$x = 0;
-												foreach ($addons as $addonsid) {
-													$adonsinfo = $this->order_model->read('*', 'add_ons', array('add_on_id' => $addonsid));
-													$adonsprice = $adonsprice + $adonsinfo->price * $addonsqty[$x];
-													$x++;
-												}
-												$nittotal = $adonsprice;
-												$itemprice = $itemprice;
-											} else {
-												$nittotal = 0;
-												$text = '';
-											}
-											$totalamount = $totalamount + $nittotal;
-											$subtotal = $subtotal + $item->price * $item->menuqty;
-											if ($newitem->menu_id == $isexitsitem->menuid && $newitem->isupdate == 1) {
-
-										?>
-												<tr>
-													<td align="left"><?php echo $item->menuqty; ?></td>
-													<td align="left"><?php echo $item->ProductName; ?><br><?php echo $item->notes; ?></td>
-													<td align="left"><?php echo $item->variantName; ?></td>
-												</tr>
-												<?php
-												if (!empty($item->add_on_id)) {
-													$y = 0;
-													foreach ($addons as $addonsid) {
-														$adonsinfo = $this->order_model->read('*', 'add_ons', array('add_on_id' => $addonsid));
-														$adonsprice = $adonsprice + $adonsinfo->price * $addonsqty[$y]; ?>
-														<tr>
-															<td colspan="2">
-																<?php echo $adonsinfo->add_on_name; ?>
-															</td>
-															<td class="text-right"><?php echo $addonsqty[$y]; ?></td>
-														</tr>
-												<?php $y++;
-													}
-												}
-											} else { ?>
-												<tr>
-													<td align="left"><?php echo $item->menuqty; ?></td>
-													<td align="left"><?php echo $item->ProductName; ?><br><?php echo $item->notes; ?></td>
-													<td align="left"><?php echo $item->variantName; ?></td>
-												</tr>
-												<?php
-												if (!empty($item->add_on_id)) {
-													$y = 0;
-													foreach ($addons as $addonsid) {
-														$adonsinfo = $this->order_model->read('*', 'add_ons', array('add_on_id' => $addonsid));
-														$adonsprice = $adonsprice + $adonsinfo->price * $addonsqty[$y]; ?>
-														<tr>
-															<td colspan="2">
-																<?php echo $adonsinfo->add_on_name; ?>
-															</td>
-															<td class="text-right"><?php echo $addonsqty[$y]; ?></td>
-														</tr>
-										<?php $y++;
-													}
-												}
-											}
-										}
-										$itemtotal = $totalamount + $subtotal;
-										$calvat = $itemtotal * 15 / 100;
-
-										$servicecharge = 0;
-										if (empty($billinfo)) {
-											$servicecharge;
-										} else {
-											$servicecharge = $billinfo->service_charge;
-										}
-										?>
-										<?php
-										foreach ($exitsitem as $exititem) {
-											$newitem = $this->order_model->read('*', 'order_menu', array('row_id' => $exititem->row_id, 'isupdate' => 1));
-
-											$isexitsitem = $this->order_model->readupdate('tbl_updateitems.*,SUM(tbl_updateitems.qty) as totalqty', 'tbl_updateitems', array('ordid' => $orderinfo->order_id, 'menuid' => $exititem->menu_id, 'varientid' => $exititem->varientid, 'addonsuid' => $exititem->addonsuid));
-											if (!empty($isexitsitem)) {
-												if ($isexitsitem->qty > 0) {
-													$itemprice = $exititem->price * $isexitsitem->qty;
-													if ($newitem->isupdate == 1) {
-														echo "";
-													} else {
-										?>
-														<tr>
-															<td align="left"><?php echo $isexitsitem->isupdate; ?> <?php echo $isexitsitem->totalqty; ?></td>
-															<td align="left"><?php echo $exititem->ProductName; ?><br><?php echo $exititem->notes; ?></td>
-															<td align="left"><?php echo $exititem->variantName; ?></td>
-														</tr>
-										<?php
-													}
-												}
-											} else {
-											}
-										}
-										?>
-										<tr>
-											<td colspan="5" class="border-top-gray">
-												<nobr></nobr>
-											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-							<tr>
-								<td align="center"><?php if (!empty($tableinfo)) {
-														echo display('table') . ': ' . $tableinfo->tablename;
-													} ?> | <?php echo display('ord_number'); ?>:<?php echo $orderinfo->order_id; ?></td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</div>
-	<?php
-		}
-	}
-	?>
+    foreach ($itemsByKitchen as $$loopVariableName) {
+        if (!empty($$loopVariableName)) { ?>
+            <div class="token">
+                <div class="token-header">
+                    <h1>Token No: <?php echo $orderinfo->tokenno; ?></h1>
+                    <p><?php echo display('date'); ?>: <?php echo date("M d, Y", strtotime($orderinfo->order_date)) . " - " . date("h:i:s A"); ?></p>
+                    <p><?php echo $customerinfo->customer_name; ?></p>
+                </div>
+                <div class="token-details">
+                    <p><?php echo display('table'); ?>: <?php echo !empty($tableinfo) ? $tableinfo->tablename : 'N/A'; ?></p>
+                    <p><?php echo display('ord_number'); ?>: <?php echo $orderinfo->order_id; ?></p>
+                    <p><?php echo display('waiter'); ?>: <?php echo $waiterinfo->first_name; ?></p>
+                </div>
+                <table class="token-items">
+                    <thead>
+                        <tr>
+                            <th>Q</th>
+                            <th><?php echo display('item'); ?></th>
+                            <th><?php echo display('size'); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($$loopVariableName as $item) { ?>
+                            <tr>
+                                <td><?php echo $item->menuqty; ?></td>
+                                <td><?php echo $item->ProductName; ?><br><?php echo $item->notes; ?></td>
+                                <td><?php echo $item->variantName; ?></td>
+                            </tr>
+                            <?php if (!empty($item->add_on_id)) {
+                                $addons = explode(",", $item->add_on_id);
+                                $addonsqty = explode(",", $item->addonsqty);
+                                $y = 0;
+                                foreach ($addons as $addonsid) {
+                                    $adonsinfo = $this->order_model->read('*', 'add_ons', array('add_on_id' => $addonsid)); ?>
+                                    <tr>
+                                        <td colspan="2"><?php echo $adonsinfo->add_on_name; ?></td>
+                                        <td><?php echo $addonsqty[$y]; ?></td>
+                                    </tr>
+                        <?php $y++;
+                                }
+                            }
+                        } ?>
+                    </tbody>
+                </table>
+                <div class="token-footer">
+                    <p>Thank you!</p>
+                </div>
+            </div>
+    <?php }
+    } ?>
 </body>
 
 </html>

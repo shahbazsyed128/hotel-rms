@@ -1,7 +1,7 @@
 // JavaScript Document
 $(document).ready(function () {
     "use strict";
-    $('#onprocessing').DataTable({
+    $('#onprocessingEmployee').DataTable({
         responsive: true,
         paging: true,
         "language": {
@@ -56,7 +56,7 @@ $(document).ready(function () {
         "processing": true,
         "serverSide": true,
         "ajax": {
-            url: basicinfo.baseurl + "ordermanage/order/todayallorder", // json datasource
+            url: basicinfo.baseurl + "ordermanage/order/todayallemployeeorder", // json datasource
             type: "post",  // type of method  ,GET/POST/DELETE
             "data": function (data) {
                 data.csrf_test_name = $('#csrfhashresarvation').val();

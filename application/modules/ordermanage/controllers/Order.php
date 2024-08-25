@@ -49,12 +49,120 @@ class Order extends MX_Controller
 		$this->db->update('tbl_quickordersetting', $updatetready);
 	}
 
+	// public function insert_customer()
+	// {
+	// 	$this->permission->method('ordermanage', 'create')->redirect();
+	// 	$this->form_validation->set_rules('customer_name', 'Customer Name', 'required|max_length[100]');
+	// 	$this->form_validation->set_rules('email', display('email'), 'required');
+	// 	$this->form_validation->set_rules('mobile', display('mobile'), 'required');
+		
+	// 	$savedid = $this->session->userdata('id');
+
+	// 	$coa = $this->order_model->headcode();
+	// 	if ($coa->HeadCode != NULL) {
+	// 		$headcode = $coa->HeadCode + 1;
+	// 	} else {
+	// 		$headcode = "102030101";
+	// 	}
+	// 	$lastid = $this->db->select("*")->from('customer_info')
+	// 		->order_by('cuntomer_no', 'desc')
+	// 		->get()
+	// 		->row();
+	// 	$sl = $lastid->cuntomer_no;
+	// 	if (empty($sl)) {
+	// 		$sl = "cus-0001";
+	// 	} else {
+	// 		$sl = $sl;
+	// 	}
+	// 	$supno = explode('-', $sl);
+	// 	$nextno = $supno[1] + 1;
+	// 	$si_length = strlen((int)$nextno);
+
+	// 	$str = '0000';
+	// 	$cutstr = substr($str, $si_length);
+	// 	$sino = $supno[0] . "-" . $cutstr . $nextno;
+
+
+	// 	if ($this->form_validation->run()) {
+	// 		$this->permission->method('ordermanage', 'create')->redirect();
+	// 		$scan = scandir('application/modules/');
+	// 		$pointsys = "";
+	// 		foreach ($scan as $file) {
+	// 			if ($file == "loyalty") {
+	// 				if (file_exists(APPPATH . 'modules/' . $file . '/assets/data/env')) {
+	// 					$pointsys = 1;
+	// 				}
+	// 			}
+	// 		}
+	// 		$data['customer']   = (object) $postData = array(
+	// 			'cuntomer_no'     	=> $sino,
+	// 			'membership_type'	=> $pointsys,
+	// 			'customer_name'     	=> $this->input->post('customer_name', true),
+	// 			'customer_email'     => $this->input->post('email', true),
+	// 			'customer_phone'     => $this->input->post('mobile', true),
+	// 			'customer_address'   => $this->input->post('address', true),
+	// 			'favorite_delivery_address'     => $this->input->post('favaddress', true),
+	// 			'is_active'        => 1,
+	// 		);
+	// 		$logData = array(
+	// 			'action_page'         => "Add Customer",
+	// 			'action_done'     	 => "Insert Data",
+	// 			'remarks'             => "Customer is Created",
+	// 			'user_name'           => $this->session->userdata('fullname'),
+	// 			'entry_date'          => date('Y-m-d H:i:s'),
+	// 		);
+
+	// 		$c_name = $this->input->post('customer_name', true);
+	// 		$c_acc = $sino . '-' . $c_name;
+	// 		$createdate = date('Y-m-d H:i:s');
+	// 		$data['aco']  = (object) $postData1 = array(
+	// 			'HeadCode'         => $headcode,
+	// 			'HeadName'         => $c_acc,
+	// 			'PHeadName'        => 'Customer Receivable',
+	// 			'HeadLevel'        => '4',
+	// 			'IsActive'         => '1',
+	// 			'IsTransaction'    => '1',
+	// 			'IsGL'             => '0',
+	// 			'HeadType'         => 'A',
+	// 			'IsBudget'         => '0',
+	// 			'IsDepreciation'   => '0',
+	// 			'DepreciationRate' => '0',
+	// 			'CreateBy'         => $savedid,
+	// 			'CreateDate'       => $createdate,
+	// 		);
+	// 		$this->order_model->create_coa($postData1);
+	// 		if ($this->order_model->insert_customer($postData)) {
+	// 			$customerid = $this->db->select("*")->from('customer_info')->where('cuntomer_no', $sino)->get()->row();
+	// 			if (!empty($pointsys)) {
+	// 				$pointstable = array(
+	// 					'customerid'   => $customerid,
+	// 					'amount'       => 0,
+	// 					'points'       => 10
+	// 				);
+	// 				$this->db->insert('tbl_customerpoint', $pointstable);
+	// 			}
+	// 			$this->logs_model->log_recorded($logData);
+	// 			$this->session->set_flashdata('message', display('save_successfully'));
+	// 			redirect('ordermanage/order/pos_invoice');
+	// 		} else {
+	// 			$this->session->set_flashdata('exception',  display('please_try_again'));
+	// 		}
+	// 		redirect("ordermanage/order/pos_invoice");
+	// 	} else {
+	// 		redirect("ordermanage/order/pos_invoice");
+	// 	}
+	// }
+
+
+
 	public function insert_customer()
 	{
 		$this->permission->method('ordermanage', 'create')->redirect();
 		$this->form_validation->set_rules('customer_name', 'Customer Name', 'required|max_length[100]');
 		$this->form_validation->set_rules('email', display('email'), 'required');
 		$this->form_validation->set_rules('mobile', display('mobile'), 'required');
+		$this->form_validation->set_rules('customer_type', 'Customer Type', 'required|integer'); // New validation rule
+
 		$savedid = $this->session->userdata('id');
 
 		$coa = $this->order_model->headcode();
@@ -81,7 +189,6 @@ class Order extends MX_Controller
 		$cutstr = substr($str, $si_length);
 		$sino = $supno[0] . "-" . $cutstr . $nextno;
 
-
 		if ($this->form_validation->run()) {
 			$this->permission->method('ordermanage', 'create')->redirect();
 			$scan = scandir('application/modules/');
@@ -93,50 +200,51 @@ class Order extends MX_Controller
 					}
 				}
 			}
-			$data['customer']   = (object) $postData = array(
-				'cuntomer_no'     	=> $sino,
-				'membership_type'	=> $pointsys,
-				'customer_name'     	=> $this->input->post('customer_name', true),
-				'customer_email'     => $this->input->post('email', true),
-				'customer_phone'     => $this->input->post('mobile', true),
-				'customer_address'   => $this->input->post('address', true),
-				'favorite_delivery_address'     => $this->input->post('favaddress', true),
-				'is_active'        => 1,
+			$data['customer'] = (object) $postData = array(
+				'cuntomer_no' => $sino,
+				'membership_type' => $pointsys,
+				'customer_name' => $this->input->post('customer_name', true),
+				'customer_email' => $this->input->post('email', true),
+				'customer_phone' => $this->input->post('mobile', true),
+				'customer_address' => $this->input->post('address', true),
+				'favorite_delivery_address' => $this->input->post('favaddress', true),
+				'is_active' => 1,
+				'customer_type' => $this->input->post('customer_type', true), // New field
 			);
 			$logData = array(
-				'action_page'         => "Add Customer",
-				'action_done'     	 => "Insert Data",
-				'remarks'             => "Customer is Created",
-				'user_name'           => $this->session->userdata('fullname'),
-				'entry_date'          => date('Y-m-d H:i:s'),
+				'action_page' => "Add Customer",
+				'action_done' => "Insert Data",
+				'remarks' => "Customer is Created",
+				'user_name' => $this->session->userdata('fullname'),
+				'entry_date' => date('Y-m-d H:i:s'),
 			);
 
 			$c_name = $this->input->post('customer_name', true);
 			$c_acc = $sino . '-' . $c_name;
 			$createdate = date('Y-m-d H:i:s');
-			$data['aco']  = (object) $postData1 = array(
-				'HeadCode'         => $headcode,
-				'HeadName'         => $c_acc,
-				'PHeadName'        => 'Customer Receivable',
-				'HeadLevel'        => '4',
-				'IsActive'         => '1',
-				'IsTransaction'    => '1',
-				'IsGL'             => '0',
-				'HeadType'         => 'A',
-				'IsBudget'         => '0',
-				'IsDepreciation'   => '0',
+			$data['aco'] = (object) $postData1 = array(
+				'HeadCode' => $headcode,
+				'HeadName' => $c_acc,
+				'PHeadName' => 'Customer Receivable',
+				'HeadLevel' => '4',
+				'IsActive' => '1',
+				'IsTransaction' => '1',
+				'IsGL' => '0',
+				'HeadType' => 'A',
+				'IsBudget' => '0',
+				'IsDepreciation' => '0',
 				'DepreciationRate' => '0',
-				'CreateBy'         => $savedid,
-				'CreateDate'       => $createdate,
+				'CreateBy' => $savedid,
+				'CreateDate' => $createdate,
 			);
 			$this->order_model->create_coa($postData1);
 			if ($this->order_model->insert_customer($postData)) {
 				$customerid = $this->db->select("*")->from('customer_info')->where('cuntomer_no', $sino)->get()->row();
 				if (!empty($pointsys)) {
 					$pointstable = array(
-						'customerid'   => $customerid,
-						'amount'       => 0,
-						'points'       => 10
+						'customerid' => $customerid,
+						'amount' => 0,
+						'points' => 10
 					);
 					$this->db->insert('tbl_customerpoint', $pointstable);
 				}
@@ -144,13 +252,14 @@ class Order extends MX_Controller
 				$this->session->set_flashdata('message', display('save_successfully'));
 				redirect('ordermanage/order/pos_invoice');
 			} else {
-				$this->session->set_flashdata('exception',  display('please_try_again'));
+				$this->session->set_flashdata('exception', display('please_try_again'));
 			}
 			redirect("ordermanage/order/pos_invoice");
 		} else {
 			redirect("ordermanage/order/pos_invoice");
 		}
 	}
+
 	public function insert_customerord()
 	{
 		$this->permission->method('ordermanage', 'create')->redirect();
@@ -323,6 +432,28 @@ class Order extends MX_Controller
 	{
 		$this->load->view('todayorder');
 	}
+
+	public function showtodayguestorder()
+	{
+		$this->load->view('todayguestorder');
+	}
+
+	public function showtodayemployeeorder()
+	{
+		$this->load->view('todayemployeeorder');
+	}
+
+	public function showtodayemployeeorder2()
+	{
+		$this->load->view('todayemployeeorder2');
+	}
+
+	public function showtodaycharityorder()
+	{
+		$this->load->view('todaycharityorder');
+	}
+
+
 	public function showonlineorder()
 	{
 		$this->load->view('onlineordertable');
@@ -1033,7 +1164,7 @@ class Order extends MX_Controller
 					$this->db->insert('tax_collection', $inserttaxdata);
 				}
 				/*for 02/11*/
-				if ($this->input->post('ctypeid') == 1) {
+				if ($this->input->post('ctypeid') == 1 || $this->input->post('ctypeid') == 5 || $this->input->post('ctypeid') == 6) {
 					if ($this->input->post('table_member_multi') == 0) {
 						$addtable_member = array(
 							'table_id' 		=> $this->input->post('tableid'),
@@ -1275,7 +1406,7 @@ class Order extends MX_Controller
 								exit;
 							} else {
 								$view = $this->postokengenerate($orderid, 0);
-								echo $view; //work
+								// echo $view; //work
 								exit;
 							}
 						}
@@ -1285,7 +1416,7 @@ class Order extends MX_Controller
 						$this->session->set_flashdata('exception',  display('please_try_again'));
 						redirect("ordermanage/order/pos_invoice");
 					} else {
-						echo "error";
+						echo "error 3";
 					}
 				}
 			} else {
@@ -1293,7 +1424,7 @@ class Order extends MX_Controller
 					$this->session->set_flashdata('exception',  'Please add Some food!!');
 					redirect("ordermanage/order/pos_invoice");
 				} else {
-					echo "error";
+					echo "error 2";
 				}
 			}
 		} else {
@@ -1312,7 +1443,7 @@ class Order extends MX_Controller
 				$data['page']   = "posorder";
 				echo Modules::run('template/layout', $data);
 			} else {
-				echo "error";
+				echo "error 1";
 			}
 		}
 	}
@@ -1446,53 +1577,133 @@ class Order extends MX_Controller
 		);
 		echo json_encode($output);
 	}
-	public function todayallorder()
-	{
+	// public function todayallorder()
+	// {
 
-		$list = $this->order_model->get_completeorder();
-		$data = array();
-		$no = $_POST['start'];
-		foreach ($list as $rowdata) {
-			$no++;
-			$row = array();
-			$update = '';
-			$details = '';
-			$print = '';
-			$posprint = '';
-			$split = '';
-			$kot = '';
-			if ($this->permission->method('ordermanage', 'update')->access()) :
-				$update = '<a href="javascript:;" onclick="editposorder(' . $rowdata->order_id . ',2)" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="Update" id="table-today-' . $rowdata->order_id . '"><i class="ti-pencil"></i></a>&nbsp;&nbsp;';
-			endif;
-			if ($rowdata->splitpay_status == 1) :
-				$split = '<a href="javascript:;" onclick="showsplit(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="Update" id="table-split-' . $rowdata->order_id . '">' . display('split') . '</a>&nbsp;&nbsp;';
-			endif;
-			if ($this->permission->method('ordermanage', 'read')->access()) :
-				$details = '&nbsp;<a href="javascript:;" onclick="detailspop(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Details"><i class="fa fa-eye"></i></a>&nbsp;';
-				$print = '<a href="javascript:;" onclick="pos_order_invoice(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Invoice"><i class="fa fa-window-restore"></i></a>&nbsp;';
-				$posprint = '<a href="javascript:;" onclick="pospageprint(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Pos Invoice"><i class="fa fa-window-maximize"></i></a>';
-				$kot = '<a href="javascript:;" onclick="postokenprint(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="KOT"><i class="fa fa-print"></i></a>';
-			endif;
+	// 	$list = $this->order_model->get_completeorder();
+	// 	$data = array();
+	// 	$no = $_POST['start'];
+	// 	foreach ($list as $rowdata) {
+	// 		$no++;
+	// 		$row = array();
+	// 		$update = '';
+	// 		$details = '';
+	// 		$print = '';
+	// 		$posprint = '';
+	// 		$split = '';
+	// 		$kot = '';
+	// 		if ($this->permission->method('ordermanage', 'update')->access()) :
+	// 			$update = '<a href="javascript:;" onclick="editposorder(' . $rowdata->order_id . ',2)" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="Update" id="table-today-' . $rowdata->order_id . '"><i class="ti-pencil"></i></a>&nbsp;&nbsp;';
+	// 		endif;
+	// 		if ($rowdata->splitpay_status == 1) :
+	// 			$split = '<a href="javascript:;" onclick="showsplit(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="Update" id="table-split-' . $rowdata->order_id . '">' . display('split') . '</a>&nbsp;&nbsp;';
+	// 		endif;
+	// 		if ($this->permission->method('ordermanage', 'read')->access()) :
+	// 			$details = '&nbsp;<a href="javascript:;" onclick="detailspop(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Details"><i class="fa fa-eye"></i></a>&nbsp;';
+	// 			$print = '<a href="javascript:;" onclick="pos_order_invoice(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Invoice"><i class="fa fa-window-restore"></i></a>&nbsp;';
+	// 			$posprint = '<a href="javascript:;" onclick="pospageprint(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Pos Invoice"><i class="fa fa-window-maximize"></i></a>';
+	// 			$kot = '<a href="javascript:;" onclick="postokenprint(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="KOT"><i class="fa fa-print"></i></a>';
+	// 		endif;
 
-			$row[] = $no;
-			$row[] = $rowdata->saleinvoice;
-			$row[] = $rowdata->customer_name;
-			$row[] = $rowdata->customer_type;
-			$row[] = $rowdata->first_name . $rowdata->last_name;
-			$row[] = $rowdata->tablename;
-			$row[] = $rowdata->order_date;
-			$row[] = $rowdata->totalamount;
-			$row[] = $update . $print . $posprint . $details . $split . $kot;
-			$data[] = $row;
-		}
-		$output = array(
-			"draw" => $_POST['draw'],
-			"recordsTotal" => $this->order_model->count_alltodayorder(),
-			"recordsFiltered" => $this->order_model->count_filtertorder(),
-			"data" => $data,
-		);
-		echo json_encode($output);
-	}
+	// 		$row[] = $no;
+	// 		$row[] = $rowdata->saleinvoice;
+	// 		$row[] = $rowdata->customer_name;
+	// 		$row[] = $rowdata->customer_type;
+	// 		$row[] = $rowdata->first_name . $rowdata->last_name;
+	// 		$row[] = $rowdata->tablename;
+	// 		$row[] = $rowdata->order_date;
+	// 		$row[] = $rowdata->totalamount;
+	// 		$row[] = $update . $print . $posprint . $details . $split . $kot;
+	// 		$data[] = $row;
+	// 	}
+	// 	$output = array(
+	// 		"draw" => $_POST['draw'],
+	// 		"recordsTotal" => $this->order_model->count_alltodayorder(),
+	// 		"recordsFiltered" => $this->order_model->count_filtertorder(),
+	// 		"data" => $data,
+	// 	);
+	// 	echo json_encode($output);
+	// }
+
+
+public function todayallorder()
+{
+    $list = $this->order_model->get_completeorder(null);
+    $this->generate_order_data($list);
+}
+
+public function todayallguestorder()
+{
+    $list = $this->order_model->get_completeorder(6);
+    $this->generate_order_data($list,6);
+}
+
+public function todayallemployeeorder()
+{
+    $list = $this->order_model->get_completeorder(5);
+    $this->generate_order_data($list,5);
+}
+
+
+public function todayallemployeeorder2()
+{
+    $list = $this->order_model->get_completeorder(6);
+    $this->generate_order_data($list,6);
+}
+
+public function todayallcharityorder()
+{
+    $list = $this->order_model->get_completeorder(7);
+    $this->generate_order_data($list,7);
+}
+
+private function generate_order_data($list,$type = null)
+{
+    $data = array();
+    $no = $_POST['start'];
+    foreach ($list as $rowdata) {
+        $no++;
+        $row = array();
+        $update = '';
+        $details = '';
+        $print = '';
+        $posprint = '';
+        $split = '';
+        $kot = '';
+        if ($this->permission->method('ordermanage', 'update')->access()) :
+            $update = '<a href="javascript:;" onclick="editposorder(' . $rowdata->order_id . ',2)" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="Update" id="table-today-' . $rowdata->order_id . '"><i class="ti-pencil"></i></a>&nbsp;&nbsp;';
+        endif;
+        if ($rowdata->splitpay_status == 1) :
+            $split = '<a href="javascript:;" onclick="showsplit(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="Update" id="table-split-' . $rowdata->order_id . '">' . display('split') . '</a>&nbsp;&nbsp;';
+        endif;
+        if ($this->permission->method('ordermanage', 'read')->access()) :
+            $details = '&nbsp;<a href="javascript:;" onclick="detailspop(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Details"><i class="fa fa-eye"></i></a>&nbsp;';
+            $print = '<a href="javascript:;" onclick="pos_order_invoice(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Invoice"><i class="fa fa-window-restore"></i></a>&nbsp;';
+            $posprint = '<a href="javascript:;" onclick="pospageprint(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="Pos Invoice"><i class="fa fa-window-maximize"></i></a>';
+            $kot = '<a href="javascript:;" onclick="postokenprint(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="" data-original-title="KOT"><i class="fa fa-print"></i></a>';
+        endif;
+
+        $row[] = $no;
+        $row[] = $rowdata->saleinvoice;
+        $row[] = $rowdata->customer_name;
+        $row[] = $rowdata->customer_type;
+        $row[] = $rowdata->first_name . $rowdata->last_name;
+        $row[] = $rowdata->tablename;
+        $row[] = $rowdata->order_date;
+        $row[] = $rowdata->totalamount;
+        $row[] = $update . $print . $posprint . $details . $split . $kot;
+        $data[] = $row;
+    }
+    $output = array(
+        "draw" => $_POST['draw'],
+        "recordsTotal" => $this->order_model->count_alltodayorder($type),
+        "recordsFiltered" => $this->order_model->count_filtertorder($type),
+        "data" => $data,
+    );
+    echo json_encode($output);
+}
+
+
 	public function notification()
 	{
 		$tdata = date('Y-m-d');

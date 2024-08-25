@@ -49,6 +49,7 @@ class Customerlist extends MX_Controller {
         /* ends of bootstrap */
         $this->pagination->initialize($config);
         $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		$data['curtomertype']  = $this->order_model->ctype_dropdown();
         $data["customerlist"] = $this->supplier_model->customerlist($config["per_page"], $page);
         $data["links"] = $this->pagination->create_links();
         #
@@ -63,6 +64,8 @@ class Customerlist extends MX_Controller {
 	  $this->form_validation->set_rules('customer_name', 'Customer Name'  ,'required|max_length[100]');
 	  $this->form_validation->set_rules('email', display('email')  ,'required');
 	  $this->form_validation->set_rules('mobile', display('mobile')  ,'required');
+	  $this->form_validation->set_rules('customer_type', 'Customer Type', 'required|integer'); // New validation rule
+
 	  $savedid=$this->session->userdata('id');
 	   
 	  $coa = $this->order_model->headcode();
@@ -109,6 +112,7 @@ class Customerlist extends MX_Controller {
 	   'customer_name'     	=> $this->input->post('customer_name',true),  
 	   'customer_email'     =>$this->input->post('email',true),
 	   'customer_phone'     => $this->input->post('mobile',true),
+	   'customer_type' => $this->input->post('customer_type', true), // New field
 	   'password'     		=> md5($this->input->post('password')),
 	   'customer_address'   => $this->input->post('address',true),
 	   'favorite_delivery_address'     =>$this->input->post('favaddress',true), 
@@ -171,13 +175,15 @@ class Customerlist extends MX_Controller {
 	  
 		$this->permission->method('setting','update')->redirect();
 		$data['title'] = display('update_member');
+		$data['curtomertype']  = $this->order_model->ctype_dropdown();
 		$data['intinfo']   = $this->supplier_model->findByIdmember($id);
 
         $data['module'] = "setting";  
         $data['page']   = "customeredit";
 		$this->load->view('setting/customeredit', $data);   
     
-	   }
+	}
+
    public function customerupdate(){
 	   $this->form_validation->set_rules('customer_name', 'Customer Name'  ,'required|max_length[100]');
 	  $this->form_validation->set_rules('mobile', display('mobile')  ,'required');
@@ -197,6 +203,7 @@ class Customerlist extends MX_Controller {
 	   'customer_id'     	=> $this->input->post('custid'),
 	   'customer_name'     	=> $this->input->post('customer_name',true),  
 	   'customer_phone'     => $this->input->post('mobile',true),
+	   'customer_type' => $this->input->post('customer_type', true), // New field
 	   'membership_type'	=> $this->input->post('isvip'),
 	   'password'     		=> $password,
 	   'customer_address'   => $this->input->post('address',true),

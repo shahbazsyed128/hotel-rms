@@ -11,13 +11,31 @@
 	<title>Print Invoice</title>
 	<style>
 		@media print {
+
+
+			* {
+				font-size: 12px;
+				font-family: 'Times New Roman';
+			}
+
 			body {
-				font-weight: bold;
+				/* font-weight: bold; */
 			}
 
 			.section {
 				page-break-after: always;
 			}
+
+			.border-bot{
+				background-color: #1a4567 !important;
+        		print-color-adjust: exact;				
+			}
+
+			.border-bot td {
+				color: white !important;
+			}
+
+			 
 		}
 	</style>
 	<script type="text/javascript">
@@ -62,41 +80,31 @@
 		$itemsByKitchen[$exititem->kitchenid]['exitsitem'][] = $exititem;
 	}
 
-
 	$tokenHeader = "<div id='printableArea' class='print_area section'>
 	<div class='panel-body'>
 		<div class='table-responsive m-b-20'>
-			<table border='0' class='font-18 wpr_100' style='width:100%; font-size:18px;'>
-				<tr>
-					<td>
-						<table border='0' class='wpr_100' style='width:100%'>
-							<tr>
-								<td align='center'>
-									<nobr>
-										<date>" . display('token_no') . " : " . $orderinfo->tokenno . "
-									</nobr><br />" . $customerinfo->customer_name . "
+			<table class='font-18 wpr_100' style='width:100%; font-size:18px; border-collapse: collapse;'>
+							<tr class='border-bot' >
+								<td align='center' colspan='4'>"
+									 . display('token_no') . " : " . $orderinfo->tokenno . "
 								</td>
 							</tr>
-						</table>
-						<table width='100%'>
-							<tr>
-								<td>Q</th>
-								<td>" . display('item') . "</td>
-								<td>" . display('size') . "</td>
+							<tr >
+								<td colspan='3'  style='font-size:8px;'>". date("d-M-Y", strtotime($orderinfo->order_date)) . " - ". date("h:i:s A")."</td>
+								<td align='right'  style='font-size:8px;'>".$customerinfo->customer_name."</td>
+							</tr>
+							<tr class='border-bot'>
+								<td><b>Q</b></td>
+								<td colspan='2'><b>" . display('item') . "</b></td>
+								<td align='center'><b>" . display('size') . "</b></td>
 							</tr>";
 
-	$tokenFooter = "<tr>
-					<td colspan='5' class='border-top-gray'>
-						<nobr></nobr>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td align='center'>" . ((!empty($tableinfo)) ? (display('table') . ': ' . $tableinfo->tablename) : "") . " | " . display('ord_number') . ":" . $orderinfo->order_id . "</td>
-	</tr>
-</table>
+	$tokenFooter = "
+		
+					<tr class='border-bot'>
+						<td align='center' colspan='4'>" . ((!empty($tableinfo)) ? (display('table') . ': ' . $tableinfo->tablename) : "") . " | " . display('ord_number') . ":" . $orderinfo->order_id . " | ".$waiterinfo->first_name."</td>
+					</tr>
+				</table>
 </div>
 </div>
 </div>";
@@ -141,14 +149,14 @@
 			if ($newitem->menu_id == $isexitsitem->menuid && $newitem->isupdate == 1) {
 				$itemcontent .= "<tr>
 						<td align='left'>" . $item->menuqty . "</td>
-						<td align='left'>" . $item->ProductName . "<br>" . $item->notes . "</td>
-						<td align='left'>" . $item->variantName . "</td>
+						<td colspan='2' align='left'>" . $item->ProductName . "<br>" . $item->notes . "</td>
+						<td align='center'>" . $item->variantName . "</td>
 					</tr>";
 			} else {
 				$itemcontent .= "<tr>
 						<td align='left'>" . $item->menuqty . "</td>
-						<td align='left'>" . $item->ProductName . "<br>" . $item->notes . "</td>
-						<td align='left'>" . $item->variantName . "</td>
+						<td colspan='2' align='left'>" . $item->ProductName . "<br>" . $item->notes . "</td>
+						<td align='center'>" . $item->variantName . "</td>
 					</tr>";
 			}
 		}
@@ -181,8 +189,8 @@
 
 						$content .= "<tr>
 											<td align='left'>" . $isexitsitem->isupdate . " " . formatNumber($isexitsitem->totalqty) . " </td>
-											<td align='left'>" . $exititem->ProductName . " " . $exititem->notes . "</td>
-											<td align='left'>" . $exititem->variantName . "</td>
+											<td colspan='2' align='left'>" . $exititem->ProductName . " " . $exititem->notes . "</td>
+											<td align='center'>" . $exititem->variantName . "</td>
 										</tr>";
 					}
 				}
