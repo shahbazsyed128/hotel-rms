@@ -731,7 +731,7 @@ CREATE TABLE IF NOT EXISTS `currency` (
 --
 
 INSERT INTO `currency` (`currencyid`, `currencyname`, `curr_icon`, `position`, `curr_rate`) VALUES(1, 'BDT', 'ÃƒÂ Ã‚Â§Ã‚Â³', 2, '83.00');
-INSERT INTO `currency` (`currencyid`, `currencyname`, `curr_icon`, `position`, `curr_rate`) VALUES(2, 'USD', '$', 1, '1.00');
+INSERT INTO `currency` (`currencyid`, `currencyname`, `curr_icon`, `position`, `curr_rate`) VALUES(2, 'PKR', 'pkr', 2, '1.00');
 INSERT INTO `currency` (`currencyid`, `currencyname`, `curr_icon`, `position`, `curr_rate`) VALUES(3, 'INR', 'R', 1, '0.50');
 
 -- --------------------------------------------------------
@@ -1287,6 +1287,19 @@ CREATE TABLE IF NOT EXISTS `item_category` (
   PRIMARY KEY (`CategoryID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+
+
+
+INSERT INTO `item_category` (`CategoryID`, `Name`, `CategoryImage`, `Position`, `CategoryIsActive`, `offerstartdate`, `offerendate`, `isoffer`, `parentid`, `UserIDInserted`, `UserIDUpdated`, `UserIDLocked`, `DateInserted`, `DateUpdated`, `DateLocked`) VALUES
+(1, 'Tea', './application/modules/itemmanage/assets/images/2024-02-01/c.jpg', NULL, 1, '0000-00-00', '0000-00-00', 0, 0, 178, 178, 178, '2024-02-01 13:51:30', '2024-02-01 13:51:30', '2024-02-01 13:51:30'),
+(2, 'Daal', './application/modules/itemmanage/assets/images/2024-02-01/d.jpg', NULL, 1, '0000-00-00', '0000-00-00', 0, 0, 178, 178, 178, '2024-02-01 13:52:22', '2024-02-01 13:52:22', '2024-02-01 13:52:22'),
+(3, 'Sabzi', './application/modules/itemmanage/assets/images/2024-02-01/s.jpg', NULL, 1, '0000-00-00', '0000-00-00', 0, 0, 178, 178, 178, '2024-02-01 13:55:18', '2024-02-01 13:55:18', '2024-02-01 13:55:18'),
+(4, 'Rooti', './application/modules/itemmanage/assets/images/2024-02-01/r.jpg', NULL, 1, '0000-00-00', '0000-00-00', 0, 0, 178, 178, 178, '2024-02-01 13:55:30', '2024-02-01 13:55:30', '2024-02-01 13:55:30'),
+(5, 'Chicken', './application/modules/itemmanage/assets/images/2024-02-01/k.jpg', NULL, 1, '0000-00-00', '0000-00-00', 0, 0, 178, 178, 178, '2024-02-01 13:24:41', '2024-02-01 13:24:41', '2024-02-01 13:24:41'),
+(6, 'Drinks', './application/modules/itemmanage/assets/images/2024-02-01/.jpeg', NULL, 1, '0000-00-00', '0000-00-00', 0, 0, 178, 178, 178, '2024-02-01 13:26:23', '2024-02-01 13:26:23', '2024-02-01 13:26:23'),
+(7, 'Salad & Raita', './application/modules/itemmanage/assets/images/2024-02-02/s.jpg', NULL, 1, '0000-00-00', '0000-00-00', 0, 0, 178, 178, 178, '2024-02-02 13:12:02', '2024-02-02 13:31:47', '2024-02-02 13:12:02');
+
+
 -- --------------------------------------------------------
 
 --
@@ -1328,6 +1341,25 @@ CREATE TABLE IF NOT EXISTS `item_foods` (
   `tax1` text DEFAULT NULL,
   PRIMARY KEY (`ProductsID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+INSERT INTO `item_foods` (`ProductsID`, `CategoryID`, `ProductName`, `ProductImage`, `bigthumb`, `medium_thumb`, `small_thumb`, `component`, `descrip`, `itemnotes`, `menutype`, `productvat`, `special`, `OffersRate`, `offerIsavailable`, `offerstartdate`, `offerendate`, `Position`, `kitchenid`, `isgroup`, `is_customqty`, `cookedtime`, `ProductsIsActive`, `UserIDInserted`, `UserIDUpdated`, `UserIDLocked`, `DateInserted`, `DateUpdated`, `DateLocked`, `tax0`, `tax1`) VALUES
+(1, 1, 'Tea', 'application/modules/itemmanage/assets/images/chai.jpg', 'application/modules/itemmanage/assets/images/big/chai.jpg', 'application/modules/itemmanage/assets/images/medium/chai.jpg', 'application/modules/itemmanage/assets/images/small/chai.jpg', '', '', '', '5,4,3,2,1', '0.000', 0, 0, 0, '0000-00-00', '0000-00-00', NULL, 11, NULL, NULL, '00:00:00', 1, 178, 178, 178, '2024-02-01 13:21:23', '2024-02-01 13:21:23', '2024-02-01 13:21:23', NULL, NULL),
+(2, 2, 'Daal Mash', 'application/modules/itemmanage/assets/images/daal-mash.jpg', 'application/modules/itemmanage/assets/images/big/daal-mash.jpg', 'application/modules/itemmanage/assets/images/medium/daal-mash.jpg', 'application/modules/itemmanage/assets/images/small/daal-mash.jpg', '', '', '', '3,2', '0.000', 0, 0, 0, '0000-00-00', '0000-00-00', NULL, 1, NULL, NULL, '00:00:00', 1, 178, 178, 178, '2024-02-01 13:23:14', '2024-02-01 13:23:14', '2024-02-01 13:23:14', NULL, NULL),
+(3, 2, 'Daal Moong', 'application/modules/itemmanage/assets/images/daal-mong.jpg', 'application/modules/itemmanage/assets/images/big/daal-mong.jpg', 'application/modules/itemmanage/assets/images/medium/daal-mong.jpg', 'application/modules/itemmanage/assets/images/small/daal-mong.jpg', '', '', '', '', '0.000', 0, 0, 0, '0000-00-00', '0000-00-00', NULL, 1, NULL, NULL, '00:00:00', 1, 178, 178, 178, '2024-02-01 13:23:28', '2024-02-01 13:23:28', '2024-02-01 13:23:28', NULL, NULL),
+(4, 2, 'Channa Chola', 'application/modules/itemmanage/assets/images/chole-recipe.jpg', 'application/modules/itemmanage/assets/images/big/chole-recipe.jpg', 'application/modules/itemmanage/assets/images/medium/chole-recipe.jpg', 'application/modules/itemmanage/assets/images/small/chole-recipe.jpg', '', '', '', '4,3,2,1', '0.000', 0, 0, 0, '0000-00-00', '0000-00-00', NULL, 1, NULL, NULL, '00:00:00', 1, 178, 178, 178, '2024-02-01 13:23:47', '2024-02-01 13:23:47', '2024-02-01 13:23:47', NULL, NULL),
+(5, 3, 'Qorma', 'application/modules/itemmanage/assets/images/chicken-cat.jpg', 'application/modules/itemmanage/assets/images/big/chicken-cat.jpg', 'application/modules/itemmanage/assets/images/medium/chicken-cat.jpg', 'application/modules/itemmanage/assets/images/small/chicken-cat.jpg', '', '', '', '', '0.000', 0, 0, 0, '0000-00-00', '0000-00-00', NULL, 1, NULL, NULL, '00:00:00', 1, 178, 178, 178, '2024-02-01 13:24:28', '2024-02-01 13:24:28', '2024-02-01 13:24:28', NULL, NULL),
+(6, 5, 'Karahi', 'application/modules/itemmanage/assets/images/karahi.jpg', 'application/modules/itemmanage/assets/images/big/karahi.jpg', 'application/modules/itemmanage/assets/images/medium/karahi.jpg', 'application/modules/itemmanage/assets/images/small/karahi.jpg', '', '', '', '', '0.000', 0, 0, 0, '0000-00-00', '0000-00-00', NULL, 1, NULL, NULL, '00:00:00', 1, 178, 178, 178, '2024-02-01 13:25:08', '2024-02-01 13:25:08', '2024-02-01 13:25:08', NULL, NULL),
+(7, 6, 'Regular Drink', 'application/modules/itemmanage/assets/images/regular.jpg', 'application/modules/itemmanage/assets/images/big/regular.jpg', 'application/modules/itemmanage/assets/images/medium/regular.jpg', 'application/modules/itemmanage/assets/images/small/regular.jpg', '', '', '', '3,2,1', '0.000', 0, 0, 0, '0000-00-00', '0000-00-00', NULL, 13, NULL, NULL, '00:00:00', 1, 178, 178, 178, '2024-02-01 13:27:05', '2024-02-02 13:34:45', '2024-02-01 13:27:05', NULL, NULL),
+(8, 4, 'Rooti', 'application/modules/itemmanage/assets/images/roti.jpg', 'application/modules/itemmanage/assets/images/big/roti.jpg', 'application/modules/itemmanage/assets/images/medium/roti.jpg', 'application/modules/itemmanage/assets/images/small/roti.jpg', '', '', '', '', '0.000', 0, 0, 0, '0000-00-00', '0000-00-00', NULL, 1, NULL, NULL, '00:00:00', 1, 178, 178, 178, '2024-02-01 13:40:14', '2024-02-01 13:40:14', '2024-02-01 13:40:14', NULL, NULL),
+(9, 6, 'Slice Juice', 'application/modules/itemmanage/assets/images/8964000101957_11.jpg', 'application/modules/itemmanage/assets/images/big/8964000101957_11.jpg', 'application/modules/itemmanage/assets/images/medium/8964000101957_11.jpg', 'application/modules/itemmanage/assets/images/small/8964000101957_11.jpg', '', '', '', '', '0.000', 0, 0, 0, '0000-00-00', '0000-00-00', NULL, 13, NULL, NULL, '00:00:00', 1, 178, 178, 178, '2024-02-02 13:12:39', '2024-02-02 13:33:15', '2024-02-02 13:12:39', NULL, NULL),
+(10, 6, '1.5 Liter Cold Drink', 'application/modules/itemmanage/assets/images/1_5liter1.jpg', 'application/modules/itemmanage/assets/images/big/1_5liter1.jpg', 'application/modules/itemmanage/assets/images/medium/1_5liter1.jpg', 'application/modules/itemmanage/assets/images/small/1_5liter1.jpg', '', '', '', '', '0.000', 0, 0, 0, '0000-00-00', '0000-00-00', NULL, 13, NULL, NULL, '00:00:00', 1, 178, 178, 178, '2024-02-02 13:13:51', '2024-02-02 13:32:18', '2024-02-02 13:13:51', NULL, NULL),
+(11, 6, '0.5 Liter Cold Drink', 'application/modules/itemmanage/assets/images/0_51.jpg', 'application/modules/itemmanage/assets/images/big/0_51.jpg', 'application/modules/itemmanage/assets/images/medium/0_51.jpg', 'application/modules/itemmanage/assets/images/small/0_51.jpg', '', '', '', '', '0.000', 0, 0, 0, '0000-00-00', '0000-00-00', NULL, 13, NULL, NULL, '00:00:00', 1, 178, 178, 178, '2024-02-02 13:14:48', '2024-02-02 13:19:17', '2024-02-02 13:14:48', NULL, NULL),
+(12, 7, 'Raita', 'application/modules/itemmanage/assets/images/raita.jpg', 'application/modules/itemmanage/assets/images/big/raita.jpg', 'application/modules/itemmanage/assets/images/medium/raita.jpg', 'application/modules/itemmanage/assets/images/small/raita.jpg', '', '', '', '', '0.000', 0, 0, 0, '0000-00-00', '0000-00-00', NULL, 1, NULL, NULL, '00:00:00', 1, 178, 178, 178, '2024-02-02 13:35:43', '2024-02-02 13:35:43', '2024-02-02 13:35:43', NULL, NULL),
+(13, 7, 'Salad', 'application/modules/itemmanage/assets/images/salad.jpg', 'application/modules/itemmanage/assets/images/big/salad.jpg', 'application/modules/itemmanage/assets/images/medium/salad.jpg', 'application/modules/itemmanage/assets/images/small/salad.jpg', '', '', '', '', '0.000', 0, 0, 0, '0000-00-00', '0000-00-00', NULL, 1, NULL, NULL, '00:00:00', 1, 178, 178, 178, '2024-02-02 13:36:03', '2024-02-02 13:36:03', '2024-02-02 13:36:03', NULL, NULL);
+
 
 -- --------------------------------------------------------
 
@@ -4030,7 +4062,8 @@ CREATE TABLE IF NOT EXISTS `setting` (
 -- Dumping data for table `setting`
 --
 
-INSERT INTO `setting` (`id`, `title`, `storename`, `address`, `email`, `phone`, `logo`, `logoweb`, `favicon`, `opentime`, `closetime`, `vat`, `isvatnumshow`, `vattinno`, `discount_type`, `discountrate`, `servicecharge`, `service_chargeType`, `currency`, `min_prepare_time`, `language`, `timezone`, `dateformat`, `site_align`, `kitchenrefreshtime`, `powerbytxt`, `footer_text`, `reservation_open`, `reservation_close`, `maxreserveperson`, `printtype`) VALUES(2, 'Bhojon Restaurant', 'Dhaka Restaurant', '98 Green Road, Farmgate, Dhaka-1215.', 'bdtask@gmail.com', '0123456789', 'assets/img/icons/2019-10-29/h.png', NULL, 'assets/img/icons/m.png', '9:00AM', '10:00PM', '7.50', 1, '23457586', 1, '5.000', '20', 1, 2, '1:00 Hour', 'english', 'Asia/Dhaka', 'd/m/Y', 'LTR', 15, 'Powered By: BDTASK, www.bdtask.com\r\n', '2020Ãƒâ€šÃ‚Â©Copyright', '09:00:00', '22:00:00', 20, 2);
+INSERT INTO `setting` (`id`, `title`, `storename`, `address`, `email`, `phone`, `logo`, `logoweb`, `favicon`, `opentime`, `closetime`, `vat`, `isvatnumshow`, `vattinno`, `discount_type`, `discountrate`, `servicecharge`, `service_chargeType`, `currency`, `min_prepare_time`, `language`, `timezone`, `dateformat`, `site_align`, `kitchenrefreshtime`, `powerbytxt`, `footer_text`, `reservation_open`, `reservation_close`, `maxreserveperson`, `printtype`) VALUES
+(2, 'Shahbaz Shahji Hotel', 'Shahbaz Shahji Hotel Amri', 'Indus Highway Sehwan Road Amri', 'shahbazsyed128@gmail.com', '03126931577', 'assets/img/icons/2024-02-02/s.png', NULL, 'assets/img/icons/2024-02-01/E1.png', '9:00AM', '10:00PM', '0.00', NULL, '2', 0, '0.000', '0', 0, 2, '1:00 Hour', 'english', 'Asia/Karachi', 'd/m/Y', 'LTR', 15, 'Powered By: BDTASK, www.bdtask.com\r\n', '2024 Â© Copyright', '09:00:00', '22:00:00', 20, 2);
 
 -- --------------------------------------------------------
 
@@ -5408,6 +5441,28 @@ CREATE TABLE IF NOT EXISTS `variant` (
   `price` decimal(10,2) NOT NULL DEFAULT 0.00,
   PRIMARY KEY (`variantid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+INSERT INTO `variant` (`variantid`, `menuid`, `variantName`, `price`) VALUES
+(1, 1, 'Large', '80.00'),
+(2, 1, 'Regular', '60.00'),
+(3, 1, 'Cut', '30.00'),
+(4, 6, '1 KG', '1800.00'),
+(5, 6, 'Half KG', '900.00'),
+(6, 6, 'Quarter', '450.00'),
+(7, 2, 'Plate', '200.00'),
+(8, 3, 'Plate', '150.00'),
+(9, 4, 'Plate', '200.00'),
+(10, 5, 'Plate', '300.00'),
+(11, 7, 'Bottel', '60.00'),
+(12, 8, 'Roti', '30.00'),
+(13, 12, 'Bowl', '30.00'),
+(14, 13, 'Plate', '30.00'),
+(15, 10, 'Bottel', '220.00'),
+(16, 11, 'Bottel', '100.00'),
+(17, 9, 'Pc', '50.00');
+
 
 -- --------------------------------------------------------
 
