@@ -147,7 +147,7 @@
                     <input name="saleinvoice" type="hidden" id="saleinvoice" value="<?php echo $orderinfo->saleinvoice;?>" />
                     <div class="row">
                         <div class="col-md-6 form-group">
-                            <label for="customer_name"><?php echo display('customer_name');?> <span class="color-red">*</span></label>
+                            <label id="customer_name_update_label" for="customer_name"><?php echo display('customer_name');?> <span class="color-red">*</span></label>
                             <div class="d-flex">
                                 <?php $cusid=1;
                                 echo form_dropdown('customer_name',$customerlist,(!empty($orderinfo->customer_id)?$orderinfo->customer_id:null),'class="postform resizeselect form-control" id="customer_name_update" required') ?>
@@ -181,6 +181,12 @@
                                 <label for="store_id"><?php echo display('del_company');?> <span class="color-red">*</span>&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                 <?php echo form_dropdown('delivercom',$thirdpartylist,(!empty($orderinfo->isthirdparty)?$orderinfo->isthirdparty:null),'class="form-control wpr_95" id="delivercom_update" required disabled="disabled"') ?>
                             </div>
+                        </div>
+
+                        
+                        <div class="col-md-6 form-group" id="customer_note_update" style="display: none;">
+                            <label for="Customer Note">Note</label>
+                            <textarea name="customernote" class="form-control" id="customernote_update" placeholder="Enter customer note"></textarea>
                         </div>
                         <div class="form-group">
                             <input class="form-control" type="hidden" id="order_date" name="order_date" required value="<?php echo date('d-m-Y')?>" />

@@ -1249,7 +1249,7 @@ class Order_model extends CI_Model
 		$cdate = date("Y-m-d", strtotime("- 1 day"));
 		$today = date("Y-m-d");
 
-		$where = "customer_order.order_date Between '" . $cdate . "' AND '" . $today . "' AND ((customer_order.order_status = 1 OR customer_order.order_status = 2 OR customer_order.order_status = 3) AND ((customer_order.cutomertype = 99 AND customer_order.orderacceptreject = 1) || (customer_order.cutomertype IN (1, 3, 4, 5, 6) || customer_order.orderacceptreject != 1)))";
+		$where = "customer_order.order_date Between '" . $cdate . "' AND '" . $today . "' AND ((customer_order.order_status = 1 OR customer_order.order_status = 2 OR customer_order.order_status = 3) AND ((customer_order.cutomertype = 99 AND customer_order.orderacceptreject = 1) || (customer_order.cutomertype IN (1, 3, 4, 5, 6, 7) || customer_order.orderacceptreject != 1)))";
 		
 		$sql = "SELECT customer_order.*, customer_order.order_id as mid, customer_info.customer_name, customer_type.customer_type, employee_history.first_name, employee_history.last_name, rest_table.tablename 
 				FROM customer_order 

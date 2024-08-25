@@ -471,6 +471,7 @@ $(document).ready(function () {
                 labelText = 'Guest By Name';
                 isGuest = true;
                 break;
+            case '7': // Charity
             case '4':
             case '2':
             default:
@@ -946,7 +947,7 @@ function placeorder() {
     var isonline = 0;
     var order_date = $("#order_date").val();
     var grandtotal = $("#grandtotal").val();
-    var customernote = $("#customernote").val();;
+    var customernote = $("#customernote").val();
     var invoice_discount = $("#invoice_discount").val();
     var service_charge = $("#service_charge").val();
     var vat = $("#vat").val();
@@ -990,7 +991,16 @@ function placeorder() {
                 return false;
             }
         }
-    } else {
+    } 
+    else if (ctypeid == 6) {
+        if(customernote == ''){
+            errormessage = errormessage + '<span>Please Enter Customer Note.</span>';
+            alert("Please Enter Customer Note!!!");
+            return false;
+        }
+    }
+    
+    else {
         var waiter = $("#waiter").val();
         var tableid = $("#tableid").val();
         var table_member_multi = $('#table_member_multi').val();
@@ -1040,6 +1050,10 @@ function placeorder() {
                 $('#waiter').select2('data', null);
                 $('#tableid').select2('data', null);
                 $('#waiter').val('');
+                $("#ctypeid").val(1).change();
+                $("#customer_name").val(1).change();
+                $("#customernote").val('');
+
 
                 $('#table_member').val('');
                 $('#table_person').val(lang.person);
@@ -1124,7 +1138,17 @@ function editposorder(id, view) {
         var vid = $("#onprocesslist");
     } else if (view == 2) {
         var vid = $("#messages");
-    } else if (view == 4) {
+    } 
+    else if(view == 5){
+        var vid = $('#employeeorders');
+    }
+    else if(view == 6){
+        var vid = $('#employeeorders2');
+    }
+    else if(view == 7){
+        var vid = $('#charityorders');
+    } 
+    else if (view == 4) {
         var vid = $("#qrorder");
     } else {
         var vid = $("#settings");
@@ -1156,7 +1180,7 @@ function quickorder() {
     var isonline = 0;
     var order_date = $("#order_date").val();
     var grandtotal = $("#grandtotal").val();
-    var customernote = "";
+    var customernote = $("#customernote").val();
     var invoice_discount = $("#invoice_discount").val();
     var service_charge = $("#service_charge").val();
     var vat = $("#vat").val();

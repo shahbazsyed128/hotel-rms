@@ -1661,6 +1661,14 @@ private function generate_order_data($list,$type = null)
 {
     $data = array();
     $no = $_POST['start'];
+
+	if($type == null){
+		$vid = 2;
+	}
+	else{
+		$vid = $type;
+	}
+
     foreach ($list as $rowdata) {
         $no++;
         $row = array();
@@ -1671,7 +1679,7 @@ private function generate_order_data($list,$type = null)
         $split = '';
         $kot = '';
         if ($this->permission->method('ordermanage', 'update')->access()) :
-            $update = '<a href="javascript:;" onclick="editposorder(' . $rowdata->order_id . ',2)" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="Update" id="table-today-' . $rowdata->order_id . '"><i class="ti-pencil"></i></a>&nbsp;&nbsp;';
+            $update = '<a href="javascript:;" onclick="editposorder(' . $rowdata->order_id . ','.$vid.')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="Update" id="table-today-' . $rowdata->order_id . '"><i class="ti-pencil"></i></a>&nbsp;&nbsp;';
         endif;
         if ($rowdata->splitpay_status == 1) :
             $split = '<a href="javascript:;" onclick="showsplit(' . $rowdata->order_id . ')" class="btn btn-xs btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="left" title="Update" id="table-split-' . $rowdata->order_id . '">' . display('split') . '</a>&nbsp;&nbsp;';

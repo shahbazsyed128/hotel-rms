@@ -4696,8 +4696,11 @@ CREATE TABLE IF NOT EXISTS `tbl_kitchen` (
 -- Dumping data for table `tbl_kitchen`
 --
 
-INSERT INTO `tbl_kitchen` (`kitchenid`, `kitchen_name`, `ip`, `port`, `status`) VALUES(1, 'Common Kitchen', '192.168.1.87', '9100', 1);
-
+INSERT INTO `tbl_kitchen` (`kitchenid`, `kitchen_name`, `ip`, `port`, `status`) VALUES
+(1, 'Common Kitchen', '192.168.1.87', '9100', 1),
+(11, 'Tea Kitchen', NULL, NULL, 1),
+(12, 'BBQ Kitchen', NULL, NULL, 1),
+(13, 'Breverages', NULL, NULL, 1);
 -- --------------------------------------------------------
 
 --
