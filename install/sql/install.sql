@@ -845,6 +845,9 @@ INSERT INTO `customer_type` (`customer_type_id`, `customer_type`, `ordering`) VA
 INSERT INTO `customer_type` (`customer_type_id`, `customer_type`, `ordering`) VALUES(2, 'Online Customer', 0);
 INSERT INTO `customer_type` (`customer_type_id`, `customer_type`, `ordering`) VALUES(3, 'Third Party', 0);
 INSERT INTO `customer_type` (`customer_type_id`, `customer_type`, `ordering`) VALUES(4, 'Take Way', 0);
+INSERT INTO `customer_type` (`customer_type_id`, `customer_type`, `ordering`) VALUES(5, 'Employee', 0);
+INSERT INTO `customer_type` (`customer_type_id`, `customer_type`, `ordering`) VALUES(6, 'Guest', 0);
+INSERT INTO `customer_type` (`customer_type_id`, `customer_type`, `ordering`) VALUES(7, 'Charity', 0);
 INSERT INTO `customer_type` (`customer_type_id`, `customer_type`, `ordering`) VALUES(99, 'QR Customer', 0);
 
 -- --------------------------------------------------------
