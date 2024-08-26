@@ -936,182 +936,398 @@ function printRawHtml(view) {
     });
 }
 
-function placeorder() {
-    var ctypeid = $("#ctypeid").val();
-    var waiter = "";
-    var isdelivary = "";
-    var thirdinvoiceid = "";
-    var tableid = "";
-    var customer_name = $("#customer_name").val();
-    var cardtype = 4;
-    var isonline = 0;
-    var order_date = $("#order_date").val();
-    var grandtotal = $("#grandtotal").val();
-    var customernote = $("#customernote").val();
-    var invoice_discount = $("#invoice_discount").val();
-    var service_charge = $("#service_charge").val();
-    var vat = $("#vat").val();
-    var orggrandTotal = $("#subtotal").val();
-    var isonline = $("#isonline").val();
-    var isitem = $("#totalitem").val();
-    var cookedtime = $("#cookedtime").val();
-    var multiplletaxvalue = $('#multiplletaxvalue').val();
-    var csrf = $('#csrfhashresarvation').val();
-    var errormessage = '';
+// function placeorder() {
+//     var ctypeid = $("#ctypeid").val();
+//     var waiter = "";
+//     var isdelivary = "";
+//     var thirdinvoiceid = "";
+//     var tableid = "";
+//     var customer_name = $("#customer_name").val();
+//     var cardtype = 4;
+//     var isonline = 0;
+//     var order_date = $("#order_date").val();
+//     var grandtotal = $("#grandtotal").val();
+//     var customernote = $("#customernote").val();
+//     var invoice_discount = $("#invoice_discount").val();
+//     var service_charge = $("#service_charge").val();
+//     var vat = $("#vat").val();
+//     var orggrandTotal = $("#subtotal").val();
+//     var isonline = $("#isonline").val();
+//     var isitem = $("#totalitem").val();
+//     var cookedtime = $("#cookedtime").val();
+//     var multiplletaxvalue = $('#multiplletaxvalue').val();
+//     var csrf = $('#csrfhashresarvation').val();
+//     var errormessage = '';
 
-    if (customer_name == '') {
-        errormessage = errormessage + '<span>Please Select Customer Name.</span>';
+//     if (customer_name == '') {
+//         errormessage = errormessage + '<span>Please Select Customer Name.</span>';
+//         alert("Please Select Customer Name!!!");
+//         return false;
+//     }
+//     if (ctypeid == '') {
+//         errormessage = errormessage + '<span>Please Select Customer Type.</span>';
+//         alert("Please Select Customer Type!!!");
+//         return false;
+//     }
+//     if (isitem == '' || isitem == 0) {
+//         errormessage = errormessage + '<span>Please add Some Food</span>';
+//         alert("Please add Some Food!!!");
+//         return false;
+//     }
+//     if (ctypeid == 3) {
+
+//         console.log('ctypeid', ctypeid);
+//         var isdelivary = $("#delivercom").val();
+//         var thirdinvoiceid = $("#thirdinvoiceid").val();
+//         if (isdelivary == '') {
+//             errormessage = errormessage + '<span>Please Select Customer Type.</span>';
+//             alert("Please Select Delivar Company!!!");
+//             return false;
+//         }
+//     } else if (ctypeid == 4 || ctypeid == 2) {
+//         console.log('ctypeid', ctypeid);
+
+//         if (possetting.waiter == 1) {
+//             var waiter = $("#waiter").val();
+//             if (waiter == '') {
+//                 errormessage = errormessage + '<span>Please Select Waiter.</span>';
+//                 alert("Please Select Waiter!!!");
+//                 return false;
+//             }
+//         }
+//     } 
+//     else if (ctypeid == 6) {
+//         console.log('ctypeid', ctypeid);
+
+//         if(customernote == ''){
+//             errormessage = errormessage + '<span>Please Enter Customer Note.</span>';
+//             alert("Please Enter Customer Note!!!");
+//             return false;
+//         }
+//         var waiter = $("#waiter").val();
+//         var tableid = $("#tableid").val();
+//         var table_member_multi = $('#table_member_multi').val();
+//         var table_member_multi_person = $('#table_member_multi_person').val();
+//         var table_member = $("#table_member").val(); //table member 02/11
+//         if (possetting.waiter == 1) {
+//             if (waiter == '') {
+//                 errormessage = errormessage + '<span>Please Select Waiter.</span>';
+//                 $("#waiter").select2('open');
+//                 return false;
+//             }
+//         }
+//         if (possetting.tableid == 1) {
+//             if (tableid == '') {
+//                 $("#tableid").select2('open');
+//                 toastr.warning("Please Select Table", 'Warning');
+//                 return false;
+//             }
+//             if (possetting.tablemaping == 1) {
+
+//                 if (tableid == '' || !$.isNumeric($('#table_person').val())) {
+//                     toastr.warning("Please Select Table or number person", 'Warning');
+//                     return false;
+//                 }
+//             }
+//         }
+//     }
+    
+//     else {
+//         var waiter = $("#waiter").val();
+//         var tableid = $("#tableid").val();
+//         var table_member_multi = $('#table_member_multi').val();
+//         var table_member_multi_person = $('#table_member_multi_person').val();
+//         var table_member = $("#table_member").val(); //table member 02/11
+//         if (possetting.waiter == 1) {
+//             if (waiter == '') {
+//                 errormessage = errormessage + '<span>Please Select Waiter.</span>';
+//                 $("#waiter").select2('open');
+//                 return false;
+//             }
+//         }
+//         if (possetting.tableid == 1) {
+//             if (tableid == '') {
+//                 $("#tableid").select2('open');
+//                 toastr.warning("Please Select Table", 'Warning');
+//                 return false;
+//             }
+//             if (possetting.tablemaping == 1) {
+
+//                 if (tableid == '' || !$.isNumeric($('#table_person').val())) {
+//                     toastr.warning("Please Select Table or number person", 'Warning');
+//                     return false;
+//                 }
+//             }
+//         }
+//     }
+//     if (errormessage == '') {
+//         order_date = encodeURIComponent(order_date);
+//         customernote = encodeURIComponent(customernote);
+//         var errormessage = '<span style="color:#060;">Signup Completed Successfully.</span>';
+//         var dataString = 'customer_name=' + customer_name + '&ctypeid=' + ctypeid + '&waiter=' + waiter + '&tableid=' + tableid + '&card_type=' + cardtype + '&isonline=' + isonline + '&order_date=' + order_date + '&grandtotal=' + grandtotal + '&customernote=' + customernote + '&invoice_discount=' + invoice_discount + '&service_charge=' + service_charge + '&vat=' + vat + '&subtotal=' + orggrandTotal + '&assigncard_terminal=&assignbank=&assignlastdigit=&delivercom=' + isdelivary + '&thirdpartyinvoice=' + thirdinvoiceid + '&cookedtime=' + cookedtime + '&tablemember=' + table_member + '&table_member_multi=' + table_member_multi + '&table_member_multi_person=' + table_member_multi_person + '&multiplletaxvalue=' + multiplletaxvalue + '&csrf_test_name=' + csrf;
+//         $.ajax({
+//             type: "POST",
+//             url: basicinfo.baseurl + "ordermanage/order/pos_order",
+//             data: dataString,
+//             success: function (data) {
+//                 $('#addfoodlist').empty();
+//                 $("#getitemp").val('0');
+//                 $('#calvat').text('0');
+//                 $('#vat').val('0');
+//                 $('#invoice_discount').val('0');
+//                 $('#caltotal').text('');
+//                 $('#grandtotal').val('');
+//                 $('#thirdinvoiceid').val('');
+//                 $('#orggrandTotal').val('');
+//                 $('#waiter').select2('data', null);
+//                 $('#tableid').select2('data', null);
+//                 $('#waiter').val('');
+//                 $("#ctypeid").val(1).change();
+//                 $("#customer_name").val(1).change();
+//                 $("#customernote").val('');
+
+
+//                 $('#table_member').val('');
+//                 $('#table_person').val(lang.person);
+//                 $('#table_member_multi').val(0);
+//                 $('#table_member_multi_person').val(0);
+
+//                 var err = data;
+//                 if (err == "error") {
+//                     swal({
+//                         title: lang.ord_failed,
+//                         text: lang.failed_msg,
+//                         type: "warning",
+//                         showCancelButton: true,
+//                         confirmButtonColor: "#DD6B55",
+//                         confirmButtonText: "Yes, Cancel!",
+//                         closeOnConfirm: true
+//                     },
+//                         function () {
+
+//                         });
+//                 } else {
+//                     if (basicinfo.printtype == 1) {
+//                         swal({
+//                             title: lang.ord_succ,
+//                             text: "",
+//                             type: "success",
+//                             showCancelButton: false,
+//                             confirmButtonColor: "#28a745",
+//                             confirmButtonText: "Done",
+//                             closeOnConfirm: true
+//                         },
+//                             function () {
+
+//                             });
+//                     } else {
+//                         swal({
+//                             title: lang.ord_succ,
+//                             text: "Do you Want to Print Token No.???",
+//                             type: "success",
+//                             showCancelButton: true,
+//                             confirmButtonColor: "#28a745",
+//                             confirmButtonText: "Yes",
+//                             cancelButtonText: "No",
+//                             closeOnConfirm: true,
+//                             closeOnCancel: true
+//                         },
+//                             function (isConfirm) {
+//                                 if (isConfirm) {
+//                                     printRawHtml(data);
+//                                 } else {
+//                                     $('#waiter').select2('data', null);
+//                                     $('#tableid').select2('data', null);
+//                                     $('#waiter').val('');
+//                                     $('#tableid').val('');
+//                                 }
+//                             });
+//                     }
+//                 }
+//             }
+//         });
+//     }
+// }
+
+
+function placeorder() {
+    const ctypeid = $("#ctypeid").val();
+    const customer_name = $("#customer_name").val();
+    const order_date = encodeURIComponent($("#order_date").val());
+    const grandtotal = $("#grandtotal").val();
+    const customernote = encodeURIComponent($("#customernote").val());
+    const invoice_discount = $("#invoice_discount").val();
+    const service_charge = $("#service_charge").val();
+    const vat = $("#vat").val();
+    const subtotal = $("#subtotal").val();
+    const isonline = $("#isonline").val();
+    const isitem = $("#totalitem").val();
+    const cookedtime = $("#cookedtime").val();
+    const multiplletaxvalue = $('#multiplletaxvalue').val();
+    const csrf_test_name  = $('#csrfhashresarvation').val();
+    let waiter = "";
+    let delivercom = "";
+    let thirdpartyinvoice = "";
+    let tableid = "";
+    let errormessage = '';
+    let assigncard_terminal = '';
+    let assignbank = '';
+    let assignlastdigit = '';
+    let tablemember = 2;
+    let table_member_multi = 0;
+    let table_member_multi_person = 0;
+
+    if (!customer_name) {
         alert("Please Select Customer Name!!!");
         return false;
     }
-    if (ctypeid == '') {
-        errormessage = errormessage + '<span>Please Select Customer Type.</span>';
+    if (!ctypeid) {
         alert("Please Select Customer Type!!!");
         return false;
     }
-    if (isitem == '' || isitem == 0) {
-        errormessage = errormessage + '<span>Please add Some Food</span>';
+    if (!isitem || isitem == 0) {
         alert("Please add Some Food!!!");
         return false;
     }
+
     if (ctypeid == 3) {
-        var isdelivary = $("#delivercom").val();
-        var thirdinvoiceid = $("#thirdinvoiceid").val();
-        if (isdelivary == '') {
-            errormessage = errormessage + '<span>Please Select Customer Type.</span>';
-            alert("Please Select Delivar Company!!!");
+        isdelivary = $("#delivercom").val();
+        thirdpartyinvoice = $("#thirdinvoiceid").val();
+        if (!isdelivary) {
+            alert("Please Select Delivery Company!!!");
             return false;
         }
-    } else if (ctypeid == 4 || ctypeid == 2) {
+    } else if ([2, 4].includes(ctypeid)) {
         if (possetting.waiter == 1) {
-            var waiter = $("#waiter").val();
-            if (waiter == '') {
-                errormessage = errormessage + '<span>Please Select Waiter.</span>';
+            waiter = $("#waiter").val();
+            if (!waiter) {
                 alert("Please Select Waiter!!!");
                 return false;
             }
         }
-    } 
-    else if (ctypeid == 6) {
-        if(customernote == ''){
-            errormessage = errormessage + '<span>Please Enter Customer Note.</span>';
+    } else if (ctypeid == 6) {
+        if (!customernote) {
             alert("Please Enter Customer Note!!!");
             return false;
         }
-    }
-    
-    else {
-        var waiter = $("#waiter").val();
-        var tableid = $("#tableid").val();
-        var table_member_multi = $('#table_member_multi').val();
-        var table_member_multi_person = $('#table_member_multi_person').val();
-        var table_member = $("#table_member").val(); //table member 02/11
-        if (possetting.waiter == 1) {
-            if (waiter == '') {
-                errormessage = errormessage + '<span>Please Select Waiter.</span>';
-                $("#waiter").select2('open');
-                return false;
-            }
+        waiter = $("#waiter").val();
+        tableid = $("#tableid").val();
+        if (possetting.waiter == 1 && !waiter) {
+            $("#waiter").select2('open');
+            return false;
         }
-        if (possetting.tableid == 1) {
-            if (tableid == '') {
-                $("#tableid").select2('open');
-                toastr.warning("Please Select Table", 'Warning');
-                return false;
-            }
-            if (possetting.tablemaping == 1) {
+        if (possetting.tableid == 1 && !validateTableSelection(tableid)) {
+            return false;
+        }
+    } else {
+        waiter = $("#waiter").val();
+        tableid = $("#tableid").val();
+        if (possetting.waiter == 1 && !waiter) {
+            $("#waiter").select2('open');
+            return false;
+        }
+        if (possetting.tableid == 1 && !validateTableSelection(tableid)) {
+            return false;
+        }
+    }
 
-                if (tableid == '' || !$.isNumeric($('#table_person').val())) {
-                    toastr.warning("Please Select Table or number person", 'Warning');
-                    return false;
-                }
-            }
-        }
+    const dataString = constructDataString({
+        customer_name, ctypeid, waiter, tableid, card_type: 4, isonline, order_date, grandtotal, customernote,
+        invoice_discount, service_charge, vat, subtotal, assigncard_terminal, assignbank, assignlastdigit, delivercom, thirdpartyinvoice, cookedtime,
+        multiplletaxvalue,tablemember, table_member_multi, table_member_multi_person, csrf_test_name
+    });
+
+    $.ajax({
+        type: "POST",
+        url: `${basicinfo.baseurl}ordermanage/order/pos_order`,
+        data: dataString,
+        success: handleOrderSuccess
+    });
+}
+
+function validateTableSelection(tableid) {
+    if (!tableid) {
+        $("#tableid").select2('open');
+        toastr.warning("Please Select Table", 'Warning');
+        return false;
     }
-    if (errormessage == '') {
-        order_date = encodeURIComponent(order_date);
-        customernote = encodeURIComponent(customernote);
-        var errormessage = '<span style="color:#060;">Signup Completed Successfully.</span>';
-        var dataString = 'customer_name=' + customer_name + '&ctypeid=' + ctypeid + '&waiter=' + waiter + '&tableid=' + tableid + '&card_type=' + cardtype + '&isonline=' + isonline + '&order_date=' + order_date + '&grandtotal=' + grandtotal + '&customernote=' + customernote + '&invoice_discount=' + invoice_discount + '&service_charge=' + service_charge + '&vat=' + vat + '&subtotal=' + orggrandTotal + '&assigncard_terminal=&assignbank=&assignlastdigit=&delivercom=' + isdelivary + '&thirdpartyinvoice=' + thirdinvoiceid + '&cookedtime=' + cookedtime + '&tablemember=' + table_member + '&table_member_multi=' + table_member_multi + '&table_member_multi_person=' + table_member_multi_person + '&multiplletaxvalue=' + multiplletaxvalue + '&csrf_test_name=' + csrf;
-        $.ajax({
-            type: "POST",
-            url: basicinfo.baseurl + "ordermanage/order/pos_order",
-            data: dataString,
-            success: function (data) {
-                $('#addfoodlist').empty();
-                $("#getitemp").val('0');
-                $('#calvat').text('0');
-                $('#vat').val('0');
-                $('#invoice_discount').val('0');
-                $('#caltotal').text('');
-                $('#grandtotal').val('');
-                $('#thirdinvoiceid').val('');
-                $('#orggrandTotal').val('');
+    if (possetting.tablemaping == 1 && (!tableid || !$.isNumeric($('#table_person').val()))) {
+        toastr.warning("Please Select Table or number person", 'Warning');
+        return false;
+    }
+    return true;
+}
+
+function constructDataString(params) {
+    return Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&');
+}
+
+function handleOrderSuccess(data) {
+    $('#addfoodlist').empty();
+    $("#getitemp").val('0');
+    $('#calvat').text('0');
+    $('#vat').val('0');
+    $('#invoice_discount').val('0');
+    $('#caltotal').text('');
+    $('#grandtotal').val('');
+    $('#thirdinvoiceid').val('');
+    $('#orggrandTotal').val('');
+    $('#waiter').select2('data', null);
+    $('#tableid').select2('data', null);
+    $('#waiter').val('');
+    $("#ctypeid").val(1).change();
+    $("#customer_name").val(1).change();
+    $("#customernote").val('');
+    $('#table_member').val('');
+    $('#table_person').val(lang.person);
+    $('#table_member_multi').val(0);
+    $('#table_member_multi_person').val(0);
+
+    if (data == "error") {
+        swal({
+            title: lang.ord_failed,
+            text: lang.failed_msg,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, Cancel!",
+            closeOnConfirm: true
+        });
+    } else {
+        handleOrderSuccessAlert(data);
+    }
+}
+
+function handleOrderSuccessAlert(data) {
+    if (basicinfo.printtype == 1) {
+        swal({
+            title: lang.ord_succ,
+            text: "",
+            type: "success",
+            showCancelButton: false,
+            confirmButtonColor: "#28a745",
+            confirmButtonText: "Done",
+            closeOnConfirm: true
+        });
+    } else {
+        swal({
+            title: lang.ord_succ,
+            text: "Do you Want to Print Token No.???",
+            type: "success",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        }, function (isConfirm) {
+            if (isConfirm) {
+                printRawHtml(data);
+            } else {
                 $('#waiter').select2('data', null);
                 $('#tableid').select2('data', null);
                 $('#waiter').val('');
-                $("#ctypeid").val(1).change();
-                $("#customer_name").val(1).change();
-                $("#customernote").val('');
-
-
-                $('#table_member').val('');
-                $('#table_person').val(lang.person);
-                $('#table_member_multi').val(0);
-                $('#table_member_multi_person').val(0);
-
-                var err = data;
-                if (err == "error") {
-                    swal({
-                        title: lang.ord_failed,
-                        text: lang.failed_msg,
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Yes, Cancel!",
-                        closeOnConfirm: true
-                    },
-                        function () {
-
-                        });
-                } else {
-                    if (basicinfo.printtype == 1) {
-                        swal({
-                            title: lang.ord_succ,
-                            text: "",
-                            type: "success",
-                            showCancelButton: false,
-                            confirmButtonColor: "#28a745",
-                            confirmButtonText: "Done",
-                            closeOnConfirm: true
-                        },
-                            function () {
-
-                            });
-                    } else {
-                        swal({
-                            title: lang.ord_succ,
-                            text: "Do you Want to Print Token No.???",
-                            type: "success",
-                            showCancelButton: true,
-                            confirmButtonColor: "#28a745",
-                            confirmButtonText: "Yes",
-                            cancelButtonText: "No",
-                            closeOnConfirm: true,
-                            closeOnCancel: true
-                        },
-                            function (isConfirm) {
-                                if (isConfirm) {
-                                    printRawHtml(data);
-                                } else {
-                                    $('#waiter').select2('data', null);
-                                    $('#tableid').select2('data', null);
-                                    $('#waiter').val('');
-                                    $('#tableid').val('');
-                                }
-                            });
-                    }
-                }
+                $('#tableid').val('');
             }
         });
     }

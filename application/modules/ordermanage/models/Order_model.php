@@ -1287,33 +1287,92 @@ class Order_model extends CI_Model
 	// }
 
 
-		public function get_unique_ongoingorder_id($id)
-		{
-			$where = "customer_order.order_id = '" . $id . "'";
+	public function getTokenNumber($newTokenNumber = null) {
+		// Get current date
+		$currentDate = date("Y-m-d");
 
-			$sql = "SELECT customer_order.*, customer_order.order_id as mid, customer_info.customer_name, customer_type.customer_type, employee_history.first_name, employee_history.last_name, rest_table.tablename 
-					FROM customer_order 
-					LEFT JOIN customer_info ON customer_order.customer_id = customer_info.customer_id 
-					LEFT JOIN customer_type ON customer_order.cutomertype = customer_type.customer_type_id 
-					LEFT JOIN employee_history ON customer_order.waiter_id = employee_history.emp_his_id 
-					LEFT JOIN rest_table ON customer_order.table_no = rest_table.tableid 
-					WHERE {$where} AND customer_order.marge_order_id IS NULL 
-					UNION 
-					SELECT customer_order.*, customer_order.order_id as mid, customer_info.customer_name, customer_type.customer_type, employee_history.first_name, employee_history.last_name, rest_table.tablename 
-					FROM customer_order 
-					LEFT JOIN customer_info ON customer_order.customer_id = customer_info.customer_id 
-					LEFT JOIN customer_type ON customer_order.cutomertype = customer_type.customer_type_id 
-					LEFT JOIN employee_history ON customer_order.waiter_id = employee_history.emp_his_id 
-					LEFT JOIN rest_table ON customer_order.table_no = rest_table.tableid 
-					WHERE {$where} AND customer_order.marge_order_id IS NOT NULL 
-					GROUP BY customer_order.marge_order_id 
-					ORDER BY mid DESC";
-			
-			$query = $this->db->query($sql);
+		// Fetch the current token number and last reset date
+		$this->db->select('current_token, last_reset_date');
+		$this->db->from('token_tracker');
+		$this->db->where('id', 1);
+		$query = $this->db->get();
+		$row = $query->row();
 
-			$orderdetails = $query->result();
-			return $orderdetails;
+		if ($row) {
+			$currentToken = $row->current_token;
+			$lastResetDate = $row->last_reset_date;
+
+			// Check if a new token number is provided
+			if ($newTokenNumber !== null) {
+				$currentToken = $newTokenNumber;
+				$data = array(
+					'current_token' => $currentToken,
+					'last_reset_date' => $currentDate
+				);
+				$this->db->where('id', 1);
+				$this->db->update('token_tracker', $data);
+			} else {
+				// Check if the date has changed
+				if ($currentDate != $lastResetDate) {
+					// Reset the token number
+					$currentToken = 1;
+					$data = array(
+						'current_token' => $currentToken,
+						'last_reset_date' => $currentDate
+					);
+					$this->db->where('id', 1);
+					$this->db->update('token_tracker', $data);
+				} else {
+					// Increment the token number
+					$currentToken++;
+					$data = array(
+						'current_token' => $currentToken
+					);
+					$this->db->where('id', 1);
+					$this->db->update('token_tracker', $data);
+				}
+			}
+		} else {
+			// Initialize the token number and date if not present
+			$currentToken = $newTokenNumber !== null ? $newTokenNumber : 1;
+			$data = array(
+				'current_token' => $currentToken,
+				'last_reset_date' => $currentDate
+			);
+			$this->db->insert('token_tracker', $data);
 		}
+
+		return $currentToken;
+	}
+
+
+	public function get_unique_ongoingorder_id($id)
+	{
+		$where = "customer_order.order_id = '" . $id . "'";
+
+		$sql = "SELECT customer_order.*, customer_order.order_id as mid, customer_info.customer_name, customer_type.customer_type, employee_history.first_name, employee_history.last_name, rest_table.tablename 
+				FROM customer_order 
+				LEFT JOIN customer_info ON customer_order.customer_id = customer_info.customer_id 
+				LEFT JOIN customer_type ON customer_order.cutomertype = customer_type.customer_type_id 
+				LEFT JOIN employee_history ON customer_order.waiter_id = employee_history.emp_his_id 
+				LEFT JOIN rest_table ON customer_order.table_no = rest_table.tableid 
+				WHERE {$where} AND customer_order.marge_order_id IS NULL 
+				UNION 
+				SELECT customer_order.*, customer_order.order_id as mid, customer_info.customer_name, customer_type.customer_type, employee_history.first_name, employee_history.last_name, rest_table.tablename 
+				FROM customer_order 
+				LEFT JOIN customer_info ON customer_order.customer_id = customer_info.customer_id 
+				LEFT JOIN customer_type ON customer_order.cutomertype = customer_type.customer_type_id 
+				LEFT JOIN employee_history ON customer_order.waiter_id = employee_history.emp_his_id 
+				LEFT JOIN rest_table ON customer_order.table_no = rest_table.tableid 
+				WHERE {$where} AND customer_order.marge_order_id IS NOT NULL 
+				GROUP BY customer_order.marge_order_id 
+				ORDER BY mid DESC";
+		
+		$query = $this->db->query($sql);
+
+		$orderdetails = $query->result();
+		return $orderdetails;
+	}
 
 	public function get_unique_ongoingtable_id($id)
 	{

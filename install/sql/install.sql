@@ -4921,6 +4921,14 @@ CREATE TABLE IF NOT EXISTS `tbl_seoption` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 
+
+DROP TABLE IF EXISTS `token_tracker`;
+CREATE TABLE `token_tracker` (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    `current_token` INT NOT NULL,
+    `last_reset_date` DATE NOT NULL
+);
+
 --
 -- Dumping data for table `tbl_seoption`
 --

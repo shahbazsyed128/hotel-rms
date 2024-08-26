@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            font-size: 10px;
+            font-size: 12px;
             width: 80mm;
             margin: 0;
             padding: 0;
@@ -28,21 +28,23 @@
 
         .token-header h1 {
             margin: 0;
-            font-size: 14px;
+            font-size: 16px;
         }
 
         .token-header p {
             margin: 0;
-            font-size: 10px;
+            font-size: 12px;
         }
 
         .token-details {
             margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
         }
 
         .token-details p {
             margin: 0;
-            font-size: 10px;
+            font-size: 12px;
         }
 
         .token-items {
@@ -54,11 +56,19 @@
         .token-items td {
             text-align: left;
             padding: 2px;
-            font-size: 10px;
+            font-size: 12px;
         }
 
         .token-items th {
             border-bottom: 1px solid #000;
+        }
+
+        th.size{
+			text-align: center;
+		}
+        
+        .token-items td.size {
+            text-align: center;
         }
 
         .token-footer {
@@ -68,7 +78,7 @@
 
         .token-footer p {
             margin: 0;
-            font-size: 10px;
+            font-size: 12px;
         }
     </style>
     <script type="text/javascript">
@@ -88,6 +98,8 @@
 <body>
     <?php
     $itemsByKitchen = [];
+    $this->load->model('order_model');
+    $tokenNumber = $this->order_model->getTokenNumber();
 
     // Check if $iteminfo is not empty, use $iteminfo, otherwise use $exitsitem
     if (!empty($iteminfo)) {
@@ -106,13 +118,15 @@
         if (!empty($$loopVariableName)) { ?>
             <div class="token">
                 <div class="token-header">
-                    <h1>Token No: <?php echo $orderinfo->tokenno; ?></h1>
+                    <h1>Token No: <?php echo $tokenNumber++; ?></h1>
                     <p><?php echo display('date'); ?>: <?php echo date("M d, Y", strtotime($orderinfo->order_date)) . " - " . date("h:i:s A"); ?></p>
                     <p><?php echo $customerinfo->customer_name; ?></p>
                 </div>
                 <div class="token-details">
                     <p><?php echo display('table'); ?>: <?php echo !empty($tableinfo) ? $tableinfo->tablename : 'N/A'; ?></p>
                     <p><?php echo display('ord_number'); ?>: <?php echo $orderinfo->order_id; ?></p>
+                </div>
+                <div class="token-details">
                     <p><?php echo display('waiter'); ?>: <?php echo $waiterinfo->first_name; ?></p>
                 </div>
                 <table class="token-items">
@@ -120,7 +134,7 @@
                         <tr>
                             <th>Q</th>
                             <th><?php echo display('item'); ?></th>
-                            <th><?php echo display('size'); ?></th>
+                            <th class="size" align="center"><?php echo display('size'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -128,7 +142,7 @@
                             <tr>
                                 <td><?php echo $item->menuqty; ?></td>
                                 <td><?php echo $item->ProductName; ?><br><?php echo $item->notes; ?></td>
-                                <td><?php echo $item->variantName; ?></td>
+                                <td class="size"><?php echo $item->variantName; ?></td>
                             </tr>
                             <?php if (!empty($item->add_on_id)) {
                                 $addons = explode(",", $item->add_on_id);
@@ -138,7 +152,7 @@
                                     $adonsinfo = $this->order_model->read('*', 'add_ons', array('add_on_id' => $addonsid)); ?>
                                     <tr>
                                         <td colspan="2"><?php echo $adonsinfo->add_on_name; ?></td>
-                                        <td><?php echo $addonsqty[$y]; ?></td>
+                                        <td class="size"><?php echo $addonsqty[$y]; ?></td>
                                     </tr>
                         <?php $y++;
                                 }
@@ -146,12 +160,11 @@
                         } ?>
                     </tbody>
                 </table>
-                <div class="token-footer">
-                    <p>Thank you!</p>
-                </div>
             </div>
     <?php }
-    } ?>
+    }
+    $this->order_model->getTokenNumber(--$tokenNumber);
+    ?>
 </body>
 
 </html>
