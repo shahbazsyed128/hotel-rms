@@ -158,7 +158,7 @@ class Order_model extends CI_Model
 		if ($cart = $this->cart->contents()) {
 			foreach ($cart as $item) {
 				$iteminfo = $this->getiteminfo($item['pid']);
-				if ($iteminfo->OffersRate > 0) {
+				if ($iteminfo->OffersRate > 0 && isset($itemprice)) {
 					$pdiscount = $pdiscount + ($iteminfo->OffersRate * $itemprice / 100);
 				} else {
 					$pdiscount = $pdiscount + 0;
@@ -1061,7 +1061,7 @@ class Order_model extends CI_Model
 		$orderdetails = $query->row();
 		return $orderdetails;
 	}
-	public function kitchen_ajaxorderinfo($id)
+	public function kitchen_ajaxorderinfo($orderid)
 	{
 		$this->db->select('customer_order.*,customer_info.customer_name,customer_info.memberid,customer_type.customer_type,employee_history.first_name,employee_history.last_name,rest_table.tablename');
 		$this->db->from('customer_order');
