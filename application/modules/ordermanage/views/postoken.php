@@ -11,6 +11,7 @@
             font-size: 12px;
             width: 80mm;
             margin: 0;
+            margin-top: -8px;
             padding: 0;
         }
 
