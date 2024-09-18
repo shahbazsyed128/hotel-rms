@@ -271,6 +271,7 @@
                                                 <select name="rate_type" id="rate_type" class="form-control">
                                                     <option value="1">Hourly</option>
                                                     <option value="2">Salary</option>
+                                                    <option value="3">Daily</option>
                                                 </select>
                                                 <span id="rate_type-error" class="input__error">!</span>
                                             </div>
