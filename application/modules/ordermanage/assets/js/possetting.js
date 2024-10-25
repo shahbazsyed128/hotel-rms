@@ -1173,7 +1173,7 @@ function placeorder() {
     let assigncard_terminal = '';
     let assignbank = '';
     let assignlastdigit = '';
-    let tablemember = 2;
+    let tablemember = $("#table_member").val();
     let table_member_multi = 0;
     let table_member_multi_person = 0;
 
