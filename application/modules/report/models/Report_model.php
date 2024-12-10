@@ -170,22 +170,70 @@ class Report_model extends CI_Model {
 	
 	public function salereport($start_date,$end_date,$pid=null,$invoice_id = null)
 	{
-		$dateRange = "a.order_date BETWEEN '$start_date%' AND '$end_date%' AND a.order_status=4";
-		if($pid != null && $invoice_id == null ){
-			$dateRange = "a.order_date BETWEEN '$start_date%' AND '$end_date%' AND a.order_status=4 AND c.payment_method_id=$pid";
-		}
-		if($invoice_id != null){
-			$dateRange = "a.order_status=4 AND a.saleinvoice=$invoice_id";
-		}
-		$this->db->select("a.*,b.customer_id,b.customer_name,b.customer_id,c.*,p.*");
-		$this->db->from('customer_order a');
-		$this->db->join('customer_info b','b.customer_id = a.customer_id','left');
-		$this->db->join('bill c','a.order_id=c.order_id','left');
-		$this->db->join('payment_method p','c.payment_method_id=p.payment_method_id','left');
-		$this->db->where($dateRange, NULL, FALSE); 	
-		$this->db->order_by('a.order_date','desc');
-		$query = $this->db->get();
 
+
+
+		// $dateRange = "a.order_date BETWEEN '$start_date%' AND '$end_date%' AND a.order_status=4";
+		// if($pid != null && $invoice_id == null ){
+		// 	$dateRange = "a.order_date BETWEEN '$start_date%' AND '$end_date%' AND a.order_status=4 AND c.payment_method_id=$pid";
+		// }
+		// if($invoice_id != null){
+		// 	$dateRange = "a.order_status=4 AND a.saleinvoice=$invoice_id";
+		// }
+		// $this->db->select("a.*,b.customer_id,b.customer_name,b.customer_id,c.*,p.*,ct.*");
+		// $this->db->from('customer_order a');
+		// $this->db->join('customer_info b','b.customer_id = a.customer_id','left');
+		// $this->db->join('customer_type ct', 'a.cutomertype=ct.customer_type_id', 'left');
+		// $this->db->join('bill c','a.order_id=c.order_id','left');
+		// $this->db->join('payment_method p','c.payment_method_id=p.payment_method_id','left');
+		// $this->db->where($dateRange, NULL, FALSE); 	
+		// $this->db->order_by('a.order_date','desc');
+		// $query = $this->db->get();
+
+
+
+// Define an array to hold the results grouped by customer type
+$results = [];
+
+// Add your date range and status filtering
+$dateRange = "a.order_date BETWEEN '$start_date%' AND '$end_date%' AND a.order_status=4";
+if ($pid != null && $invoice_id == null) {
+    $dateRange .= " AND c.payment_method_id=$pid";
+}
+if ($invoice_id != null) {
+    $dateRange = "a.order_status=4 AND a.saleinvoice=$invoice_id";
+}
+
+// Build your query with joins
+$this->db->select("a.*, b.customer_id, b.customer_name, c.*, p.*, ct.customer_type, ct.customer_type_id");
+$this->db->from('customer_order a');
+$this->db->join('customer_info b', 'b.customer_id = a.customer_id', 'left');
+$this->db->join('customer_type ct', 'a.cutomertype = ct.customer_type_id', 'left');
+$this->db->join('bill c', 'a.order_id = c.order_id', 'left');
+$this->db->join('payment_method p', 'c.payment_method_id = p.payment_method_id', 'left');
+$this->db->where($dateRange, NULL, FALSE);
+$this->db->order_by('a.order_date', 'desc');
+
+// Execute the query
+$query = $this->db->get();
+
+// Process the results to group by customer_type
+foreach ($query->result() as $row) {
+    $customer_type = $row->customer_type;  // Get the customer type name
+    
+    // Check if this customer_type is already a key in the results array
+    if (!isset($results[$customer_type])) {
+        $results[$customer_type] = [];  // Initialize an array for this type if it doesn't exist
+    }
+    
+    // Append the row data to the appropriate customer_type array
+    $results[$customer_type][] = $row;
+}
+
+// Return or process $results as needed
+return $results;
+
+		
 		return $query->result();
 	} 
 	public function settinginfo()
@@ -622,12 +670,14 @@ class Report_model extends CI_Model {
 		
 		$dateRange = "a.order_date BETWEEN '$start_date%' AND '$end_date%' AND a.order_status=4";
 		
-		$this->db->select("a.order_id");
+		$this->db->select("a.order_id,ct.customer_type");
 		$this->db->from('customer_order a');
+		$this->db->join('customer_type ct', 'a.cutomertype = ct.customer_type_id', 'left');
 		$this->db->where($dateRange, NULL, FALSE); 	
 		$this->db->order_by('a.order_date','desc');
 		$query = $this->db->get();
 		return $query->result();
+
 	} 
 	public function order_items($ids,$catid=null){
 		$newids="'".implode("','",$ids)."'";
@@ -639,7 +689,7 @@ class Report_model extends CI_Model {
 			$condition="order_menu.order_id IN($newids) ";
 			}
 		$sql="SELECT SUM(order_menu.menuqty) as totalqty,order_menu.order_id,order_menu.groupmid,order_menu.groupvarient,order_menu.isgroup,order_menu.price,item_foods.ProductName,item_foods.OffersRate,variant.price as mprice,variant.variantName FROM order_menu LEFT JOIN item_foods ON order_menu.menu_id=item_foods.ProductsID LEFT JOIN variant ON order_menu.varientid=variant.variantid WHERE {$condition} AND order_menu.isgroup=0 GROUP BY order_menu.price,order_menu.menu_id,order_menu.varientid UNION SELECT order_menu.qroupqty as totalqty,order_menu.order_id,order_menu.groupmid,order_menu.groupvarient,order_menu.isgroup,order_menu.price,item_foods.ProductName,item_foods.OffersRate,variant.price as mprice,variant.variantName FROM order_menu LEFT JOIN item_foods ON order_menu.groupmid=item_foods.ProductsID LEFT JOIN variant ON order_menu.groupvarient=variant.variantid WHERE {$condition} AND order_menu.isgroup=1 GROUP BY order_menu.price,order_menu.groupmid,order_menu.groupvarient";
-		
+			
 		$query=$this->db->query($sql);
 		$orderinfo=$query->result();
 		

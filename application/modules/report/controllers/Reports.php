@@ -147,7 +147,7 @@ class Reports extends MX_Controller {
     }
 	public function salereport()
     {
-	      $this->permission->method('report','read')->redirect();
+	    $this->permission->method('report','read')->redirect();
         $data['title']    = display('sell_report');
      
         $pid = $this->input->post('paytype',true);
@@ -157,7 +157,7 @@ class Reports extends MX_Controller {
 		$start_date= date('Y-m-d' , strtotime($first_date));
 		$second_date = str_replace('/','-',$this->input->post('to_date'));
 		$end_date= date('Y-m-d' , strtotime($second_date));
-        $data['preport']  = $this->report_model->salereport($start_date,$end_date,$pid,$invoie_no);
+        $data['preports']  = $this->report_model->salereport($start_date,$end_date,$pid,$invoie_no);
 		$settinginfo=$this->report_model->settinginfo();
 		$data['setting']=$settinginfo;
 		$data['currency']=$this->report_model->currencysetting($settinginfo->currency);
@@ -330,14 +330,38 @@ class Reports extends MX_Controller {
 		$second_date = str_replace('/','-',$this->input->post('to_date'));
 		$end_date= date('Y-m-d' , strtotime($second_date));
         $preports  = $this->report_model->itemsReport($start_date,$end_date);
-        $i =0;
-        $order_ids = array('');
-        foreach ($preports as $preport) {
-        	 $order_ids[$i] = $preport->order_id;
-        	 $i++;
-        }
+
+
+		$organizedReports = [];
+
+		// Loop through each report in $preports
+		foreach ($preports as $report) {
+			// Get the customer type and order ID
+			$customerType = strtolower($report->customer_type); // Convert to lowercase for consistency
+			$orderId = $report->order_id;
+
+			// Initialize the array for the customer type if it doesn't exist
+			if (!isset($organizedReports[$customerType])) {
+				$organizedReports[$customerType] = [];
+			}
+
+			// Add the order ID to the respective customer type
+			$organizedReports[$customerType][] = $orderId;
+		}
+
+       foreach ($organizedReports as $ctype => $preports) {
+			$i =0;
+			$order_ids = [];
+			foreach ($preports as $preport) {
+				$order_ids[$i] = $preport;
+				$i++;
+			}
+			$data['items'][$ctype] = $this->report_model->order_items($order_ids,$catid);
+	   }
+        // echo "<pre>";
+		// print_r($data['items']);
 		
-           $data['items']  = $this->report_model->order_items($order_ids,$catid);
+        // $data['items']  = $this->report_model->order_items($order_ids,$catid);
 
         $data['allorderid']  =$order_ids;
 		$settinginfo=$this->report_model->settinginfo();
@@ -349,7 +373,6 @@ class Reports extends MX_Controller {
 		$this->load->view('report/ajaxsalereportitems', $data);
 
 		}
-
 				
 	public function sellrptItems(){
 		$this->permission->method('report','read')->redirect();

@@ -1,0 +1,58 @@
+.walk-in-customer {
+    color: white !important;
+    background-color: rgb(4, 163, 4);
+}
+
+.walk-in-customer:hover,
+.walk-in-customer:active,
+.walk-in-customer:focus {
+    color: black !important;
+    background-color: aqua;
+}
+
+.guest {
+    color: white !important;
+    background-color: #F03737;
+}
+
+.guest:hover,
+.guest:active,
+.guest:focus {
+    color: black !important;
+    background-color: aqua;
+}
+
+.charity {
+    color: white !important;
+    background-color: #2ECC71;
+}
+
+.charity:hover,
+.charity:active,
+.charity:focus {
+    color: black !important;
+    background-color: aqua;
+}
+
+.employee {
+    color: white !important;
+    background-color: #0071F1;
+}
+
+.employee:hover,
+.employee:active,
+.employee:focus {
+    color: black !important;
+    background-color: aqua;
+}
+.all-records {
+    color: white !important;
+    background-color: #007BFF;
+}
+
+.all-records:hover,
+.all-records:active,
+.all-records:focus {
+    color: black !important;
+    background-color: aqua;
+}
