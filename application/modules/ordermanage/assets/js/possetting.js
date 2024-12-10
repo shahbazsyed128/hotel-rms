@@ -1151,6 +1151,8 @@ function printRawHtml(view) {
 
 
 function placeorder() {
+
+    const Triggerbutton  = $('#add_payment');
     const ctypeid = $("#ctypeid").val();
     const customer_name = $("#customer_name").val();
     const order_date = encodeURIComponent($("#order_date").val());
@@ -1237,12 +1239,35 @@ function placeorder() {
         multiplletaxvalue,tablemember, table_member_multi, table_member_multi_person, csrf_test_name
     });
 
+    // $.ajax({
+    //     type: "POST",
+    //     url: `${basicinfo.baseurl}ordermanage/order/pos_order`,
+    //     data: dataString,
+    //     success: handleOrderSuccess
+    // });
+
+
     $.ajax({
         type: "POST",
         url: `${basicinfo.baseurl}ordermanage/order/pos_order`,
         data: dataString,
-        success: handleOrderSuccess
+        beforeSend: function() {
+            // Disable the button just before sending the request
+            Triggerbutton.prop("disabled", true).val("Processing...");
+        },
+        success: function(response) {
+            handleOrderSuccess(response);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error:", status, error);
+            alert("There was an issue with your order. Please try again.");
+        },
+        complete: function(xhr, status) {
+            // Re-enable the button after the AJAX request is complete
+            Triggerbutton.prop("disabled", false).val("Place Order"); // Change button text back to "Submit Order"
+        }
     });
+
 }
 
 function validateTableSelection(tableid) {
