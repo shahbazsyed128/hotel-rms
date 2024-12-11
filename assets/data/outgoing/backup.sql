@@ -36679,6 +36679,7 @@ SET SESSION sql_mode = "";
 SET SESSION sql_mode = "";
 SET SESSION sql_mode = "";
 SET SESSION sql_mode = "";
+INSERT INTO `tbl_cashregister` (`userid`, `counter_no`, `opening_balance`, `closing_balance`, `openclosedate`, `opendate`, `closedate`, `status`, `openingnote`, `closing_note`) VALUES ('178', '1', '100.000', '0.000', '2024-12-11', '2024-12-11 14:41:00', '1970-01-01 00:00:00', 0, '', '');
 SET SESSION sql_mode = "";
 SET SESSION sql_mode = "";
 SET SESSION sql_mode = "";
