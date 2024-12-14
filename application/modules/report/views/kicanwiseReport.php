@@ -1,44 +1,93 @@
-<link href="<?php echo base_url('application/modules/report/assets/css/kicanwiseReport.css'); ?>" rel="stylesheet" type="text/css"/>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen-wise Report</title>
 
-<div class="table-responsive">
-<table class="table table-bordered table-striped table-hover" id="respritbl">
-			                        <thead>
-										<tr>
-											<th><?php echo $name; ?></th>
-                                            <th><?php echo display('total_amount'); ?></th>
-											
-										</tr>
-									</thead>
-									<tbody class="kicanwisereport">
-									<?php 
-									$totalprice=0;
-										foreach ($items as $item) {
-																				# code...
-																											
-									?>
-											<tr>
-																					
-                                                <td><?php echo $item['kiname'];?></td>
-												
-												<td class="kicanwisereport-head-cell"><?php if($currency->position==1){echo $currency->curr_icon;}?> <?php echo $item['totalprice'];?> <?php if($currency->position==2){echo $currency->curr_icon;}?></td>
-												
-											</tr>
+    <!-- Your existing CSS -->
+    <link href="<?php echo base_url('application/modules/report/assets/css/kicanwiseReport.css'); ?>" rel="stylesheet" type="text/css"/>
 
-								<?php $totalprice = $totalprice+$item['totalprice'];  } ?>
-									</tbody>
-									<tfoot class="kicanwisereport-foot">
-											<tr>
-											<td class="kicanwisereport-first-cell" colspan="1" align="right">&nbsp; <b><?php echo display('subtotal') ?> </b></td>
-											<td class="kicanwisereport-sec-cell"><b><?php if($currency->position==1){echo $currency->curr_icon;}?> <?php echo number_format($totalprice,3);?> <?php if($currency->position==2){echo $currency->curr_icon;}?></b></td>
-										</tr>
-										<tr>
-											<td class="kicanwisereport-first-cell" colspan="1" align="right">&nbsp; <b><?php echo display('servicecharge+vAT') ?> </b></td>
-											<td class="kicanwisereport-sec-cell"><b><?php if($currency->position==1){echo $currency->curr_icon;}?> <?php echo number_format($vatsd,3);?> <?php if($currency->position==2){echo $currency->curr_icon;}?></b></td>
-										</tr>
-										<tr>
-											<td class="kicanwisereport-first-cell" colspan="1" align="right">&nbsp; <b><?php echo display('total_sale') ?> </b></td>
-											<td class="kicanwisereport-sec-cell"><b><?php if($currency->position==1){echo $currency->curr_icon;}?> <?php echo number_format($totalprice+$vatsd,3);?> <?php if($currency->position==2){echo $currency->curr_icon;}?></b></td>
-										</tr>
-									</tfoot>
-			                    </table>
-</div>                                
+    <!-- DataTables CSS (Scoped to avoid overriding) -->
+    <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+    <style>
+        /* Scoped styling to preserve your existing layout */
+        #kitchenReportTable_wrapper {
+            font-size: inherit;
+        }
+        #kitchenReportTable {
+            width: 100%;
+        }
+        #kitchenReportTable th, #kitchenReportTable td {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover" id="kitchenReportTable">
+            <thead>
+                <tr>
+                    <th>Kitchen Name</th>
+                    <th>Customer Types</th>
+                    <th>Total Amount (<?php echo $currency->curr_icon; ?>)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                $grandTotal = 0; 
+                foreach ($items as $kitchen): 
+                    $kitchenTotal = 0;
+                ?>
+                    <tr>
+                        <td><?php echo $kitchen['kiname']; ?></td>
+                        <td>
+                            <ul>
+                                <?php if (!empty($kitchen['report'])): 
+                                    foreach ($kitchen['report'] as $report): 
+                                        foreach ($report['customer_types'] as $customerType): 
+                                            $kitchenTotal += $customerType['totalprice'];
+                                            echo "<li>{$customerType['type']}: " . number_format($customerType['totalprice'], 2) . "</li>";
+                                        endforeach;
+                                    endforeach;
+                                else:
+                                    echo "<li>No customer types available</li>";
+                                endif; ?>
+                            </ul>
+                        </td>
+                        <td class="text-end">
+                            <?php echo number_format($kitchenTotal, 2); ?>
+                        </td>
+                    </tr>
+                    <?php $grandTotal += $kitchenTotal; ?>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="2" class="text-end">Grand Total</th>
+                    <th class="text-end">
+                        <?php echo number_format($grandTotal, 2); ?>
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- Existing JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#kitchenReportTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true
+            });
+        });
+    </script>
+</body>
+</html>

@@ -557,76 +557,156 @@ class Reports extends MX_Controller {
 		}
 
 
-		public function kichanReport(){
-       $this->permission->method('report','read')->redirect();
-        $data['title']    = display('sell_report');
+	// 	public function kichanReport(){
+    //    $this->permission->method('report','read')->redirect();
+    //     $data['title']    = display('sell_report');
      
        
-    $first_date = str_replace('/','-',$this->input->post('from_date'));
-    $start_date= date('Y-m-d' , strtotime($first_date));
-    $second_date = str_replace('/','-',$this->input->post('to_date'));
-    $end_date= date('Y-m-d' , strtotime($second_date));
+    // $first_date = str_replace('/','-',$this->input->post('from_date'));
+    // $start_date= date('Y-m-d' , strtotime($first_date));
+    // $second_date = str_replace('/','-',$this->input->post('to_date'));
+    // $end_date= date('Y-m-d' , strtotime($second_date));
       
 
-        $i =0;
+    //     $i =0;
        
-       $findkicen = $this->report_model->kiread();
-
-       $kichendata = array();
-       $y=0;
-       foreach ($findkicen as $kitchen) {
-       $preports  = $this->report_model->itemsKiReport($kitchen->kitchenid,$start_date,$end_date);
-       $totalamount = 0;
-	   $pricewithaddons =0;
-       foreach ($preports as $value) {
-		   if($value->price>0){
-			$newprice=$value->price;
-			}else{
-				$newprice=$value->mprice;
-				} 
-		if($value->OffersRate>0){
+    //    $findkicen = $this->report_model->kiread();
+	   
+    //    $kichendata = array();
+	   
+    //    $y=0;
+    //    foreach ($findkicen as $kitchen) {
+    //    $preports  = $this->report_model->itemsKiReport($kitchen->kitchenid,$start_date,$end_date);
+	   
+    //    $totalamount = 0;
+	//    $pricewithaddons =0;
+    //    foreach ($preports as $value) {
+	// 	   if($value->price>0){
+	// 		$newprice=$value->price;
+	// 		}else{
+	// 			$newprice=$value->mprice;
+	// 			} 
+	// 	if($value->OffersRate>0){
 			
-			$getdisprice=$newprice*$value->OffersRate/100;
-			$grprice=$newprice-$getdisprice;
-         	$itemprice=$value->menuqty*$grprice;
-		}else{
-			$itemprice=$value->menuqty*$newprice;
-			}
-		 
-         if($countprice->add_on_id !=NULL){
-           $add_on_ids = explode(',', $countprice->add_on_id);
-           $add_on_qtys = explode(',', $countprice->addonsqty);
-           $i=0;
-           foreach ($add_on_ids as $add_on_id) {
-             $add_on_price = $this->report_model->findaddons($add_on_id);
-             $pricewithaddons = $add_on_price->price*$add_on_qtys[$i];
-             
-             $i++;
-           }//end foreach
+	// 		$getdisprice=$newprice*$value->OffersRate/100;
+	// 		$grprice=$newprice-$getdisprice;
+    //      	$itemprice=$value->menuqty*$grprice;
+	// 	}else{
+	// 		$itemprice=$value->menuqty*$newprice;
+	// 		}
 
-         }
-		 $totalamount = $totalamount+$pricewithaddons+$itemprice;
+		 
+    //      if($countprice->add_on_id !=NULL){
+    //        $add_on_ids = explode(',', $countprice->add_on_id);
+    //        $add_on_qtys = explode(',', $countprice->addonsqty);
+    //        $i=0;
+    //        foreach ($add_on_ids as $add_on_id) {
+    //          $add_on_price = $this->report_model->findaddons($add_on_id);
+    //          $pricewithaddons = $add_on_price->price*$add_on_qtys[$i];
+             
+    //          $i++;
+    //        }//end foreach
+
+    //      }
+	// 	 $totalamount = $totalamount+$pricewithaddons+$itemprice;
 		
        
-       }//end foreach
-         $kichendata[$y] =   array('kiname' => $kitchen->kitchen_name,'totalprice'=> $totalamount);  
-       $y++;
-       }
-
-         $data['items'] = $kichendata;
+    //    }//end foreach
+    //      $kichendata[$y] =   array('kiname' => $kitchen->kitchen_name,'totalprice'=> $totalamount);  
+    //    $y++;
+    //    }
+     
+    //      $data['items'] = $kichendata;
+		 
         
-    $settinginfo=$this->report_model->settinginfo();
-    $data['setting']=$settinginfo;
-    $data['currency']=$this->report_model->currencysetting($settinginfo->currency);
-	$wherevat="`bill_date` BETWEEN '".$start_date."' AND '".$end_date."' AND `bill_status`=1";
-	$sdvat=$this->db->select("SUM(service_charge+VAT) as sdvat")->from('bill')->where($wherevat)->get()->row();
-    $data['vatsd']=$sdvat->sdvat;
-        $data['module'] = "report";
-        $data['name'] = 'Kitchen Name';
-        $data['page']   = "kicanwiseReport";  
-    $this->load->view('report/kicanwiseReport', $data);
+    // $settinginfo=$this->report_model->settinginfo();
+    // $data['setting']=$settinginfo;
+    // $data['currency']=$this->report_model->currencysetting($settinginfo->currency);
+	// $wherevat="`bill_date` BETWEEN '".$start_date."' AND '".$end_date."' AND `bill_status`=1";
+	// $sdvat=$this->db->select("SUM(service_charge+VAT) as sdvat")->from('bill')->where($wherevat)->get()->row();
+    // $data['vatsd']=$sdvat->sdvat;
+    //     $data['module'] = "report";
+    //     $data['name'] = 'Kitchen Name';
+    //     $data['page']   = "kicanwiseReport";  
 
-    }
+		
+    // $this->load->view('report/kicanwiseReport', $data);
+
+    // }
+	public function processKitchenReport($preports) {
+		$kitchenReport = [];
+	
+		foreach ($preports as $item) {
+			
+			$kitchenId = $item->kitchenid;
+			$customerType = $item->customer_type;
+	
+			// Initialize kitchen if not already set
+			if (!isset($kitchenReport[$kitchenId])) {
+				$kitchenReport[$kitchenId] = [
+					'kiname' => $item->kiname ?? 'Unknown Kitchen',
+					'customer_types' => [],
+					'totalprice' => 0
+				];
+			}
+	
+			// Initialize customer type if not already set
+			if (!isset($kitchenReport[$kitchenId]['customer_types'][$customerType])) {
+				$kitchenReport[$kitchenId]['customer_types'][$customerType] = [
+					'type' => $customerType,
+					'totalprice' => 0
+				];
+			}
+	
+			// Calculate item price
+			$price = $item->price ?: $item->mprice;
+			$quantity = $item->menuqty;
+			$itemTotal = $price * $quantity;
+	
+			// Add price to customer type total and kitchen total
+			$kitchenReport[$kitchenId]['customer_types'][$customerType]['totalprice'] += $itemTotal;
+			$kitchenReport[$kitchenId]['totalprice'] += $itemTotal;
+		}
+	
+		return $kitchenReport;
+	}
+	
+	public function kichanReport() {
+		$this->permission->method('report','read')->redirect();
+		$data['title'] = display('sell_report');
+	
+		$start_date = date('Y-m-d', strtotime(str_replace('/', '-', $this->input->post('from_date'))));
+		$end_date = date('Y-m-d', strtotime(str_replace('/', '-', $this->input->post('to_date'))));
+	
+		$kitchenData = [];
+		$findkicen = $this->report_model->kiread();
+	
+		foreach ($findkicen as $kitchen) {
+			$preports = $this->report_model->itemsKiReport($kitchen->kitchenid, $start_date, $end_date);
+			$kitchenData[$kitchen->kitchenid] = [
+				'kiname' => $kitchen->kitchen_name,
+				'report' => $this->processKitchenReport($preports)
+			];
+		}
+	
+		$data['items'] = $kitchenData;
+		$data['setting'] = $this->report_model->settinginfo();
+		$data['currency'] = $this->report_model->currencysetting($data['setting']->currency);
+		$data['vatsd'] = $this->db->select("SUM(service_charge + VAT) as sdvat")
+			->from('bill')
+			->where("`bill_date` BETWEEN '$start_date' AND '$end_date' AND `bill_status`=1")
+			->get()
+			->row()
+			->sdvat;
+	
+		$data['module'] = "report";
+		$data['name'] = 'Kitchen Name';
+		$data['page'] = "kicanwiseReport";
+		// echo "<pre>";
+		// print_r($data);
+		$this->load->view('report/kicanwiseReport', $data);
+	}
+	
 		public function servicerpt(){
 		$this->permission->method('report','read')->redirect();
         $data['title']    = display('scharge_report');

@@ -787,19 +787,85 @@ return $results;
 	public function itemsKiReport($kid,$start_date,$end_date)
 	{
 		
+		// $dateRange = "customer_order.order_date BETWEEN '$start_date' AND '$end_date' AND customer_order.order_status=4 AND item_foods.kitchenid=$kid";
+		// $sql="SELECT customer_order.saleinvoice, order_menu.*, item_foods.kitchenid, variant.price as mprice FROM order_menu LEFT JOIN customer_order ON customer_order.order_id=order_menu.order_id LEFT JOIN item_foods ON item_foods.ProductsID=order_menu.menu_id INNER JOIN variant ON variant.menuid=item_foods.ProductsID WHERE {$dateRange} AND order_menu.isgroup=0 UNION SELECT customer_order.saleinvoice, order_menu.*, item_foods.kitchenid, variant.price as mprice FROM order_menu LEFT JOIN customer_order ON customer_order.order_id=order_menu.order_id LEFT JOIN item_foods ON item_foods.ProductsID=order_menu.menu_id INNER JOIN variant ON variant.menuid=item_foods.ProductsID WHERE {$dateRange} AND order_menu.isgroup=1 GROUP BY order_menu.groupmid,order_menu.addonsuid";
+		// $this->db->select("customer_order.saleinvoice,order_menu.*,item_foods.kitchenid,item_foods.OffersRate,variant.price as mprice");
+		// $this->db->from('order_menu');
+		// $this->db->join('customer_order','customer_order.order_id=order_menu.order_id','left');
+		// $this->db->join('item_foods','item_foods.ProductsID=order_menu.menu_id','left');
+		// $this->db->join('variant','variant.menuid=item_foods.ProductsID','Inner');
+		// $this->db->where($dateRange); 
+		// $this->db->group_by('order_menu.order_id');
+		// $this->db->group_by('variant.menuid');	
+		// $query = $this->db->get();
+		// //echo $this->db->last_query();
+		// return $query->result();
 		$dateRange = "customer_order.order_date BETWEEN '$start_date' AND '$end_date' AND customer_order.order_status=4 AND item_foods.kitchenid=$kid";
-		$sql="SELECT customer_order.saleinvoice, order_menu.*, item_foods.kitchenid, variant.price as mprice FROM order_menu LEFT JOIN customer_order ON customer_order.order_id=order_menu.order_id LEFT JOIN item_foods ON item_foods.ProductsID=order_menu.menu_id INNER JOIN variant ON variant.menuid=item_foods.ProductsID WHERE {$dateRange} AND order_menu.isgroup=0 UNION SELECT customer_order.saleinvoice, order_menu.*, item_foods.kitchenid, variant.price as mprice FROM order_menu LEFT JOIN customer_order ON customer_order.order_id=order_menu.order_id LEFT JOIN item_foods ON item_foods.ProductsID=order_menu.menu_id INNER JOIN variant ON variant.menuid=item_foods.ProductsID WHERE {$dateRange} AND order_menu.isgroup=1 GROUP BY order_menu.groupmid,order_menu.addonsuid";
-		$this->db->select("customer_order.saleinvoice,order_menu.*,item_foods.kitchenid,item_foods.OffersRate,variant.price as mprice");
-		$this->db->from('order_menu');
-		$this->db->join('customer_order','customer_order.order_id=order_menu.order_id','left');
-		$this->db->join('item_foods','item_foods.ProductsID=order_menu.menu_id','left');
-		$this->db->join('variant','variant.menuid=item_foods.ProductsID','Inner');
-		$this->db->where($dateRange); 
-		$this->db->group_by('order_menu.order_id');
-		$this->db->group_by('variant.menuid');	
-		$query = $this->db->get();
-		//echo $this->db->last_query();
-		return $query->result();
+
+// First part of the query
+$sql = "
+    SELECT 
+        customer_order.saleinvoice, 
+        order_menu.*, 
+        item_foods.kitchenid, 
+        variant.price as mprice, 
+        ct.customer_type 
+    FROM 
+        order_menu 
+    LEFT JOIN 
+        customer_order ON customer_order.order_id = order_menu.order_id 
+    LEFT JOIN 
+        item_foods ON item_foods.ProductsID = order_menu.menu_id 
+    INNER JOIN 
+        variant ON variant.menuid = item_foods.ProductsID 
+    LEFT JOIN 
+        customer_type ct ON customer_order.cutomertype = ct.customer_type_id 
+    WHERE 
+        {$dateRange} AND order_menu.isgroup=0 
+    UNION 
+    SELECT 
+        customer_order.saleinvoice, 
+        order_menu.*, 
+        item_foods.kitchenid, 
+        variant.price as mprice, 
+        ct.customer_type 
+    FROM 
+        order_menu 
+    LEFT JOIN 
+        customer_order ON customer_order.order_id = order_menu.order_id 
+    LEFT JOIN 
+        item_foods ON item_foods.ProductsID = order_menu.menu_id 
+    INNER JOIN 
+        variant ON variant.menuid = item_foods.ProductsID 
+    LEFT JOIN 
+        customer_type ct ON customer_order.cutomertype = ct.customer_type_id 
+    WHERE 
+        {$dateRange} AND order_menu.isgroup=1 
+    GROUP BY 
+        order_menu.groupmid, order_menu.addonsuid";
+
+// Using Query Builder for the second query
+$this->db->select("
+    customer_order.saleinvoice,
+    order_menu.*,
+    item_foods.kitchenid,
+    item_foods.OffersRate,
+    variant.price as mprice,
+    ct.customer_type
+");
+$this->db->from('order_menu');
+$this->db->join('customer_order', 'customer_order.order_id = order_menu.order_id', 'left');
+$this->db->join('item_foods', 'item_foods.ProductsID = order_menu.menu_id', 'left');
+$this->db->join('variant', 'variant.menuid = item_foods.ProductsID', 'inner');
+$this->db->join('customer_type ct', 'customer_order.cutomertype = ct.customer_type_id', 'left');
+$this->db->where($dateRange);
+$this->db->group_by('order_menu.order_id');
+$this->db->group_by('variant.menuid');
+
+$query = $this->db->get();
+// echo $this->db->last_query();
+return $query->result();
+
 	}
 	public function kichanOrderInfo($orderid,$itemid){
 		$dateRange = "m.order_id=$orderid AND m.menu_id=$itemid";
