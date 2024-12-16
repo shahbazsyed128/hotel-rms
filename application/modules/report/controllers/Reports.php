@@ -359,7 +359,7 @@ class Reports extends MX_Controller {
 			$data['items'][$ctype] = $this->report_model->order_items($order_ids,$catid);
 	   }
         // echo "<pre>";
-		// print_r($data['items']);
+		// print_r($data);
 		
         // $data['items']  = $this->report_model->order_items($order_ids,$catid);
 
@@ -370,7 +370,7 @@ class Reports extends MX_Controller {
         $data['module'] = "report";
         $data['name'] = 'Items Name';
         $data['page']   = "ajaxsalereportitems";  
-		$this->load->view('report/ajaxsalereportitems', $data);
+		$this->load->view('report/ajaxsalereportitemsmain', $data);
 
 		}
 				
@@ -420,7 +420,7 @@ class Reports extends MX_Controller {
         $data['module'] = "report";
         $data['name'] = 'Waiter Name';
         $data['page']   = "ajaxsalereportitems";  
-		$this->load->view('report/ajaxsalereportitems', $data);
+		$this->load->view('report/WaitersReport', $data);
 
 		}
 		public function delviryReport(){
