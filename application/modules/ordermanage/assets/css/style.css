@@ -124,6 +124,12 @@
     border-radius: 0;
     box-shadow: inset 0 -8px 7px -9px rgba(0, 0, 0, .4), -2px -2px 5px -2px rgba(0, 0, 0, .4);
 }
+.nav-tabs > li > a.expenses {
+    color: #FFF;
+    background: #FF804F !important;
+    border-radius: 0;
+    box-shadow: inset 0 -8px 7px -9px rgba(0, 0, 0, .4), -2px -2px 5px -2px rgba(0, 0, 0, .4);
+}
 
 
 .nav-tabs > li.active > a,
