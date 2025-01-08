@@ -485,14 +485,15 @@ $(document).ready(function () {
     
         $("#delivercom").prop('disabled', !isThirdParty);
         $("#waiter").prop('disabled', isThirdParty);
-        $("#tableid").prop('disabled', isThirdParty || customertype == 4);
-        $("#cookingtime").prop('disabled', isThirdParty || customertype == 4);
+        $("#tableid").prop('disabled', isThirdParty || customertype == 4 || customertype == 5 || customertype == 7);
+        $("#cookingtime").prop('disabled', isThirdParty || customertype == 4 || customertype == 5 || customertype == 7);
     
         $("#nonthirdparty").toggle(!isThirdParty);
         $("#thirdparty").toggle(isThirdParty);
-        $("#tblsecp").toggle(!isThirdParty && customertype != 2 && customertype != 4);
-        $("#tblsec").toggle(!isThirdParty && customertype != 2 && customertype != 4);
-        $('#customer_note').toggle(isGuest);
+        $("#tblsecp").toggle(!isThirdParty && customertype != 2 && customertype != 4 && customertype != 5 && customertype != 7);
+        $("#tblsec").toggle(!isThirdParty && customertype != 2 && customertype != 4 && customertype != 5 && customertype != 7);
+        $('#customer_note').toggle(isGuest || customertype == 7);
+        $("#cookingtime").toggle(!customertype == 7);
     });
 
 
@@ -1154,6 +1155,7 @@ function placeorder() {
 
     const Triggerbutton  = $('#add_payment');
     const ctypeid = $("#ctypeid").val();
+    console.log(ctypeid);
     const customer_name = $("#customer_name").val();
     const order_date = encodeURIComponent($("#order_date").val());
     const grandtotal = $("#grandtotal").val();
@@ -1199,14 +1201,15 @@ function placeorder() {
             alert("Please Select Delivery Company!!!");
             return false;
         }
-    } else if ([2, 4].includes(ctypeid)) {
+    } else if (ctypeid == 4 || ctypeid == 2 || ctypeid == 5  || ctypeid == 7) {
         if (possetting.waiter == 1) {
             waiter = $("#waiter").val();
-            if (!waiter) {
+            if (waiter == '') {
                 alert("Please Select Waiter!!!");
                 return false;
             }
         }
+        
     } else if (ctypeid == 6) {
         if (!customernote) {
             alert("Please Enter Customer Note!!!");
@@ -1455,7 +1458,7 @@ function quickorder() {
             alert("Please Select Delivar Company!!!");
             return false;
         }
-    } else if (ctypeid == 4 || ctypeid == 2) {
+    } else if (ctypeid == 4 || ctypeid == 2 || ctypeid == 5) {
         var waiter = $("#waiter").val();
         if (quickordersetting.waiter == 1) {
             if (waiter == '') {

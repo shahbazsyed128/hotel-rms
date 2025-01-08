@@ -22,7 +22,14 @@
           <?php if (!empty($onprocess->marge_order_id)) { ?>
             <div class="hero-widget <?php echo $onprocess->customer_type; ?> well well-sm height-abg">
               <div class="mdjc">
-                <label class="text-muted-none"><strong><?php echo display('table'); ?>: <?php echo $onprocess->tablename; ?></strong></label>
+                <label class="text-muted-none"><strong><?php echo display('table'); ?>: <?php 
+                
+                if (empty($onprocess->tablename)) {
+                    echo $onprocess->customer_type;
+                } else {
+                    echo $onprocess->tablename;
+                }
+                ?></strong></label>
                 <?php if ($this->permission->method('ordermanage', 'update')->access() && $onprocess->splitpay_status == 0): ?>
                   <div class="display-flex align-items-center">
                     <?php 
@@ -68,7 +75,14 @@
           <?php } else { ?>
             <div class="hero-widget <?php echo $onprocess->customer_type; ?> well well-sm height-auto">
               <div class="mdjc">
-                <label class="text-muted-none"><strong><?php echo display('table'); ?>: <?php echo $onprocess->tablename; ?></strong></label>
+                <label class="text-muted-none"><strong><?php echo display('table'); ?>: <?php 
+                if (empty($onprocess->tablename)) {
+                    echo $onprocess->customer_type;
+                } else {
+                    echo $onprocess->tablename;
+                }
+                
+                ?></strong></label>
                 <?php if ($this->permission->method('ordermanage', 'update')->access() && $onprocess->splitpay_status == 0): ?>
                   <div class="display-flex align-items-center">
                     <div class="action-btn">
