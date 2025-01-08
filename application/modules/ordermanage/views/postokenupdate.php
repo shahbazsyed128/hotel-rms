@@ -136,7 +136,23 @@
 
         $content = "";
         foreach ($allItems['exitsitem'] as $exititem) {
-            $isexitsitem = $this->order_model->readupdate('tbl_updateitems.*,SUM(tbl_updateitems.qty) as totalqty', 'tbl_updateitems', array('ordid' => $orderinfo->order_id, 'menuid' => $exititem->menu_id, 'varientid' => $exititem->varientid, 'addonsuid' => $exititem->addonsuid));
+            // $isexitsitem = $this->order_model->readupdate('tbl_updateitems.*,SUM(tbl_updateitems.qty) as totalqty', 'tbl_updateitems', array('ordid' => $orderinfo->order_id, 'menuid' => $exititem->menu_id, 'varientid' => $exititem->varientid, 'addonsuid' => $exititem->addonsuid));
+            $isexitsitem = $this->order_model->readupdate(
+                'tbl_updateitems.*, 
+                SUM(CASE 
+                    WHEN isupdate IS NULL THEN qty
+                    WHEN isupdate = "-" THEN -qty
+                    ELSE qty
+                END) AS totalqty',
+                'tbl_updateitems', 
+                array(
+                    'ordid' => $orderinfo->order_id, 
+                    'menuid' => $exititem->menu_id, 
+                    'varientid' => $exititem->varientid, 
+                    'addonsuid' => $exititem->addonsuid
+                )
+            );
+            
             if (!empty($isexitsitem) && $isexitsitem->qty > 0) {
                 $content .= generateTableRow($isexitsitem->totalqty, $exititem->ProductName, $exititem->notes, $exititem->variantName);
             }
