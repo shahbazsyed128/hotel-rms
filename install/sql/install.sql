@@ -763,8 +763,31 @@ CREATE TABLE IF NOT EXISTS `customer_info` (
 -- Dumping data for table `customer_info`
 --
 
-INSERT INTO `customer_info` (`customer_id`, `cuntomer_no`, `membership_type`, `customer_name`, `customer_email`, `password`, `customer_token`, `customer_address`, `customer_phone`, `customer_picture`, `favorite_delivery_address`, `crdate`, `is_active`) VALUES(1, 'cusL-0001', 2, 'Walkin', 'test@gmail.com', NULL, 'cO_Sa2fwscE:APA91bEFDD0sbV52pZPwJEl8MEUCcHBg2wIGjKfelfbiytAj4nJlPsKf8sSupfElBq-nm36DCkjYDEoUcA7qvtzKu4vDqjutF23f6Y_0uw4L_PlJIrtl61y4s-t5OKFAmdaU9OUQTtYS', 'dhaka', '8801717426371', NULL, 'ddd', NULL, 1);
-INSERT INTO `customer_info` (`customer_id`, `cuntomer_no`, `membership_type`, `customer_name`, `customer_email`, `password`, `customer_token`, `customer_address`, `customer_phone`, `customer_picture`, `favorite_delivery_address`, `crdate`, `is_active`) VALUES(36, 'cusL-0004', 1, 'Kabir khan', 'kabir@gmail.com', '827ccb0eea8a706c4c34a16891f84e7b', NULL, 'DDD sgfsrgrg', '1732432434', 'assets/img/icons/2021-11-10/m.png', NULL, '2021-08-31', 1);
+INSERT INTO `customer_info` (`customer_id`, `cuntomer_no`, `membership_type`, `customer_name`, `customer_email`, `customer_type`, `password`, `customer_token`, `customer_address`, `customer_phone`, `customer_picture`, `favorite_delivery_address`, `crdate`, `is_active`) VALUES
+(1, 'cusL-0001', 2, 'Walkin', 'test@gmail.com', 1, NULL, 'cO_Sa2fwscE:APA91bEFDD0sbV52pZPwJEl8MEUCcHBg2wIGjKfelfbiytAj4nJlPsKf8sSupfElBq-nm36DCkjYDEoUcA7qvtzKu4vDqjutF23f6Y_0uw4L_PlJIrtl61y4s-t5OKFAmdaU9OUQTtYS', 'Dhaka', '8801717426371', NULL, 'ddd', NULL, 1),
+(36, 'cusL-0004', 1, 'Kabir Khan', 'kabir@gmail.com', 1, '827ccb0eea8a706c4c34a16891f84e7b', NULL, 'DDD sgfsrgrg', '1732432434', 'assets/img/icons/2021-11-10/m.png', NULL, '2021-08-31', 1),
+(37, 'cusL-0005', 0, 'Mahdi Shah', 'mehdi@gmail.com', 5, NULL, NULL, '', '2131234324', NULL, '', NULL, 1),
+(38, 'cusL-0006', 0, 'Murtaza Solangi', 'murtu@gmail.com', 5, NULL, NULL, '', '34242424242', NULL, '', NULL, 1),
+(39, 'cusL-0007', 0, 'Gulsheer Solangi', 'gulu@gmail.com', 5, NULL, NULL, '', '234242424', NULL, '', NULL, 1),
+(40, 'cusL-0008', 0, 'Ameero Birahmani', 'ameero@gmail.com', 5, NULL, NULL, '', '452352342', NULL, '', NULL, 1),
+(41, 'cusL-0009', 0, 'Munwar Solangi', 'munu@gmail.com', 5, NULL, NULL, '', '2523423424', NULL, '', NULL, 1),
+(42, 'cusL-0010', 0, 'Wadal Shah', 'Wadal@gmail.com', 5, NULL, NULL, '', '213213144', NULL, '', NULL, 1),
+(43, 'cusL-0011', 0, 'Basar Mallah', 'basar@gmail.com', 7, NULL, NULL, '', '45353535', NULL, '', NULL, 1),
+(44, 'cusL-0012', 0, 'Ayaz Shah', 'ayaz@gmail.com', 7, NULL, NULL, '', '73642493269', NULL, '', NULL, 1),
+(45, 'cusL-0013', 0, 'Ali Hyhder', 'Ali@gmail.com', 1, NULL, NULL, '', '345353', NULL, '', NULL, 1),
+(46, 'cusL-0014', 0, 'Mehal Solangi', 'Mehal@gmail.com', 1, NULL, NULL, '', '43534553534', NULL, '', NULL, 1),
+(47, 'cusL-0015', 0, 'Munwar Solangi', 'Munwar@gmnail.com', 1, NULL, NULL, '', '32523535', NULL, '', NULL, 1),
+(48, 'cusL-0016', 0, 'Kashif Bodlayi', 'Bodlyi@gmail.com', 1, NULL, NULL, '', '543453535', NULL, '', NULL, 1),
+(49, 'cusL-0017', 0, 'Umar Umrani', 'Umar@gmail.com', 5, NULL, NULL, '', '2343424232', NULL, '', NULL, 1),
+(50, 'cusL-0018', 0, 'Ghulam Abbas Solangi', 'abbas@gmail.com', 7, NULL, NULL, '', '234242', NULL, '', NULL, 1),
+(51, 'cusL-0019', 0, 'Abdul Solangi', 'Abdul@gmail.com', 1, NULL, NULL, '', '758587587', NULL, '', NULL, 1),
+(52, 'cusL-0020', 0, 'Hasnain Shah', 'Hasnian@gmail.com', 6, NULL, NULL, '', '23423424', NULL, '', NULL, 1),
+(53, 'cusL-0021', 0, 'Shahani', 'Shahani@gmail.com', 7, NULL, NULL, '', '8768767676', NULL, '', NULL, 1),
+(54, 'cusL-0022', 0, 'Khameso Khan', 'khameso@gmail.com', 7, NULL, NULL, '', '7687668768', NULL, '', NULL, 1),
+(55, 'cusL-0023', 0, 'Shahbaz Shah', 'Shahbaz@gmail.com', 6, NULL, NULL, '', '6757656', NULL, '', NULL, 1),
+(57, 'cusL-0025', 0, 'Sayed Arbab Shah', 'Arbab@gmail.com', 7, NULL, NULL, '', '767678786', NULL, '', NULL, 1),
+(58, 'cusL-0026', 0, 'Mehboob Ali', 'Mehboob@gmail.com', 5, NULL, NULL, '', '7585585', NULL, '', NULL, 1),
+(59, 'cusL-0027', 0, 'Shahbaz Solangi', 'shabu@gmail.com', 5, NULL, NULL, '', '7747565', NULL, '', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -845,7 +868,7 @@ CREATE TABLE IF NOT EXISTS `customer_type` (
 INSERT INTO `customer_type` (`customer_type_id`, `customer_type`, `ordering`) VALUES(1, 'Walk In Customer', 0);
 INSERT INTO `customer_type` (`customer_type_id`, `customer_type`, `ordering`) VALUES(2, 'Online Customer', 0);
 INSERT INTO `customer_type` (`customer_type_id`, `customer_type`, `ordering`) VALUES(3, 'Third Party', 0);
-INSERT INTO `customer_type` (`customer_type_id`, `customer_type`, `ordering`) VALUES(4, 'Take Way', 0);
+INSERT INTO `customer_type` (`customer_type_id`, `customer_type`, `ordering`) VALUES(4, 'Take Away', 0);
 INSERT INTO `customer_type` (`customer_type_id`, `customer_type`, `ordering`) VALUES(5, 'Employee', 0);
 INSERT INTO `customer_type` (`customer_type_id`, `customer_type`, `ordering`) VALUES(6, 'Guest', 0);
 INSERT INTO `customer_type` (`customer_type_id`, `customer_type`, `ordering`) VALUES(7, 'Charity', 0);
