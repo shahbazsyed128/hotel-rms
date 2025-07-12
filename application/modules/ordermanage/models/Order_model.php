@@ -49,6 +49,7 @@ class Order_model extends CI_Model
 		}
 		return true;
 	}
+	
 	public function allfood()
 	{
 		$this->db->select('item_foods.*,variant.variantid,variant.variantName,variant.price');
