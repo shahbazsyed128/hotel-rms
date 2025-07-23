@@ -1,5 +1,6 @@
 <table class="table table-fixed table-bordered table-hover bg-white wpr_100" id="onprocessingCharity">
     <thead>
+        <button type="button" style="padding: 10px;" >Get Daily Report</button>
         <tr>
             <th class="text-center"><?php echo display('sl'); ?>. </th>
             <th class="text-center"><?php echo display('invoice'); ?> </th>
