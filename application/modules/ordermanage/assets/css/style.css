@@ -131,6 +131,14 @@
     box-shadow: inset 0 -8px 7px -9px rgba(0, 0, 0, .4), -2px -2px 5px -2px rgba(0, 0, 0, .4);
 }
 
+/* .nav-tabs > li.active > a.expenses,
+.nav-tabs > li.active > a.expenses:hover {
+    color: #37a000;
+    background: #fff !important;
+    border-radius: 0;
+    box-shadow: inset 0 -8px 7px -9px rgba(0, 0, 0, .4), -2px -2px 5px -2px rgba(0, 0, 0, .4);
+} */
+
 
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover {
