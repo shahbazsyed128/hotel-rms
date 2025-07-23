@@ -74,9 +74,9 @@ $route['app-terms'] = "hungry/termsqr";
 $route['app-refund-policty'] = "hungry/refundpolicyqr";
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
-
 //Qr Route
 
+$route['dailyreport'] = 'dailyreport/Sales/index';
 
 
 //set modules/config/routes.php
