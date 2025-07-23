@@ -786,6 +786,20 @@ $(document).ready(function () {
         });
 
 
+        $(document).on('click', '#managetodayexpenses', function () {
+            var url = 'showexpenses';
+            var csrf = $('#csrfhashresarvation').val();
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: { csrf_test_name: csrf },
+                success: function (data) {
+                    $('#manageexpenses').html(data);
+                }
+            });
+        });
+
+
     /*all todayorder product as ajax*/
     $(document).on('click', '#todayonlieorder', function () {
 
@@ -803,6 +817,8 @@ $(document).ready(function () {
 
 
     });
+
+    
     /*all todayorder product as ajax*/
     $(document).on('click', '#todayqrorder', function () {
 
@@ -1391,6 +1407,9 @@ function editposorder(id, view) {
     }
     else if(view == 7){
         var vid = $('#charityorders');
+    } 
+    else if(view == 8){
+        var vid = $('#manageexpenses');
     } 
     else if (view == 4) {
         var vid = $("#qrorder");
