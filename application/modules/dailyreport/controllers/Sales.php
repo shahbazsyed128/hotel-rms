@@ -19,8 +19,9 @@
             $data['todaySales'] = $this->Sales_Model->todayamount();
             $data['monthlyOrders'] = $this->Sales_Model->monthlysaleorder();
             $data['monthlySales'] = $this->Sales_Model->monthlysaleamount();
-            $data['employees'] = $this->Sales_Model->employees();            
+            $data['employees'] = $this->Sales_Model->employees(); 
             $this->load->view('Sales', $data);
+
 
         }
 
