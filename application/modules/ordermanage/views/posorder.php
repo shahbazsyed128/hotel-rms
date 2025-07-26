@@ -490,7 +490,7 @@ foreach ($scan as $file) {
           <!-- <li> <a href="#guestorders" role="tab" data-toggle="tab" class="guestorder newtab" id="todayguestorder" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Today Guest Orders</span> </a> </li> -->
           <li> <a href="#employeeorders" role="tab" data-toggle="tab" class="employeeorder newtab" id="todayemployeeorder" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Today Employee's Orders</span> </a> </li>
           <li> <a href="#employeeorders2" role="tab" data-toggle="tab" class="employeeorder2 newtab" id="todayemployeeorder2" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Today Guest's Orders</span> </a> </li>
-          <li> <a href="#charityorders" role="tab" data-toggle="tab" class="charityorder newtab" id="todaycharityorder" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Sales Report</span> </a> </li>
+          <li> <a href="#charityorders" role="tab" data-toggle="tab" class="charityorder newtab" id="todaycharityorder" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Employees Report</span> </a> </li>
           
           <!-- new button  expenses-->
 

@@ -450,7 +450,15 @@ class Order extends MX_Controller
 
 	public function showtodaycharityorder()
 	{
-		$this->load->view('todaycharityorder');
+		$data['todayOrders'] = $this->order_model->todayorder();
+		$data['todaySales'] = $this->order_model->todayamount();
+        $data['monthlyOrders'] = $this->order_model->monthlysaleorder();
+        $data['monthlySales'] = $this->order_model->monthlysaleamount();
+        $data['completedOrders'] = $this->order_model->completedorder();
+        $data['lifetimeSells'] = $this->order_model->lifetimeSells();
+        $data['employees'] = $this->order_model->employees();
+        // $data['employee_roles'] = $this->order_model->get_employee_roles();
+		$this->load->view('todaycharityorder', $data);
 	}
 
 	public function showexpenses()

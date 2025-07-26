@@ -19,7 +19,7 @@
 
 
 		public function employees(){
-			$this->db->select(' e.emp_id as eid, e.emp_name ename, r.emp_role_name erole , e.emp_salary esalary');
+			$this->db->select(' e.emp_id, e.emp_name, r.emp_role_name , e.emp_salary');
 			$this->db->from('emp_details e');
 			$this->db->join('emp_role r', 'r.emp_role_id = e.emp_role');
 			$this->db->get();
