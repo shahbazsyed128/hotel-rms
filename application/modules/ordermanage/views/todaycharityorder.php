@@ -57,10 +57,10 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="employeeModalLabel">Add New Employee</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+     <h3 class="modal-title" id="employeeModalLabel">Add New Employee</h3>
             </div>
             <div class="modal-body">
                 <form id="employee-form" action="<?php echo base_url('ordermanage/order/create_employee'); ?>" method="post">
@@ -74,9 +74,9 @@
                         <label for="emp_role_id">Employee Role</label>
                         <select class="form-control" id="emp_role_id" name="emp_role_id" required>
                             <option value="">Select Role</option>
-                            <?php if (!empty($employee_roles)) {
-                                foreach ($employee_roles as $role) { ?>
-                                    <option value="<?php echo htmlspecialchars($role->emp_role_id, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($role->emp_role_name, ENT_QUOTES, 'UTF-8'); ?></option>
+                            <?php if (!empty($employees)) {
+                                foreach ($employees as $role) { ?>
+                                    <option value="<?php echo htmlspecialchars($role->emp_role, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($role->emp_role_name, ENT_QUOTES, 'UTF-8'); ?></option>
                             <?php }
                             } ?>
                         </select>
