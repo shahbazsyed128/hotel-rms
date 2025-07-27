@@ -457,9 +457,58 @@ class Order extends MX_Controller
         $data['completedOrders'] = $this->order_model->completedorder();
         $data['lifetimeSells'] = $this->order_model->lifetimeSells();
         $data['employees'] = $this->order_model->employees();
-        // $data['employee_roles'] = $this->order_model->get_employee_roles();
+    	$data['roles'] = $this->order_model->get_all_roles(); // new function
+
 		$this->load->view('todaycharityorder', $data);
 	}
+
+
+public function createemployee() {
+    $name = $this->input->post('emp_name');
+    $role = $this->input->post('emp_role_id');
+    $salary = $this->input->post('emp_salary');
+
+    if (!$name || !$role || !$salary) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Missing required fields'
+        ]);
+        return;
+    }
+
+    $data = [
+        'emp_name' => $name,
+        'emp_role' => $role,
+        'emp_salary' => $salary
+    ];
+
+    $insert = $this->order_model->insertemployee($data);
+
+    if ($insert) {
+        // Get the inserted ID
+        $emp_id = $this->db->insert_id();
+        $role_name = $this->order_model->get_role_name($role);
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Employee saved successfully',
+            'employee' => [
+                'emp_id' => $emp_id,
+                'emp_name' => $name,
+                'emp_role_name' => $role_name,
+                'emp_salary' => $salary
+            ]
+        ]);
+    } else {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Failed to insert employee into database.'
+        ]);
+    }
+}
+
+
+
 
 	public function showexpenses()
 	{

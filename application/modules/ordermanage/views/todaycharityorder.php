@@ -1,6 +1,7 @@
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="m-0">Select Employee Salary Expenditure</h2>
+    <div class=" d-flex justify-content-between align-items-center mb-3" style="display: flex;
+        justify-content: space-between;">
+        <h2 class="text-center">Select Employee Salary Expenditure</h2>
         <button type="button" class="btn btn-success" id="add-employee-btn" data-toggle="modal" data-target="#employeeModal">
             <i class="fa fa-plus"></i> Add New Employee
         </button>
@@ -53,30 +54,29 @@
 </div>
 
 <!-- Add/Edit Employee Modal -->
-<div class="modal fade" id="employeeModal" tabindex="-1" role="dialog" aria-labelledby="employeeModalLabel" aria-hidden="true">
+<div class="modal fade" id="employeeModal" tabindex="-1" role="dialog" aria-labelledby="employeeModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span a="true">&times;</span>
                 </button>
      <h3 class="modal-title" id="employeeModalLabel">Add New Employee</h3>
             </div>
             <div class="modal-body">
-                <form id="employee-form" action="<?php echo base_url('ordermanage/order/create_employee'); ?>" method="post">
-                    <!-- CSRF Token -->
-                    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                <form id="employee-form" action="" method="post">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                     <div class="form-group">
                         <label for="emp_name">Employee Name</label>
                         <input type="text" class="form-control" id="emp_name" name="emp_name" required>
                     </div>
                     <div class="form-group">
-                        <label for="emp_role_id">Employee Role</label>
+                        <label for="emp_role">Employee Role</label>
                         <select class="form-control" id="emp_role_id" name="emp_role_id" required>
                             <option value="">Select Role</option>
-                            <?php if (!empty($employees)) {
-                                foreach ($employees as $role) { ?>
-                                    <option value="<?php echo htmlspecialchars($role->emp_role, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($role->emp_role_name, ENT_QUOTES, 'UTF-8'); ?></option>
+                            <?php if (!empty($roles)) {
+                                foreach ($roles as $role) { ?>
+                                    <option value="<?php echo htmlspecialchars($role->emp_role_id, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($role->emp_role_name, ENT_QUOTES, 'UTF-8'); ?></option>
                             <?php }
                             } ?>
                         </select>
@@ -96,3 +96,65 @@
 </div>
 
 <script src="<?php echo base_url('application/modules/ordermanage/assets/js/todaycharityorder.js'); ?>" type="text/javascript"></script>
+<script>
+    // Trigger form submission when clicking Save button
+    $('#save-employee-btn').on('click', function () {
+        $('#employee-form').submit();
+    });
+
+    // Handle AJAX form submission
+    $('#employee-form').submit(function (e) {
+        e.preventDefault();
+
+        const formData = $(this).serialize();
+
+        $.ajax({
+            url: '<?= base_url("ordermanage/order/createemployee") ?>',
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    const emp = response.employee;
+
+                    let newRow = `
+                        <tr id="employee-row-${emp.emp_id}">
+                            <td class="text-center">
+                                <input type="checkbox" class="form-check-input mx-auto employee-checkbox"
+                                    data-id="${emp.emp_id}"
+                                    data-salary="${emp.emp_salary}">
+                            </td>
+                            <td>${emp.emp_name}</td>
+                            <td>${emp.emp_role_name}</td>
+                            <td class="text-right">₹${parseFloat(emp.emp_salary).toFixed(2)}</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-primary btn-sm edit-employee"
+                                    data-id="${emp.emp_id}"
+                                    data-name="${emp.emp_name}"
+                                    data-role="${emp.emp_role_name}"
+                                    data-salary="${emp.emp_salary}">
+                                    <i class="fa fa-edit"></i> Edit
+                                </button>
+                                <button type="button" class="btn btn-danger btn-sm delete-employee"
+                                    data-id="${emp.emp_id}">
+                                    <i class="fa fa-trash"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+
+                    $('#employee-table tbody').append(newRow);
+                    $('#employeeModal').modal('hide');
+                    $('#employee-form')[0].reset();
+                    calculateTotal();
+                } else {
+                    alert(response.message || 'Failed to save employee');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', error);
+                alert('Something went wrong while saving employee.');
+            }
+        });
+    });
+</script>

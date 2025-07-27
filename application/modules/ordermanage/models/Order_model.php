@@ -160,7 +160,7 @@ class Order_model extends CI_Model
 	}
 
 	public function employees(){
-		$this->db->select(' e.emp_id, e.emp_name, e.emp_role , r.emp_role_name , e.emp_salary');
+		$this->db->select(' e.emp_id, e.emp_name, e.emp_role , r.emp_role_id , r.emp_role_name , e.emp_salary');
 		$this->db->from('emp_details e');
 		$this->db->join('emp_role r', 'r.emp_role_id = e.emp_role');
 		$query = $this->db->get();
@@ -170,16 +170,31 @@ class Order_model extends CI_Model
 		return false;
 	}
 
+	public function get_all_roles() {
+    $query = $this->db->get('emp_role');
+    if ($query->num_rows() > 0) {
+        return $query->result();
+    }
+    return [];
+}
 
-	public function get_employee_roles() {
-		$this->db->select('*');
-		$this->db->from('emp_role');
-		$this->db->get();
-		return $this->db->result();
+	public function get_role_name($role_id) {
+    	$this->db->select('emp_role_name');
+    	$this->db->from('emp_role');
+    	$this->db->where('emp_role_id', $role_id);
+    	$query = $this->db->get();
+
+    	if ($query->num_rows() > 0) {
+        	return $query->row()->emp_role_name;
+    }
+    return '';
+}
+
+
+	public function insertemployee($data){
+		return $query= $this->db->insert('emp_details', $data);
 	}
 
-
-	
 
 	public function allfood2()
 	{
