@@ -491,11 +491,8 @@ foreach ($scan as $file) {
           <li> <a href="#employeeorders" role="tab" data-toggle="tab" class="employeeorder newtab" id="todayemployeeorder" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Today Employee's Orders</span> </a> </li>
           <li> <a href="#employeeorders2" role="tab" data-toggle="tab" class="employeeorder2 newtab" id="todayemployeeorder2" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Today Guest's Orders</span> </a> </li>
           <li> <a href="#charityorders" role="tab" data-toggle="tab" class="charityorder newtab" id="todaycharityorder" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Employees Report</span> </a> </li>
+          <!-- <li> <a href="#charityorders" role="tab" data-toggle="tab" class="charityorder newtab" id="todaycharityorder" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Employees Report</span> </a> </li> -->
           
-          <!-- new button  expenses-->
-
-          <li> <a href="#manageexpenses" role="tab" data-toggle="tab" class="expenses newtab" id="managetodayexpenses" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Manage Expenses</span> </a> </li>
-          <!-- new button expences -->
 
           <?php if ($new_version != $myversion) {
             if ($versioncheck->version != $new_version) {

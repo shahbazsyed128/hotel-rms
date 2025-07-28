@@ -195,6 +195,62 @@ class Order_model extends CI_Model
 	}
 
 
+
+
+
+
+
+	public function get_items() {
+        return $this->db->get('expense_item')->result();
+    }
+
+    public function get_vendors() {
+        return $this->db->get('expense_vendors')->result();
+    }
+
+    public function insert_expense($data) {
+        return $this->db->insert('item_expenses', $data);
+    }
+
+    public function get_expenses() {
+        $this->db->select('e.*, i.item_name, v.vendor_name');
+        $this->db->from('item_expenses e');
+        $this->db->join('expense_item i', 'i.id = e.item_id');
+        $this->db->join('expense_vendors v', 'v.id = e.vendor_id');
+        $this->db->order_by('expense_date', 'DESC');
+        return $this->db->get()->result();
+    }
+
+    public function update_payment_status($id, $status) {
+        $this->db->where('id', $id);
+        return $this->db->update('item_expenses', ['payment_status' => $status]);
+    }
+
+
+	public function add_item_if_not_exists($item_name) {
+    $this->db->where('item_name', $item_name);
+    $query = $this->db->get('expense_item');
+    if ($query->num_rows() > 0) {
+        return $query->row()->id;
+    } else {
+        $this->db->insert('expense_item', ['item_name' => $item_name]);
+        return $this->db->insert_id();
+    }
+}
+
+public function add_vendor_if_not_exists($vendor_name) {
+    $this->db->where('vendor_name', $vendor_name);
+    $query = $this->db->get('expense_vendors');
+    if ($query->num_rows() > 0) {
+        return $query->row()->id;
+    } else {
+        $this->db->insert('expense_vendors', ['vendor_name' => $vendor_name]);
+        return $this->db->insert_id();
+    }
+}
+
+
+
 	public function allfood2()
 	{
 		$this->db->select('*');

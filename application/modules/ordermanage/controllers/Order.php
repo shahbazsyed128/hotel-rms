@@ -444,9 +444,83 @@ class Order extends MX_Controller
 	}
 
 	public function showtodayemployeeorder2()
-	{
-		$this->load->view('todayemployeeorder2');
-	}
+{
+    // Load items, vendors, and expenses from model
+    $data['items'] = $this->order_model->get_items();
+    $data['vendors'] = $this->order_model->get_vendors();
+    $data['expenses'] = $this->order_model->get_expenses();
+
+    // Load view
+    $this->load->view('todayemployeeorder2', $data);
+}
+
+public function save_expense_ajax()
+{
+    $item_id = $this->input->post('item_id');
+    $vendor_id = $this->input->post('vendor_id');
+    $item_name = trim($this->input->post('item_name'));
+    $vendor_name = trim($this->input->post('vendor_name'));
+    $quantity_kg = (float) $this->input->post('quantity_kg');
+    $unit_price = (float) $this->input->post('unit_price');
+    $payment_status = $this->input->post('payment_status') ?? 'Unpaid';
+    $today = date('Y-m-d');
+
+    // If name was typed instead of ID
+    if (!$item_id && $item_name) {
+        $item_id = $this->order_model->add_item_if_not_exists($item_name);
+    }
+
+    if (!$vendor_id && $vendor_name) {
+        $vendor_id = $this->order_model->add_vendor_if_not_exists($vendor_name);
+    }
+
+    if (!$item_id || !$vendor_id || !$quantity_kg || !$unit_price) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Missing fields',
+            'debug' => [
+                'item_id' => $item_id,
+                'vendor_id' => $vendor_id,
+                'quantity_kg' => $quantity_kg,
+                'unit_price' => $unit_price
+            ]
+        ]);
+        return;
+    }
+
+    $data = [
+        'expense_date'   => $today,
+        'item_id'        => $item_id,
+        'vendor_id'      => $vendor_id,
+        'quantity_kg'    => $quantity_kg,
+        'unit_price'     => $unit_price,
+        'total_price'    => $quantity_kg * $unit_price,
+        'payment_status' => $payment_status
+    ];
+
+    if ($this->order_model->insert_expense($data)) {
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Insert failed']);
+    }
+}
+
+
+public function update_status()
+{
+    $expense_id = $this->input->post('expense_id', TRUE);
+    $status = $this->input->post('status', TRUE);
+
+    if (!$expense_id || !$status) {
+        echo json_encode(['success' => false, 'message' => 'Invalid input.']);
+        return;
+    }
+
+    $updated = $this->order_model->update_payment_status($expense_id, $status);
+
+    echo json_encode(['success' => $updated]);
+}
+
 
 	public function showtodaycharityorder()
 	{
@@ -557,17 +631,6 @@ class Order extends MX_Controller
 		}
 	}
 
-
-	// public function check_daily_entry() {
-    // 	$today = date('Y-m-d');
-    // 	$query = $this->db->get_where('daily_report_summary', ['report_date' => $today]);
-
-	// 	if ($query->num_rows() > 0) {
-	// 		echo json_encode(['exists' => true]);
-	// 	} else {
-	// 		echo json_encode(['exists' => false]);
-	// 	}
-	// }
 
 
 
