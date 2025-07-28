@@ -28,7 +28,7 @@
                         <td class="text-right">₹<?php echo htmlspecialchars(number_format($employee->emp_salary, 2), ENT_QUOTES, 'UTF-8'); ?></td>
                         <td class="text-center">
                             <button type="button" class="btn btn-primary btn-sm edit-employee" data-id="<?php echo htmlspecialchars($employee->emp_id, ENT_QUOTES, 'UTF-8'); ?>" data-name="<?php echo htmlspecialchars($employee->emp_name, ENT_QUOTES, 'UTF-8'); ?>" data-role="<?php echo htmlspecialchars($employee->emp_role_name, ENT_QUOTES, 'UTF-8'); ?>" data-salary="<?php echo htmlspecialchars($employee->emp_salary, ENT_QUOTES, 'UTF-8'); ?>"><i class="fa fa-edit"></i> Edit</button>
-                            <button type="button" class="btn btn-danger btn-sm delete-employee" data-id="<?php echo htmlspecialchars($employee->emp_id, ENT_QUOTES, 'UTF-8'); ?>"><i class="fa fa-trash"></i> Delete</button>
+                            <button type="button" class="btn btn-danger btn-sm delete-employee" data-id="<?= htmlspecialchars($employee->emp_id, ENT_QUOTES, 'UTF-8'); ?>"><i class="fa fa-trash"></i> Delete</button>
                         </td>
                     </tr>
             <?php }
@@ -157,4 +157,36 @@
             }
         });
     });
+
+    
+    $(document).on('click', '.delete-employee', function () {
+        if (!confirm('Are you sure you want to delete this employee?')) return;
+
+        const empId = $(this).data('id');
+
+        $.ajax({
+            url: '<?= base_url("ordermanage/order/deleteemployee") ?>',
+            type: 'POST',
+            data: {
+                emp_id: empId,
+                '<?= $this->security->get_csrf_token_name(); ?>': '<?= $this->security->get_csrf_hash(); ?>'
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    // Remove row from DOM
+                    $('#employee-row-' + empId).fadeOut(300, function () {
+                        $(this).remove();
+                        calculateTotal(); // Optional: recalculate total salaries
+                    });
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert('Server error occurred.');
+            }
+        });
+    });
+
 </script>

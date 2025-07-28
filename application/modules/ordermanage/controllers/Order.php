@@ -463,49 +463,68 @@ class Order extends MX_Controller
 	}
 
 
-public function createemployee() {
-    $name = $this->input->post('emp_name');
-    $role = $this->input->post('emp_role_id');
-    $salary = $this->input->post('emp_salary');
+	public function createemployee() {
+		$name = $this->input->post('emp_name');
+		$role = $this->input->post('emp_role_id');
+		$salary = $this->input->post('emp_salary');
 
-    if (!$name || !$role || !$salary) {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Missing required fields'
-        ]);
-        return;
-    }
+		if (!$name || !$role || !$salary) {
+			echo json_encode([
+				'success' => false,
+				'message' => 'Missing required fields'
+			]);
+			return;
+		}
 
-    $data = [
-        'emp_name' => $name,
-        'emp_role' => $role,
-        'emp_salary' => $salary
-    ];
+		$data = [
+			'emp_name' => $name,
+			'emp_role' => $role,
+			'emp_salary' => $salary
+		];
 
-    $insert = $this->order_model->insertemployee($data);
+		$insert = $this->order_model->insertemployee($data);
 
-    if ($insert) {
-        // Get the inserted ID
-        $emp_id = $this->db->insert_id();
-        $role_name = $this->order_model->get_role_name($role);
+		if ($insert) {
+			// Get the inserted ID
+			$emp_id = $this->db->insert_id();
+			$role_name = $this->order_model->get_role_name($role);
 
-        echo json_encode([
-            'success' => true,
-            'message' => 'Employee saved successfully',
-            'employee' => [
-                'emp_id' => $emp_id,
-                'emp_name' => $name,
-                'emp_role_name' => $role_name,
-                'emp_salary' => $salary
-            ]
-        ]);
-    } else {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Failed to insert employee into database.'
-        ]);
-    }
-}
+			echo json_encode([
+				'success' => true,
+				'message' => 'Employee saved successfully',
+				'employee' => [
+					'emp_id' => $emp_id,
+					'emp_name' => $name,
+					'emp_role_name' => $role_name,
+					'emp_salary' => $salary
+				]
+			]);
+		} else {
+			echo json_encode([
+				'success' => false,
+				'message' => 'Failed to insert employee into database.'
+			]);
+		}
+	}
+
+
+	public function deleteemployee() {
+		$emp_id = $this->input->post('emp_id');
+
+		if (!$emp_id) {
+			echo json_encode(['success' => false, 'message' => 'Invalid employee ID']);
+			return;
+		}
+
+		$deleted = $this->db->delete('emp_details', ['emp_id' => $emp_id]);
+
+		if ($deleted) {
+			echo json_encode(['success' => true, 'message' => 'Employee deleted']);
+		} else {
+			echo json_encode(['success' => false, 'message' => 'Failed to delete employee']);
+		}
+	}
+
 
 
 
