@@ -102,61 +102,6 @@
         $('#employee-form').submit();
     });
 
-    // Handle AJAX form submission
-    $('#employee-form').submit(function (e) {
-        e.preventDefault();
-
-        const formData = $(this).serialize();
-
-        $.ajax({
-            url: '<?= base_url("ordermanage/order/createemployee") ?>',
-            type: 'POST',
-            data: formData,
-            dataType: 'json',
-            success: function (response) {
-                if (response.success) {
-                    const emp = response.employee;
-
-                    let newRow = `
-                        <tr id="employee-row-${emp.emp_id}">
-                            <td class="text-center">
-                                <input type="checkbox" class="form-check-input mx-auto employee-checkbox"
-                                    data-id="${emp.emp_id}"
-                                    data-salary="${emp.emp_salary}">
-                            </td>
-                            <td>${emp.emp_name}</td>
-                            <td>${emp.emp_role_name}</td>
-                            <td class="text-right">₹${parseFloat(emp.emp_salary).toFixed(2)}</td>
-                            <td class="text-center">
-                                <button type="button" class="btn btn-primary btn-sm edit-employee"
-                                    data-id="${emp.emp_id}"
-                                    data-name="${emp.emp_name}"
-                                    data-role="${emp.emp_role_name}"
-                                    data-salary="${emp.emp_salary}">
-                                    <i class="fa fa-edit"></i> Edit
-                                </button>
-                                <button type="button" class="btn btn-danger btn-sm delete-employee"
-                                    data-id="${emp.emp_id}">
-                                    <i class="fa fa-trash"></i> Delete
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-
-                    $('#employee-table tbody').append(newRow);
-                    $('#employeeModal').modal('hide');
-                    $('#employee-form')[0].reset();
-                    calculateTotal();
-                } else {
-                    alert(response.message || 'Failed to save employee');
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error('AJAX Error:', error);
-                alert('Something went wrong while saving employee.');
-            }
-        });
-    });
 
     $(document).on('click', '.edit-employee', function () {
         const empId = $(this).data('id');

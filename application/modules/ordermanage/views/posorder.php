@@ -494,7 +494,7 @@ foreach ($scan as $file) {
           
           <!-- new button  expenses-->
 
-          <!-- <li> <a href="#manageexpenses" role="tab" data-toggle="tab" class="expenses newtab" id="managetodayexpenses" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Manage Expenses</span> </a> </li> -->
+          <li> <a href="#manageexpenses" role="tab" data-toggle="tab" class="expenses newtab" id="managetodayexpenses" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Manage Expenses</span> </a> </li>
           <!-- new button expences -->
 
           <?php if ($new_version != $myversion) {
