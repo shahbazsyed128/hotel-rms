@@ -158,6 +158,94 @@
         });
     });
 
+    $(document).on('click', '.edit-employee', function () {
+        const empId = $(this).data('id');
+        const empName = $(this).data('name');
+        const empSalary = $(this).data('salary');
+        const empRoleName = $(this).data('role');
+
+        $('#employeeModalLabel').text('Edit Employee');
+        $('#emp_name').val(empName);
+        $('#emp_salary').val(empSalary);
+        $('#emp_role_id option').filter(function () {
+            return $(this).text() === empRoleName;
+        }).prop('selected', true);
+
+        // Store employee ID
+        $('#employee-form').append(`<input type="hidden" id="emp_id" name="emp_id" value="${empId}">`);
+        $('#employeeModal').modal('show');
+    });
+
+    $('#employee-form').submit(function (e) {
+        e.preventDefault();
+        const formData = $(this).serialize();
+        const isEdit = $('#emp_id').length > 0;
+        const url = isEdit
+            ? '<?= base_url("ordermanage/order/updateemployee") ?>'
+            : '<?= base_url("ordermanage/order/createemployee") ?>';
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    const emp = response.employee;
+
+                    let newRow = `
+                        <tr id="employee-row-${emp.emp_id}">
+                            <td class="text-center">
+                                <input type="checkbox" class="form-check-input mx-auto employee-checkbox"
+                                    data-id="${emp.emp_id}" data-salary="${emp.emp_salary}">
+                            </td>
+                            <td>${emp.emp_name}</td>
+                            <td>${emp.emp_role_name}</td>
+                            <td class="text-right">₹${parseFloat(emp.emp_salary).toFixed(2)}</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-primary btn-sm edit-employee"
+                                    data-id="${emp.emp_id}" data-name="${emp.emp_name}" data-role="${emp.emp_role_name}"
+                                    data-salary="${emp.emp_salary}">
+                                    <i class="fa fa-edit"></i> Edit
+                                </button>
+                                <button type="button" class="btn btn-danger btn-sm delete-employee"
+                                    data-id="${emp.emp_id}">
+                                    <i class="fa fa-trash"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+
+                    // Replace existing row or add new
+                    if (isEdit) {
+                        $('#employee-row-' + emp.emp_id).replaceWith(newRow);
+                    } else {
+                        $('#employee-table tbody').append(newRow);
+                    }
+
+                    $('#employeeModal').modal('hide');
+                    $('#employee-form')[0].reset();
+                    $('#emp_id').remove(); // Remove hidden ID for future inserts
+                    $('#employeeModalLabel').text('Add New Employee');
+                    calculateTotal();
+                } else {
+                    alert(response.message || 'Operation failed');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', error);
+                alert('Something went wrong.');
+            }
+        });
+    });
+
+    $('#employeeModal').on('hidden.bs.modal', function () {
+        $('#employee-form')[0].reset();
+        $('#emp_id').remove(); // Remove hidden emp_id input
+        $('#employeeModalLabel').text('Add New Employee');
+    });
+
+
     
     $(document).on('click', '.delete-employee', function () {
         if (!confirm('Are you sure you want to delete this employee?')) return;

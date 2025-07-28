@@ -171,12 +171,10 @@ class Order_model extends CI_Model
 	}
 
 	public function get_all_roles() {
-    $query = $this->db->get('emp_role');
-    if ($query->num_rows() > 0) {
-        return $query->result();
-    }
-    return [];
-}
+		$query = $this->db->get('emp_role');
+		if ($query->num_rows() > 0) {return $query->result();}
+    	return [];
+	}
 
 	public function get_role_name($role_id) {
     	$this->db->select('emp_role_name');
@@ -187,8 +185,9 @@ class Order_model extends CI_Model
     	if ($query->num_rows() > 0) {
         	return $query->row()->emp_role_name;
     }
-    return '';
-}
+    	return '';
+	}
+
 
 
 	public function insertemployee($data){

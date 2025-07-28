@@ -525,6 +525,49 @@ class Order extends MX_Controller
 		}
 	}
 
+	public function updateemployee() {
+		$this->load->model('ordermanage/order_model'); // Load your model
+		$emp_id = $this->input->post('emp_id');
+		$emp_name = $this->input->post('emp_name');
+		$emp_role_id = $this->input->post('emp_role_id');
+		$emp_salary = $this->input->post('emp_salary');
+
+		$data = [
+			'emp_name' => $emp_name,
+			'emp_role' => $emp_role_id,
+			'emp_salary' => $emp_salary
+		];
+
+		$this->db->where('emp_id', $emp_id);
+		$success = $this->db->update('emp_details', $data);
+
+		if ($success) {
+			$role_name = $this->order_model->get_role_name($emp_role_id);
+			echo json_encode([
+				'success' => true,
+				'employee' => [
+					'emp_id' => $emp_id,
+					'emp_name' => $emp_name,
+					'emp_salary' => $emp_salary,
+					'emp_role_name' => $role_name
+				]
+			]);
+		} else {
+			echo json_encode(['success' => false, 'message' => 'Update failed']);
+		}
+	}
+
+
+	// public function check_daily_entry() {
+    // 	$today = date('Y-m-d');
+    // 	$query = $this->db->get_where('daily_report_summary', ['report_date' => $today]);
+
+	// 	if ($query->num_rows() > 0) {
+	// 		echo json_encode(['exists' => true]);
+	// 	} else {
+	// 		echo json_encode(['exists' => false]);
+	// 	}
+	// }
 
 
 
