@@ -454,6 +454,12 @@ class Order extends MX_Controller
     $this->load->view('todayemployeeorder2', $data);
 }
 
+public function get_expense_data_ajax() {
+    $data = $this->order_model->get_expenses(); // assumes joined data
+    echo json_encode($data);
+}
+
+
 public function save_expense_ajax()
 {
     $item_id = $this->input->post('item_id');
