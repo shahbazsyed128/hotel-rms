@@ -637,7 +637,36 @@ public function update_status()
 		}
 	}
 
+public function save_full_daily_report()
+{
+    $report_date = date('Y-m-d');
+    $total_orders = $this->order_model->todayorder();
+    $total_sales  = $this->order_model->todayamount();
+    $emp_expenses    = $this->input->post('employee_expenses');
+    $item_expenses   = 1500;
+    $profit          = $total_sales - ($item_expenses + $emp_expenses);
 
+    $data = [
+        'report_date'     => $report_date,
+        'daily_orders'    => (int) $total_orders,
+        'daily_sales'     => (int) $total_sales,
+        'emp_expenses'    => (int) $emp_expenses,
+        'item_expenses'   => $item_expenses,
+        'profit'          => $profit
+    ];
+
+    $success = $this->db->insert('daily_report', $data);
+
+    if ($success) {
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode([
+            'success' => false,
+            'debug' => $this->db->last_query(),
+            'db_error' => $this->db->_error() // Shows DB error
+        ]);
+    }
+}
 
 
 

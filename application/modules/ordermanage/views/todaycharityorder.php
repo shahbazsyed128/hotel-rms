@@ -1,3 +1,5 @@
+<meta name="csrf-name" content="<?= $this->security->get_csrf_token_name(); ?>">
+<meta name="csrf-hash" content="<?= $this->security->get_csrf_hash(); ?>">
 <div class="container-fluid">
     <div class=" d-flex justify-content-between align-items-center mb-3" style="display: flex;
         justify-content: space-between;">
@@ -45,8 +47,7 @@
                     ₹<span id="total_salary_amount">0.00</span>
                 </th>
                 <th>
-                    <button type="button" class="btn btn-primary btn-sm edit-employee"><i class="fa fa-edit"></i>Add To Expenses</button>
-                    <!-- <button type="button" class="btn btn-danger btn-sm delete-employee"><i class="fa fa-trash"></i> Delete</button> -->
+                    <button type="button" class="btn btn-primary btn-sm" id="saveDailyReportBtn"><i class="fa fa-edit"></i>Add To Expenses</button>
                 </th>
             </tr>
         </tfoot>
@@ -94,10 +95,82 @@
         </div>
     </div>
 </div>
-
-<script src="<?php echo base_url('application/modules/ordermanage/assets/js/todaycharityorder.js'); ?>" type="text/javascript"></script>
 <script>
-    // Trigger form submission when clicking Save button
+    const BASE_URL = "<?= base_url(); ?>";
+    
+
+    $(document).ready(function() {
+        let selectedEmployeeIds = [];
+
+        function calculateTotal() {
+            let totalSalary = 0;
+            selectedEmployeeIds = [];
+
+
+            $('#employee-table .employee-checkbox:checked').each(function() {
+                const salary = parseFloat($(this).data('salary'));
+                const employeeId = $(this).data('id');
+
+                if (!isNaN(salary)) {
+                    totalSalary += salary;
+                }
+                if (employeeId) {
+                    selectedEmployeeIds.push(employeeId);
+                }
+            });
+
+            $('#total_salary_amount').text(totalSalary.toFixed(2));
+        }
+
+        $('#employee-table').on('change', '.employee-checkbox', function() {
+            // Toggle a 'table-info' class on the parent row for styling
+            // The second argument to toggleClass is a boolean that adds the class if true, and removes if false.
+            $(this).closest('tr').toggleClass('table-info', this.checked);
+
+            // Recalculate everything when a checkbox state changes
+            calculateTotal();
+        });
+
+        calculateTotal();
+    });
+
+$('#saveDailyReportBtn').on('click', function () {
+    const salaryText = $('#total_salary_amount').text().replace(/[^\d.]/g, '');
+    const empExpenses = parseFloat(salaryText) || 0;
+
+    const csrfName = $('meta[name="csrf-name"]').attr('content');
+    const csrfHash = $('meta[name="csrf-hash"]').attr('content');
+
+
+    const payload = {
+        employee_expenses: empExpenses
+    };
+    payload[csrfName] = csrfHash;
+
+    $.ajax({
+        url: "<?= base_url('ordermanage/order/save_full_daily_report'); ?>",
+        type: 'POST',
+        dataType: 'json',
+        data: payload,
+        success: function (res) {
+            console.log('Server Response:', res);
+            if (res.success) {
+                alert('✅ Employee expense saved in daily report!');
+            } else {
+                alert('❌ Error: ' + (res.message || 'Unknown error'));
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Error:', xhr.responseText);
+            console.log(data);
+            alert('❌ AJAX failed: ' + error);
+        }
+    });
+});
+
+
+
+
     $('#save-employee-btn').on('click', function () {
         $('#employee-form').submit();
     });
