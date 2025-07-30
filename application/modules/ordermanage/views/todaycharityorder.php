@@ -132,12 +132,15 @@
         const salaryText = $('#total_salary_amount').text().replace(/[^\d.]/g, '');
         const empExpenses = parseFloat(salaryText) || 0;
 
+        const itemExpenses = parseFloat(localStorage.getItem('item_expense_total')) || 0;
+
         const csrfName = $('meta[name="csrf-name"]').attr('content');
         const csrfHash = $('meta[name="csrf-hash"]').attr('content');
 
 
         const payload = {
-            employee_expenses: empExpenses
+            employee_expenses: empExpenses,
+            item_expenses : itemExpenses
         };
         payload[csrfName] = csrfHash;
 

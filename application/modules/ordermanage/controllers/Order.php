@@ -645,7 +645,7 @@ class Order extends MX_Controller
     $total_orders = $this->order_model->todayorder();
     $total_sales  = $this->order_model->todayamount();
     $emp_expenses    = $this->input->post('employee_expenses');
-    $item_expenses   = 1500;
+    $item_expenses   = $this->input->post('item_expenses');
     $profit          = $total_sales - ($item_expenses + $emp_expenses);
 
     $data = [
@@ -670,6 +670,11 @@ class Order extends MX_Controller
     }
 	}
 
+
+	public function showtodayreport()
+	{
+		$this->load->view('todayreport');
+	}
 
 
 	public function showexpenses()

@@ -79,7 +79,7 @@
                 <tr>
                     <th colspan="5" class="text-end">Grand Total</th>
                     <th id="grandTotal">0.00</th>
-                    <th></th>
+                    <th><button class="" id="grandTotalExpense">Add To Expense</button></th>
                 </tr>
             </tfoot>
         </table>
@@ -160,11 +160,22 @@ $(document).ready(function () {
 
                 $('#expenseTable tbody').html(tbody);
                 $('#grandTotal').text(grandTotal.toFixed(2));
+                // id = document.getElementById('grandTotal');
             },
             error: function () {
                 $('#expenseTable tbody').html('<tr><td colspan="7" class="text-center text-danger">Failed to load expenses.</td></tr>');
             }
         });
     }
+
+        $('#grandTotalExpense').on('click', function () {
+        const grandTotal = parseFloat($('#grandTotal').text()) || 0;
+
+        // Save to localStorage
+        localStorage.setItem('item_expense_total', grandTotal);
+
+        // Redirect to todaycharityorder.php
+    })
+
 });
 </script>
