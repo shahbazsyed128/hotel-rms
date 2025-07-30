@@ -238,16 +238,30 @@ class Order_model extends CI_Model
     }
 }
 
-public function add_vendor_if_not_exists($vendor_name) {
-    $this->db->where('vendor_name', $vendor_name);
-    $query = $this->db->get('expense_vendors');
-    if ($query->num_rows() > 0) {
-        return $query->row()->id;
-    } else {
-        $this->db->insert('expense_vendors', ['vendor_name' => $vendor_name]);
-        return $this->db->insert_id();
-    }
-}
+	public function add_vendor_if_not_exists($vendor_name) {
+		$this->db->where('vendor_name', $vendor_name);
+		$query = $this->db->get('expense_vendors');
+		if ($query->num_rows() > 0) {
+			return $query->row()->id;
+		} else {
+			$this->db->insert('expense_vendors', ['vendor_name' => $vendor_name]);
+			return $this->db->insert_id();
+		}
+	}
+
+
+// public function save_or_update_daily_report($report_date, $data)
+// {
+//     $exists = $this->db->get_where('daily_report', ['report_date' => $report_date])->row();
+
+//     if ($exists) {
+//         $this->db->where('report_date', $report_date);
+//         return $this->db->update('daily_report', $data);
+//     } else {
+//         return $this->db->insert('daily_report', $data);
+//     }
+// }
+
 
 
 

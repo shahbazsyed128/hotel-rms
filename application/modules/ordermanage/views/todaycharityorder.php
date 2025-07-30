@@ -95,9 +95,7 @@
         </div>
     </div>
 </div>
-<script>
-    const BASE_URL = "<?= base_url(); ?>";
-    
+<script>    
 
     $(document).ready(function() {
         let selectedEmployeeIds = [];
@@ -123,50 +121,46 @@
         }
 
         $('#employee-table').on('change', '.employee-checkbox', function() {
-            // Toggle a 'table-info' class on the parent row for styling
-            // The second argument to toggleClass is a boolean that adds the class if true, and removes if false.
             $(this).closest('tr').toggleClass('table-info', this.checked);
-
-            // Recalculate everything when a checkbox state changes
             calculateTotal();
         });
 
         calculateTotal();
     });
 
-$('#saveDailyReportBtn').on('click', function () {
-    const salaryText = $('#total_salary_amount').text().replace(/[^\d.]/g, '');
-    const empExpenses = parseFloat(salaryText) || 0;
+    $('#saveDailyReportBtn').on('click', function () {
+        const salaryText = $('#total_salary_amount').text().replace(/[^\d.]/g, '');
+        const empExpenses = parseFloat(salaryText) || 0;
 
-    const csrfName = $('meta[name="csrf-name"]').attr('content');
-    const csrfHash = $('meta[name="csrf-hash"]').attr('content');
+        const csrfName = $('meta[name="csrf-name"]').attr('content');
+        const csrfHash = $('meta[name="csrf-hash"]').attr('content');
 
 
-    const payload = {
-        employee_expenses: empExpenses
-    };
-    payload[csrfName] = csrfHash;
+        const payload = {
+            employee_expenses: empExpenses
+        };
+        payload[csrfName] = csrfHash;
 
-    $.ajax({
-        url: "<?= base_url('ordermanage/order/save_full_daily_report'); ?>",
-        type: 'POST',
-        dataType: 'json',
-        data: payload,
-        success: function (res) {
-            console.log('Server Response:', res);
-            if (res.success) {
-                alert('✅ Employee expense saved in daily report!');
-            } else {
-                alert('❌ Error: ' + (res.message || 'Unknown error'));
+        $.ajax({
+            url: "<?= base_url('ordermanage/order/save_full_daily_report'); ?>",
+            type: 'POST',
+            dataType: 'json',
+            data: payload,
+            success: function (res) {
+                console.log('Server Response:', res);
+                if (res.success) {
+                    alert('✅ Employee expense saved in daily report!');
+                } else {
+                    alert('❌ Error: ' + (res.message || 'Unknown error'));
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', xhr.responseText);
+                console.log(data);
+                alert('❌ AJAX failed: ' + error);
             }
-        },
-        error: function (xhr, status, error) {
-            console.error('AJAX Error:', xhr.responseText);
-            console.log(data);
-            alert('❌ AJAX failed: ' + error);
-        }
+        });
     });
-});
 
 
 
@@ -193,6 +187,8 @@ $('#saveDailyReportBtn').on('click', function () {
         $('#employee-form').append(`<input type="hidden" id="emp_id" name="emp_id" value="${empId}">`);
         $('#employeeModal').modal('show');
     });
+
+    
 
     $('#employee-form').submit(function (e) {
         e.preventDefault();

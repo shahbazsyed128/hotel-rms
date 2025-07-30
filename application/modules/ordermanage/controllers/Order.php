@@ -444,88 +444,87 @@ class Order extends MX_Controller
 	}
 
 	public function showtodayemployeeorder2()
-{
-    // Load items, vendors, and expenses from model
-    $data['items'] = $this->order_model->get_items();
-    $data['vendors'] = $this->order_model->get_vendors();
-    $data['expenses'] = $this->order_model->get_expenses();
+	{
+		$data['items'] = $this->order_model->get_items();
+		$data['vendors'] = $this->order_model->get_vendors();
+		$data['expenses'] = $this->order_model->get_expenses();
 
-    // Load view
-    $this->load->view('todayemployeeorder2', $data);
-}
+		$this->load->view('todayemployeeorder2', $data);
+	}
 
-public function get_expense_data_ajax() {
-    $data = $this->order_model->get_expenses(); // assumes joined data
-    echo json_encode($data);
-}
-
-
-public function save_expense_ajax()
-{
-    $item_id = $this->input->post('item_id');
-    $vendor_id = $this->input->post('vendor_id');
-    $item_name = trim($this->input->post('item_name'));
-    $vendor_name = trim($this->input->post('vendor_name'));
-    $quantity_kg = (float) $this->input->post('quantity_kg');
-    $unit_price = (float) $this->input->post('unit_price');
-    $payment_status = $this->input->post('payment_status') ?? 'Unpaid';
-    $today = date('Y-m-d');
-
-    // If name was typed instead of ID
-    if (!$item_id && $item_name) {
-        $item_id = $this->order_model->add_item_if_not_exists($item_name);
-    }
-
-    if (!$vendor_id && $vendor_name) {
-        $vendor_id = $this->order_model->add_vendor_if_not_exists($vendor_name);
-    }
-
-    if (!$item_id || !$vendor_id || !$quantity_kg || !$unit_price) {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Missing fields',
-            'debug' => [
-                'item_id' => $item_id,
-                'vendor_id' => $vendor_id,
-                'quantity_kg' => $quantity_kg,
-                'unit_price' => $unit_price
-            ]
-        ]);
-        return;
-    }
-
-    $data = [
-        'expense_date'   => $today,
-        'item_id'        => $item_id,
-        'vendor_id'      => $vendor_id,
-        'quantity_kg'    => $quantity_kg,
-        'unit_price'     => $unit_price,
-        'total_price'    => $quantity_kg * $unit_price,
-        'payment_status' => $payment_status
-    ];
-
-    if ($this->order_model->insert_expense($data)) {
-        echo json_encode(['success' => true]);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Insert failed']);
-    }
-}
+	public function get_expense_data_ajax() 
+	{
+    	$data = $this->order_model->get_expenses(); // assumes joined data
+    	echo json_encode($data);
+	}
 
 
-public function update_status()
-{
-    $expense_id = $this->input->post('expense_id', TRUE);
-    $status = $this->input->post('status', TRUE);
+	public function save_expense_ajax()
+	{
+		$item_id = $this->input->post('item_id');
+		$vendor_id = $this->input->post('vendor_id');
+		$item_name = trim($this->input->post('item_name'));
+		$vendor_name = trim($this->input->post('vendor_name'));
+		$quantity_kg = (float) $this->input->post('quantity_kg');
+		$unit_price = (float) $this->input->post('unit_price');
+		$payment_status = $this->input->post('payment_status') ?? 'Unpaid';
+		$today = date('Y-m-d');
 
-    if (!$expense_id || !$status) {
-        echo json_encode(['success' => false, 'message' => 'Invalid input.']);
-        return;
-    }
+		// If name was typed instead of ID
+		if (!$item_id && $item_name) {
+			$item_id = $this->order_model->add_item_if_not_exists($item_name);
+		}
 
-    $updated = $this->order_model->update_payment_status($expense_id, $status);
+		if (!$vendor_id && $vendor_name) {
+			$vendor_id = $this->order_model->add_vendor_if_not_exists($vendor_name);
+		}
 
-    echo json_encode(['success' => $updated]);
-}
+		if (!$item_id || !$vendor_id || !$quantity_kg || !$unit_price) {
+			echo json_encode([
+				'success' => false,
+				'message' => 'Missing fields',
+				'debug' => [
+					'item_id' => $item_id,
+					'vendor_id' => $vendor_id,
+					'quantity_kg' => $quantity_kg,
+					'unit_price' => $unit_price
+				]
+			]);
+			return;
+		}
+
+		$data = [
+			'expense_date'   => $today,
+			'item_id'        => $item_id,
+			'vendor_id'      => $vendor_id,
+			'quantity_kg'    => $quantity_kg,
+			'unit_price'     => $unit_price,
+			'total_price'    => $quantity_kg * $unit_price,
+			'payment_status' => $payment_status
+		];
+
+		if ($this->order_model->insert_expense($data)) {
+			echo json_encode(['success' => true]);
+		} else {
+			echo json_encode(['success' => false, 'message' => 'Insert failed']);
+		}
+	}
+
+
+	public function update_status()
+	{
+		$expense_id = $this->input->post('expense_id', TRUE);
+		$status = $this->input->post('status', TRUE);
+
+		if (!$expense_id || !$status) {
+			echo json_encode(['success' => false, 'message' => 'Invalid input.']);
+			return;
+		}
+
+		$updated = $this->order_model->update_payment_status($expense_id, $status);
+
+		echo json_encode(['success' => $updated]);
+	}
 
 
 	public function showtodaycharityorder()
@@ -543,7 +542,8 @@ public function update_status()
 	}
 
 
-	public function createemployee() {
+	public function createemployee() 
+	{
 		$name = $this->input->post('emp_name');
 		$role = $this->input->post('emp_role_id');
 		$salary = $this->input->post('emp_salary');
@@ -588,7 +588,8 @@ public function update_status()
 	}
 
 
-	public function deleteemployee() {
+	public function deleteemployee() 
+	{
 		$emp_id = $this->input->post('emp_id');
 
 		if (!$emp_id) {
@@ -605,7 +606,8 @@ public function update_status()
 		}
 	}
 
-	public function updateemployee() {
+	public function updateemployee() 
+	{
 		$this->load->model('ordermanage/order_model'); // Load your model
 		$emp_id = $this->input->post('emp_id');
 		$emp_name = $this->input->post('emp_name');
@@ -637,8 +639,8 @@ public function update_status()
 		}
 	}
 
-public function save_full_daily_report()
-{
+	public function save_full_daily_report()
+	{
     $report_date = date('Y-m-d');
     $total_orders = $this->order_model->todayorder();
     $total_sales  = $this->order_model->todayamount();
@@ -666,7 +668,7 @@ public function save_full_daily_report()
             'db_error' => $this->db->_error() // Shows DB error
         ]);
     }
-}
+	}
 
 
 
