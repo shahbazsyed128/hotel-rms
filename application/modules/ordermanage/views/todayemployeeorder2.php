@@ -2,7 +2,7 @@
     <h3>Add Item Expense</h3>
     <form id="expenseForm">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6 mb-3">
                 <label for="item_id">Item</label>
                 <select id="item_id" name="item_id" class="form-control select2">
                     <option value="">-- Select Item --</option>
@@ -27,7 +27,7 @@
                     <?php endforeach; ?>
                 </select>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mb-3">
                 <label for="vendor_name">Or Enter New Vendor</label>
                 <input type="text" id="vendor_name" name="vendor_name" class="form-control" placeholder="New vendor name (optional)">
             </div>
@@ -42,7 +42,7 @@
                 <label for="unit_price">Unit Price</label>
                 <input type="number" step="0.01" id="unit_price" name="unit_price" class="form-control" required>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 mb-3">
                 <label for="payment_status">Payment Status</label>
                 <select id="payment_status" name="payment_status" class="form-control">
                     <option value="Unpaid">Unpaid</option>
@@ -51,7 +51,7 @@
             </div>
         </div>
 
-        <div class="text-end mt-6">
+        <div class="text-end">
             <button type="submit" class="btn btn-primary">Add Expense</button>
         </div>
     </form>
@@ -79,7 +79,7 @@
                 <tr>
                     <th colspan="5" class="text-end">Grand Total</th>
                     <th id="grandTotal">0.00</th>
-                    <th><button class="" id="grandTotalExpense">Add To Expense</button></th>
+                    <th><button class="btn btn-success btn-sm " id="grandTotalExpense"><i class="fa fa-plus"></i> Add To Expense</button></th>
                 </tr>
             </tfoot>
         </table>
@@ -173,8 +173,6 @@ $(document).ready(function () {
 
         // Save to localStorage
         localStorage.setItem('item_expense_total', grandTotal);
-
-        // Redirect to todaycharityorder.php
     })
 
 });

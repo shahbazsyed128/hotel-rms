@@ -77,6 +77,7 @@ $route['translate_uri_dashes'] = FALSE;
 //Qr Route
 
 $route['dailyreport'] = 'dailyreport/Sales/index';
+$route['dailyreport/export_pdf'] = 'dailyreport/sales/export_pdf';
 
 
 //set modules/config/routes.php

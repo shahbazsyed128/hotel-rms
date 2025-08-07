@@ -47,7 +47,7 @@
                     ₹<span id="total_salary_amount">0.00</span>
                 </th>
                 <th>
-                    <button type="button" class="btn btn-primary btn-sm" id="saveDailyReportBtn"><i class="fa fa-edit"></i>Add To Expenses</button>
+                    <button type="button" class="btn btn-success btn-sm" id="saveDailyReportBtn"><i class="fa fa-plus"></i> Add To Expenses</button>
                 </th>
             </tr>
         </tfoot>

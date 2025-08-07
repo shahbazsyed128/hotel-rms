@@ -59,24 +59,35 @@
 				return 0;
 			}
 
-			public function monthlysaleorder() {
-				$year = date('Y');
-				$month = date('m');
-				$totalorder = '';
-				$wherequery = "YEAR(order_date)='$year' AND month(order_date)='$month' AND order_status!=5 GROUP BY YEAR(order_date), MONTH(order_date)";
-				$this->db->select('COUNT(order_id) as totalorder');
-				$this->db->from('customer_order');
-				$this->db->where($wherequery, NULL, FALSE);
-				$query = $this->db->get();
-				if ($query->num_rows() > 0) {
-				$result = $query->result();
-				foreach ($result as $row) {
-					$totalorder .= $row->totalorder . ", ";
-				}
-				return trim($totalorder, ', ');
-				}
-				return 0;
+		public function monthlysaleorder() {
+			$year = date('Y');
+			$month = date('m');
+			$totalorder = '';
+			$wherequery = "YEAR(order_date)='$year' AND month(order_date)='$month' AND order_status!=5 GROUP BY YEAR(order_date), MONTH(order_date)";
+			$this->db->select('COUNT(order_id) as totalorder');
+			$this->db->from('customer_order');
+			$this->db->where($wherequery, NULL, FALSE);
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+			$result = $query->result();
+			foreach ($result as $row) {
+				$totalorder .= $row->totalorder . ", ";
 			}
+			return trim($totalorder, ', ');
+			}
+			return 0;
+		}
+
+
+		public function todayReport(){
+			$today=date('Y-m-d');
+
+			$this->db->select('*');
+			$this->db->from('daily_report');
+			$this->db->where('report_date', $today);
+			$query = $this->db->get();
+			return $query->result();  
+		}
 	
     }
 ?>

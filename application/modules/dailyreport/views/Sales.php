@@ -3,61 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?php echo base_url('application/modules/dailyreport/assets/css/bootstrap.min.css'); ?>">
-    <title>Sales</title>
-    <link rel="stylesheet" href="<?php echo base_url('application/modules/dailyreport/assets/css/sales_styles.css') ?>">
+    <title>Hotel Daily Report</title>
+    <link rel="stylesheet" href="<?= base_url('application/modules/dailyreport/assets/css/bootstrap.min.css'); ?>">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f0f4f8, #e0eafc);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+
+        .report-card {
+            background: linear-gradient(135deg, #ffffff, #f9f9ff);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease;
+        }
+
+        .report-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            margin-right: 12px;
+        }
+
+        .report-label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .report-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .report-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .alert {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .profit {
+            color: #27ae60;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="title">Hotel Report</div>
-        <div class="summary-row d-flex gap">
-            <div class="summary-card torders">
-                <div class="summary-label">Today Orders</div>
-                <div class="summary-value" id="today-orders"><?php echo isset($todayOrders) ? number_format($todayOrders) : 0; ?></div>
+
+    <div class="container ">
+        <div class="page-title">📊 Hotel Daily Reports</div>
+
+        <?php if (!empty($report)) { ?>
+            <div class="row g-4 justify-content-center">
+                <?php foreach ($report as $todayReport) { ?>
+                    <div class="col-md-8 mx-auto">
+    <div class="report-card p-4">
+        <div class="text-center mb-4">
+            <h4 class="fw-bold text-dark">📅 <?= $todayReport->report_date; ?></h4>
+        </div>
+
+        <div class="report-section" style="background: linear-gradient(to right, #ff9a9e, #fad0c4); border-radius: 10px; padding: 15px; margin-bottom: 15px;">
+            <div class="icon-circle"><i data-feather="shopping-cart"></i></div>
+            <div>
+                <div class="report-label">Daily Sales</div>
+                <div class="report-value">Rs. <?= number_format($todayReport->daily_sales, 2); ?></div>
             </div>
-            <div class="summary-card tsales">
-                <div class="summary-label">Today Sales</div>
-                <div class="summary-value" id="today-sales">₹<?php echo isset($todaySales) ? number_format($todaySales) : 0; ?></div>
+        </div>
+
+        <div class="report-section" style="background: linear-gradient(to right, #a1c4fd, #c2e9fb); border-radius: 10px; padding: 15px; margin-bottom: 15px;">
+            <div class="icon-circle"><i data-feather="package"></i></div>
+            <div>
+                <div class="report-label">Item Expenses</div>
+                <div class="report-value">Rs. <?= number_format($todayReport->item_expenses, 2); ?></div>
             </div>
-            <div class="summary-card morders">
-                <div class="summary-label">Monthly Orders</div>
-                <div class="summary-value" id="monthly-orders"><?php echo isset($monthlyOrders) ? $monthlyOrders : 0; ?></div>
+        </div>
+
+        <div class="report-section" style="background: linear-gradient(to right, #fbc2eb, #a6c1ee); border-radius: 10px; padding: 15px; margin-bottom: 15px;">
+            <div class="icon-circle"><i data-feather="users"></i></div>
+            <div>
+                <div class="report-label">Employee Expenses</div>
+                <div class="report-value">Rs. <?= number_format($todayReport->emp_expenses, 2); ?></div>
             </div>
-            <div class="summary-card msales">
-                <div class="summary-label">Monthly Sales</div>
-                <div class="summary-value" id="monthly-sales">₹<?php echo isset($monthlySales) ? number_format($monthlySales) : 0; ?></div>
+        </div>
+
+        <div class="report-section" style="background: linear-gradient(to right, #d4fc79, #96e6a1); border-radius: 10px; padding: 15px; margin-bottom: 25px;">
+            <div class="icon-circle"><i data-feather="trending-up"></i></div>
+            <div>
+                <div class="report-label">Profit</div>
+                <div class="report-value profit">Rs. <?= number_format($todayReport->profit, 2); ?></div>
             </div>
-            </div>
-            <div class='d-grid gap-2'>
-                <button type="button" class="btn btn-primary">Calculate Profit</button>
-                <button type="button" class="btn btn-warning">Print Report</button>
-            </div> 
-        </div>   
+        </div>
+
+        <div class="text-center">
+            <a href="<?= base_url('dailyreport/export_pdf') ?>" target="_blank" class="btn btn-danger">
+                <i class="fa fa-file-pdf"></i> Export PDF
+            </a>
+        </div>
     </div>
-    <div>
-        <table class="table ">
-            <th>
-                <td>Select Employee</td>
-                <td>Employee Name</td>
-                <td>Employee Role</td>
-                <td>Employee Salary</td>
-                <td>Employee Action</td>
-            </th>
-            <tr>
-                <td><input type="checkbox" class="" name="" id=""></td>
-                <td>Wadal Shah</td>
-                <td>Senior Manager</td>
-                <td>1500 </td>
-                <td>1500 </td>
-                <td>
-                    <a href="" class="btn">Edit</i></a>
-                    <a href="" class="btn btn-danger">Delete</a>
-                </td>
-            </tr>
-        </table>
+</div>
+
+                <?php } ?>
+            </div>
+        <?php } else { ?>
+            <div class="alert alert-warning">🚫 No data found. Please add expense first!</div>
+        <?php } ?>
     </div>
 
-    <script src="<?php echo base_url('/assets/js/jquery-3.3.1.min.js') ?>" type="text/javascript"></script>
-    <script src="<?php echo base_url('application/modules/dailyreport/assets/js/bootstrap.min.js') ?>" type="text/javascript"></script>
+    <script src="<?= base_url('/assets/js/jquery-3.3.1.min.js'); ?>"></script>
+    <script>
+        feather.replace();
+    </script>
 </body>
 </html>
+
