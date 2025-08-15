@@ -453,6 +453,11 @@ class Order extends MX_Controller
 		$this->load->view('todaycharityorder');
 	}
 
+	public function showtodaymanageexpenses()
+	{
+		$this->load->view('todaymanageexpenses');
+	}
+
 
 	public function showonlineorder()
 	{
