@@ -4,13 +4,13 @@
 // ============================================================================
 
 // Seed data (replace with your DB data as needed)
-$categories = [
-  'milk'        => 'Milk',
-  'employee'    => 'Employee',
-  'electricity' => 'Electricity',
-  'gas'         => 'Gas',
-  'other'       => 'Other Charges',
-];
+// $categories = [
+//   'milk'        => 'Milk',
+//   'employee'    => 'Employee',
+//   'electricity' => 'Electricity',
+//   'gas'         => 'Gas',
+//   'other'       => 'Other Charges',
+// ];
 
 $users = [
   'milk' => [
@@ -78,9 +78,9 @@ $users = [
           <div class="col-sm-4">
             <select id="category" name="category" class="form-control" required>
               <option value="">-- Select Category --</option>
-              <?php foreach ($categories as $key => $label): ?>
-                <option value="<?php echo htmlspecialchars($key); ?>">
-                  <?php echo htmlspecialchars($label); ?>
+              <?php foreach ($categories as $category): ?>
+                <option value="<?php echo htmlspecialchars($category->category_id); ?>">
+                  <?php echo htmlspecialchars($category->category_name); ?>
                 </option>
               <?php endforeach; ?>
               <option value="__add_category__">➕ Add new category…</option>

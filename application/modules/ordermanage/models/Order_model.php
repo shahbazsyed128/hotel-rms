@@ -2394,4 +2394,12 @@ class Order_model extends CI_Model
 		//echo $this->db->last_query();
 		return $orderdetails = $query->result();
 	}
+
+	public function get_expense_categories()
+	{
+		$this->db->select('*');
+		$this->db->from('exp_categories');
+		$query = $this->db->get();
+		return $query->result();
+	}
 }

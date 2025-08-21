@@ -454,8 +454,9 @@ class Order extends MX_Controller
 	}
 
 	public function showtodaymanageexpenses()
-	{
-		$this->load->view('todaymanageexpenses');
+	{	
+		$categories = $this->order_model->get_expense_categories();
+		$this->load->view('todaymanageexpenses', compact('categories'));
 	}
 
 
