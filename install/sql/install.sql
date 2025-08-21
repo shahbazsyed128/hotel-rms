@@ -1176,6 +1176,91 @@ CREATE TABLE IF NOT EXISTS `emp_attendance` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
+DROP TABLE IF EXISTS `entities`;
+CREATE TABLE `entities` (
+    `entity_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `category_id` INT NOT NULL,
+    `entity_name` VARCHAR(150) NOT NULL,
+    `contact_info` VARCHAR(255)
+);
+
+DROP TABLE IF EXISTS `expenses`;
+CREATE TABLE `expenses` (
+    `expense_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `category_id` INT NOT NULL,
+    `entity_id` INT NOT NULL,
+    `amount` DECIMAL(10,2) NOT NULL,
+    `expense_date` DATE NOT NULL,
+    `description` VARCHAR(255)
+);
+
+DROP TABLE IF EXISTS `categories`;
+CREATE TABLE `categories` (
+    `category_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `category_name` VARCHAR(100) NOT NULL
+);
+
+
+
+-- Insert Categories
+INSERT INTO categories (category_name) VALUES
+('Milk'),
+('Employees'),
+('Gas'),
+('Vegetables'),
+('Shop'),
+('Chicken'),
+('Electricity'),
+('Fixture'),
+('Others');
+
+-- Insert Vendors (Entities) for each Category
+INSERT INTO entities (category_id, entity_name, contact_info) VALUES
+-- Milk
+(1, 'DairyLand Supplier', 'dairyland@example.com'),
+(1, 'FreshMilk Co.', 'freshmilk@example.com'),
+
+-- Employees
+(2, 'John Doe', 'john.doe@example.com'),
+(2, 'Jane Smith', 'jane.smith@example.com'),
+
+-- Gas
+(3, 'Fuel Station A', 'stationA@example.com'),
+(3, 'Fuel Station B', 'stationB@example.com'),
+
+-- Vegetables
+(4, 'Green Market', 'greenmarket@example.com'),
+(4, 'Farm Fresh Veggies', 'farmfresh@example.com'),
+
+-- Shop
+(5, 'Local Mart', 'localmart@example.com'),
+(5, 'Wholesale Shop', 'wholesale@example.com'),
+
+-- Chicken
+(6, 'Poultry Farm A', 'poultryA@example.com'),
+(6, 'Chicken World', 'chickenworld@example.com'),
+
+-- Electricity
+(7, 'City Power Co.', 'support@citypower.com'),
+
+-- Fixture
+(8, 'Hardware Hub', 'hardwarehub@example.com'),
+(8, 'FixIt Supplies', 'fixit@example.com'),
+
+-- Others
+(9, 'Miscellaneous Vendor', 'misc@example.com');
+
+-- Insert some dummy Expenses
+INSERT INTO expenses (category_id, entity_id, amount, expense_date, description) VALUES
+(1, 1, 250.00, '2025-08-01', 'Monthly milk supply'),
+(2, 3, 1500.00, '2025-08-05', 'Salary for John Doe'),
+(2, 4, 1400.00, '2025-08-05', 'Salary for Jane Smith'),
+(3, 5, 300.00, '2025-08-08', 'Gas for delivery truck'),
+(4, 7, 200.00, '2025-08-09', 'Vegetable purchase'),
+(6, 11, 500.00, '2025-08-10', 'Chicken supply'),
+(7, 13, 1200.00, '2025-08-11', 'Electricity bill'),
+(8, 14, 450.00, '2025-08-12', 'New fixtures for shop'),
+(9, 16, 100.00, '2025-08-13', 'Miscellaneous expense');
 
 --
 -- Table structure for table `expense`
