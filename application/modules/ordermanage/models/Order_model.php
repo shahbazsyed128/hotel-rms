@@ -2395,11 +2395,34 @@ class Order_model extends CI_Model
 		return $orderdetails = $query->result();
 	}
 
-	public function get_expense_categories()
+	public function get_categories()
 	{
 		$this->db->select('*');
-		$this->db->from('exp_categories');
+		$this->db->from('categories');
 		$query = $this->db->get();
 		return $query->result();
+	}
+
+	public function add_category($data = array())
+	{
+		return $this->db->insert('categories', array('category_name' => $data));
+	}
+
+	public function get_entities_by_category($category_id){
+		$this->db->select('*');
+		$this->db->from('entities');
+		$this->db->where('category_id', $category_id);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function add_entity($data = array())
+	{
+		return $this->db->insert('entities', $data);
+	}
+
+	public function add_category_entity($data = array())
+	{
+		return $this->db->insert('entities', $data);
 	}
 }

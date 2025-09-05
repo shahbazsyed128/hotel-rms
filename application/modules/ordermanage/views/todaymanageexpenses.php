@@ -98,6 +98,8 @@ $users = [
             </select>
             <span class="help-block">Select who this expense is for.</span>
           </div>
+          <button disabled="true" type="button" id="addUserBtn" class="btn btn-primary">➕ Add User/Vendor</button>
+
         </div>
 
         <!-- Rate & Quantity -->
@@ -175,15 +177,10 @@ $users = [
             <label>Category Name (label)</label>
             <input type="text" class="form-control" id="newCatLabel" placeholder="e.g., Water" required>
           </div>
-          <div class="form-group">
-            <label>Category Key (unique, lowercase, no spaces)</label>
-            <input type="text" class="form-control" id="newCatKey" placeholder="e.g., water" required>
-          </div>
-          <p class="text-muted m-b-0">Key is used internally; label shows in the dropdown.</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Category</button>
+          <button type="button" id="closeAddCategoryModal" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" id="addCategory" class="btn btn-primary">Save Category</button>
         </div>
       </form>
     </div>
@@ -191,10 +188,10 @@ $users = [
 </div>
 
 <!-- Add User/Vendor (fields change by category) -->
-<div class="modal fade" id="modalAddUser" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="modalAddEntity" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form id="formAddUser">
+      <form id="formAddEntity">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Add User/Vendor</h4>
@@ -213,7 +210,7 @@ $users = [
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save User/Vendor</button>
+          <button type="button" id="addUserVendor" class="btn btn-primary">Save User/Vendor</button>
         </div>
       </form>
     </div>
@@ -225,9 +222,19 @@ $users = [
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <script>
+
+
+
+
+
+
 // ========================== DATA FROM PHP ==========================
 var usersByCategory = <?php echo json_encode($users); ?>;
 var categoryLabels  = <?php echo json_encode($categories); ?>;
+
+// ...existing code...
+
+// ...existing code...
 
 // ========================== STATE ==========================
 var expenses = []; // {catKey, catName, userId, userName, rate, qty, amount}
@@ -364,53 +371,56 @@ function buildDynamicRateFields(catKey){
 }
 
 // ========================== EVENTS ==========================
+
 $categoryEl.on('change', function(){
   var val = $(this).val();
+  var catName = $(this).find('option:selected').text();
+  $modalCatName.val(catName);
 
-  if (val === '__add_category__'){
-    // open modal for new category
-    $newCatKey.val('');
-    $newCatLabel.val('');
+  if(val && val !== '__add_category__'){
+    // $.ajax({
+    //   url: 'getCategoryEntities',
+    //   type: 'GET',
+    //   data: { category_id: val },
+    //   dataType: 'json',
+    //   success: function(resp){
+    //     // resp should be an array of users/entities: [{id, name, rate}, ...]
+    //     $('#addUserBtn').prop('disabled', false);
+    //     // $userEl.prop('disabled', true).empty()
+    //     //   .append('<option value="">-- Select User/Vendor --</option>');
+    //     // if (Array.isArray(resp)) {
+    //     //   resp.forEach(function(u){
+    //     //     $userEl.append(
+    //     //       $('<option>').val(String(u.id)).text(u.name).attr('data-rate', String(u.rate || 0))
+    //     //     );
+    //     //   });
+    //     // }
+    //     // $userEl.append('<option value="__add_user__">➕ Add new user/vendor…</option>');
+    //     // $userEl.prop('disabled', false);
+    //     // setRateHint(val);
+    //   },
+    //   error: function(){
+    //     $userEl.prop('disabled', true).empty()
+    //       .append('<option value="">-- Select User/Vendor --</option>');
+    //     setRateHint('');
+    //   }
+    // });
+
+    getCategoryEntities(val);
+    $('#addUserBtn').prop('disabled', false);
+  } else if(val === '__add_category__') {
     $modalAddCategory.modal('show');
-
-    // reset selection while modal is open
-    $(this).val('');
-    $userEl.prop('disabled', true).empty().append('<option value="">-- Select User/Vendor --</option>');
-    $rateEl.val(''); $rateHintEl.text(''); $qtyEl.val('');
-    return;
-  }
-
-  setRateHint(val || '');
-  if (val){
-    populateUsers(val);
+    // Reset selection
+    $categoryEl.val('');
   } else {
-    $userEl.prop('disabled', true).empty().append('<option value="">-- Select User/Vendor --</option>');
-    $rateEl.val(''); $qtyEl.val('');
+    $userEl.prop('disabled', true).empty()
+      .append('<option value="">-- Select User/Vendor --</option>');
+    setRateHint('');
   }
 });
 
-$userEl.on('change', function(){
-  var selected = this.options[this.selectedIndex];
-  if (!selected) return;
 
-  if (selected.value === '__add_user__'){
-    var catKey = $categoryEl.val();
-    if (!catKey){ alert('Please select a category first.'); this.value = ''; return; }
-    $modalCatName.val(categoryLabels[catKey] || catKey);
-    buildDynamicRateFields(catKey);
-    $newUserName.val('');
-    $modalAddUser.modal('show');
 
-    // reset drop-down until user saved
-    this.value = '';
-    $rateEl.val('');
-    return;
-  }
-
-  var rate = $(selected).attr('data-rate') || '';
-  $rateEl.val(rate);
-  $qtyEl.val('');
-});
 
 // Add Expense
 $('#expenseForm').on('submit', function(e){
@@ -464,37 +474,108 @@ $('#expenseForm').on('submit', function(e){
   */
 });
 
-// ========================== MODAL SUBMITS ==========================
-
-// Save Category
-$('#formAddCategory').on('submit', function(e){
+$('#addUserBtn').on('click', function(){
+  $('#modalAddEntity').modal('show');
+});
+// Save Category via Ajax on button click
+$('#addCategory').on('click', function(e){
   e.preventDefault();
-  var key   = ($newCatKey.val() || '').trim().toLowerCase().replace(/\s+/g, '_');
-  var label = ($newCatLabel.val() || '').trim();
+  var label = $('#newCatLabel').val().trim();
+  if (!label) {
+    alert('Please enter a category name.');
+    return;
+  }
+  // Optionally, disable button to prevent double submit
+  $(this).prop('disabled', true);
 
-  if (!key || !label) return;
-  if (categoryLabels[key]){
-    alert('Category key already exists. Choose another.');
+  $.ajax({
+    url: 'addcategory',
+    type: 'GET',
+    data: { category_name: label },
+    dataType: 'json',
+    success: function(resp) {
+      if (resp.success) {
+        // Optionally, reload categories from server or append new one
+        $.getJSON('getcategories', function(categories){
+          // console.log(categories);
+          categoryLabels = categories;
+          $categoryEl.empty().append('<option value="">-- Select Category --</option>');
+          $.each(categoryLabels, function(id,category){
+            $categoryEl.append($('<option>').val(category.category_id).text(category.category_name));
+          });
+          $categoryEl.append('<option value="__add_category__">➕ Add new category…</option>');
+          $categoryEl.val(resp.new_id).change();
+        });
+        $('#closeAddCategoryModal').click();
+      } else {
+        alert(resp.message || 'Failed to add category.');
+      }
+    },
+    error: function(xhr){
+      alert('Error: ' + (xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : xhr.statusText));
+    },
+    complete: function() {
+      $('#addCategory').prop('disabled', false);
+    }
+  });
+});
+
+
+$('#addUserVendor').on('click', function(e){
+  e.preventDefault();
+  var catKey = $categoryEl.val();
+  var name   = ($newUserName.val() || '').trim();
+  // var rate   = Number($('#newUserRate').val());
+
+  if (!catKey || !name ) {
+    alert('Please fill all required fields.');
     return;
   }
 
-  // Update in-memory
-  categoryLabels[key] = label;
-  usersByCategory[key] = [];
-
-  // Update dropdown before Add new option
-  var $addOpt = $categoryEl.find('option[value="__add_category__"]');
-  $('<option>').val(key).text(label).insertBefore($addOpt);
-  $categoryEl.val(key).change();
-
-  $modalAddCategory.modal('hide');
-
-  // (Optional) persist category
-  /*
-  $.post('<?= /* base_url("categories/store") */ "" ?>', { key:key, label:label });
-  */
+  $.ajax({
+    url: 'addCategoryEntity',
+    type: 'GET',
+    data: { category_id: catKey, name: name },
+    dataType: 'json',
+    success: function(resp) {
+      if (resp.success) {
+        // Optionally reload users/entities for this category
+        getCategoryEntities(catKey);
+        $('#modalAddEntity').modal('hide');
+      } else {
+        alert(resp.message || 'Failed to add user/vendor.');
+      }
+    },
+    error: function(xhr){
+      alert('Error: ' + (xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : xhr.statusText));
+    }
+  });
 });
 
+
+function getCategoryEntities(id) {
+  $.ajax({
+    url: 'getCategoryEntities',
+    type: 'GET',
+    data: { category_id: id },
+    dataType: 'json',
+    success: function(resp){
+      // resp should be an array of users/entities: [{id, name, rate}, ...]
+      $('#addUserBtn').prop('disabled', false);
+      $userEl.empty().append('<option value="">-- Select User/Vendor --</option>').prop('disabled', false);
+      if (Array.isArray(resp)) {
+        resp.forEach(function(u){
+          $userEl.append(
+            $('<option>').val(String(u.entity_id)).text(u.entity_name)
+          );
+        });
+      }
+    },
+    error: function(){
+      alert('Failed to load users/vendors for this category.');
+    }
+  });
+}
 // Save User/Vendor
 $('#formAddUser').on('submit', function(e){
   e.preventDefault();
@@ -518,7 +599,7 @@ $('#formAddUser').on('submit', function(e){
   populateUsers(catKey);
   $userEl.val(String(newUser.id));
   $rateEl.val(String(rate));
-  $modalAddUser.modal('hide');
+  // $modalAddUser.modal('hide');
 
   // (Optional) persist vendor
   /*
