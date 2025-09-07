@@ -520,6 +520,34 @@ class Order extends MX_Controller
 	}
 
 
+	public function addexpense(){
+		$category_id = $this->input->get('category_id');
+		$entity_id = $this->input->get('entity_id');
+		$item_id = $this->input->get('item_id');
+		$quantity = $this->input->get('quantity');
+		$price = $this->input->get('price');
+		$total = $this->input->get('total');
+		$expense_date = $this->input->get('expense_date');
+
+		if ($category_id && $entity_id && $item_id && $quantity && $price && $total && $expense_date) {
+			$data = [
+				'category_id' => $category_id,
+				'entity_id' => $entity_id,
+				'item_id' => $item_id,
+				'quantity' => $quantity,
+				'price' => $price,
+				'total' => $total,
+				'expense_date' => date('Y-m-d', strtotime($expense_date)),
+				'created_at' => date('Y-m-d H:i:s'),
+			];
+			$this->order_model->add_expense($data);
+			echo json_encode(['success' => true, 'message' => 'Expense added successfully.']);
+		} else {
+			echo json_encode(['success' => false, 'message' => 'Invalid input.']);
+		}
+	}
+
+
 	public function showonlineorder()
 	{
 		$this->load->view('onlineordertable');

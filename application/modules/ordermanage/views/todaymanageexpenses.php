@@ -2,37 +2,6 @@
 // ============================================================================
 // expenses.php  (Bootstrap 3.3.7 + jQuery)
 // ============================================================================
-
-// Seed data (replace with your DB data as needed)
-// $categories = [
-//   'milk'        => 'Milk',
-//   'employee'    => 'Employee',
-//   'electricity' => 'Electricity',
-//   'gas'         => 'Gas',
-//   'other'       => 'Other Charges',
-// ];
-
-$users = [
-  'milk' => [
-    ['id'=>1, 'name'=>'Milk Vendor 1', 'rate'=>50],
-    ['id'=>2, 'name'=>'Milk Vendor 2', 'rate'=>55],
-  ],
-  'employee' => [
-    ['id'=>3, 'name'=>'John Doe',  'rate'=>500], // daily wages
-    ['id'=>4, 'name'=>'Jane Smith','rate'=>600],
-  ],
-  'gas' => [
-    ['id'=>5, 'name'=>'Gas Vendor 1', 'rate'=>100],
-    ['id'=>6, 'name'=>'Gas Vendor 2', 'rate'=>110],
-  ],
-  'electricity' => [
-    ['id'=>7, 'name'=>'Electricity Board', 'rate'=>0],
-  ],
-  'other' => [
-    ['id'=>8, 'name'=>'Misc Vendor', 'rate'=>0],
-  ],
-];
-
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -234,35 +203,8 @@ $users = [
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <script>
-
-
-
-
-
-
-// ========================== DATA FROM PHP ==========================
-var usersByCategory = <?php echo json_encode($users); ?>;
-var categoryLabels  = <?php echo json_encode($categories); ?>;
-
-// ...existing code...
-
-// ...existing code...
-
-// ========================== STATE ==========================
 var expenses = []; // {catKey, catName, userId, userName, rate, qty, amount}
-var __nextId = (function(){
-  // next integer id after the highest existing
-  try {
-    var max = 0;
-    Object.keys(usersByCategory).forEach(function(k){
-      (usersByCategory[k] || []).forEach(function(u){
-        max = Math.max(max, Number(u.id)||0);
-      });
-    });
-    return max + 1;
-  } catch(e){ return 1000; }
-})();
-
+var __nextId = 1000; // for new users/vendors added client-side
 // ========================== ELEMENTS ==========================
 var $categoryEl = $('#category');
 var $userEl     = $('#user');
@@ -464,20 +406,21 @@ $('#expenseForm').on('submit', function(e){
   var userName = $userEl.find('option:selected').text();
   // remove "Add new user…" suffix if present visually
   userName = userName.replace(/— Rate:.*$/,'').trim();
-
   var amount = rate * qty;
+  data = { category_id: catKey, catName: catName.trim(), entity_id: Number(usrVal), userName: userName, rate: rate, qty: qty, amount: amount };
+  addExpense(data);
 
-  expenses.push({
-    catKey: catKey,
-    catName: catName,
-    userId: Number(usrVal),
-    userName: userName,
-    rate: rate,
-    qty: qty,
-    amount: amount
-  });
+  // expenses.push({
+  //   catKey: catKey,
+  //   catName: catName,
+  //   userId: Number(usrVal),
+  //   userName: userName,
+  //   rate: rate,
+  //   qty: qty,
+  //   amount: amount
+  // });
 
-  renderTable();
+  // renderTable();
 
   // // reset quantity only for faster multiple entries
   $qtyEl.val('');
@@ -494,6 +437,32 @@ $('#expenseForm').on('submit', function(e){
   });
   */
 });
+
+function addExpense(data) {
+  
+
+    $.ajax({
+    url: 'addexpense',
+    type: 'GET',
+    data: data,
+    dataType: 'json',
+    success: function(resp) {
+      if (resp.success) {
+        console.log('Expense added:', resp);
+      } else {
+        alert(resp.message || 'Failed to add category.');
+      }
+    },
+    error: function(xhr){
+      alert('Error: ' + (xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : xhr.statusText));
+    },
+    complete: function() {
+    }
+  });
+
+  // expenses.push(expense);
+  // renderTable();
+}
 
 $('#addUserBtn').on('click', function(){
   $('#modalAddEntity').modal('show');
