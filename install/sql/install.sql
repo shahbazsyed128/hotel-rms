@@ -1184,50 +1184,156 @@ CREATE TABLE IF NOT EXISTS `entity_item_rates` (
     `item_name` VARCHAR(100) NOT NULL,          -- e.g. 'Milk'
     `unit` VARCHAR(20) NOT NULL,                -- e.g. 'Litre', 'KG'
     `price` DECIMAL(12,4) NOT NULL,             -- rate value
-    `valid_from` DATE NOT NULL,                 -- when this rate starts
-    `valid_to` DATE DEFAULT NULL,               -- null = still active
+    `valid_from` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,   -- when this rate starts
+    `valid_to` TIMESTAMP NULL DEFAULT NULL,     -- null = still active
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      PRIMARY KEY (`rate_id`)
+    PRIMARY KEY (`rate_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- --------------------------------------------------------
 
 
+-- 1) Malik Dairy Farm
 INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
-(1, 'Milk', 'Litre', 160.00, '2025-08-01', '2025-08-31'),
-(1, 'Milk', 'Litre', 170.00, '2025-09-01', NULL);
+(1, 'Milk', 'Litre', 160.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(1, 'Milk', 'Litre', 170.00, '2025-09-01 00:00:00', NULL);
 
 -- 2) Nazeer Milk Vendor
 INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
-(2, 'Milk', 'Litre', 158.00, '2025-08-01', '2025-08-31'),
-(2, 'Milk', 'Litre', 168.00, '2025-09-01', NULL);
+(2, 'Milk', 'Litre', 158.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(2, 'Milk', 'Litre', 168.00, '2025-09-01 00:00:00', NULL);
 
 -- 3) Fresh Dairy Center
 INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
-(3, 'Milk', 'Litre', 159.00, '2025-08-01', '2025-08-31'),
-(3, 'Milk', 'Litre', 169.00, '2025-09-01', NULL);
+(3, 'Milk', 'Litre', 159.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(3, 'Milk', 'Litre', 169.00, '2025-09-01 00:00:00', NULL);
 
-
--- === Employees (category_id = 2) : entity_id 4..6 ===
--- All wages are per day (unit = 'Day')
-
+-- === Employees (category_id = 2) ===
 -- 4) John Doe - Salesman
-INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`)
-VALUES
-(4, 'Wage', 'Day', 1800.00, '2025-08-01', '2025-08-31'),
-(4, 'Wage', 'Day', 2000.00, '2025-09-01', NULL);
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(4, 'Wage', 'Day', 1800.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(4, 'Wage', 'Day', 2000.00, '2025-09-01 00:00:00', NULL);
 
 -- 5) Maryam Bibi - Cashier
-INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`)
-VALUES
-(5, 'Wage', 'Day', 1500.00, '2025-08-01', '2025-08-31'),
-(5, 'Wage', 'Day', 1600.00, '2025-09-01', NULL);
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(5, 'Wage', 'Day', 1500.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(5, 'Wage', 'Day', 1600.00, '2025-09-01 00:00:00', NULL);
 
 -- 6) Ahmed Khan - Helper
-INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`)
-VALUES
-(6, 'Wage', 'Day', 1200.00, '2025-08-01', '2025-08-31'),
-(6, 'Wage', 'Day', 1300.00, '2025-09-01', NULL);
-    
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(6, 'Wage', 'Day', 1200.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(6, 'Wage', 'Day', 1300.00, '2025-09-01 00:00:00', NULL);
+
+-- === Gas (category_id = 3) ===
+-- 7) Sui Gas Distributor
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(7, 'LPG', 'KG', 285.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(7, 'LPG', 'KG', 300.00, '2025-09-01 00:00:00', NULL);
+
+-- 8) Local LPG Vendor
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(8, 'LPG', 'KG', 280.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(8, 'LPG', 'KG', 295.00, '2025-09-01 00:00:00', NULL);
+
+-- 9) Gas Service Company
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(9, 'Cylinder (Domestic)', 'Cylinder', 3500.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(9, 'Cylinder (Domestic)', 'Cylinder', 3650.00, '2025-09-01 00:00:00', NULL);
+
+-- === Vegetables (category_id = 4) ===
+-- 10) Green Market Vegetables
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(10, 'Vegetables', 'KG', 180.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(10, 'Vegetables', 'KG', 195.00, '2025-09-01 00:00:00', NULL);
+
+-- 11) Daily Fresh Veggies
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(11, 'Vegetables', 'KG', 175.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(11, 'Vegetables', 'KG', 190.00, '2025-09-01 00:00:00', NULL);
+
+-- 12) Organic Veggie Point
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(12, 'Vegetables', 'KG', 200.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(12, 'Vegetables', 'KG', 215.00, '2025-09-01 00:00:00', NULL);
+
+-- === Shop (category_id = 5) ===
+-- 13) Ali General Store
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(13, 'General Goods', 'Unit', 120.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(13, 'General Goods', 'Unit', 125.00, '2025-09-01 00:00:00', NULL);
+
+-- 14) City Mart
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(14, 'General Goods', 'Unit', 115.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(14, 'General Goods', 'Unit', 122.00, '2025-09-01 00:00:00', NULL);
+
+-- 15) Mega Store
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(15, 'General Goods', 'Unit', 130.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(15, 'General Goods', 'Unit', 135.00, '2025-09-01 00:00:00', NULL);
+
+-- === Chicken (category_id = 6) ===
+-- 16) Poultry World
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(16, 'Chicken', 'KG', 520.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(16, 'Chicken', 'KG', 540.00, '2025-09-01 00:00:00', NULL);
+
+-- 17) Chicken Point
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(17, 'Chicken', 'KG', 510.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(17, 'Chicken', 'KG', 530.00, '2025-09-01 00:00:00', NULL);
+
+-- 18) Fresh Poultry House
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(18, 'Chicken', 'KG', 515.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(18, 'Chicken', 'KG', 535.00, '2025-09-01 00:00:00', NULL);
+
+-- === Electricity (category_id = 7) ===
+-- 19) K-Electric Service
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(19, 'Electricity', 'kWh', 32.50, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(19, 'Electricity', 'kWh', 34.00, '2025-09-01 00:00:00', NULL);
+
+-- 20) Power Supply Vendor
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(20, 'Electricity', 'kWh', 31.75, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(20, 'Electricity', 'kWh', 33.25, '2025-09-01 00:00:00', NULL);
+
+-- 21) Electricity Service Co.
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(21, 'Electricity', 'kWh', 33.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(21, 'Electricity', 'kWh', 34.50, '2025-09-01 00:00:00', NULL);
+
+-- === Fixture (category_id = 8) ===
+-- 22) Fixture & Fittings Co.
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(22, 'Fixture', 'Unit', 950.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(22, 'Fixture', 'Unit', 990.00, '2025-09-01 00:00:00', NULL);
+
+-- 23) Light & Fixture Supplier
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(23, 'Fixture', 'Unit', 900.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(23, 'Fixture', 'Unit', 940.00, '2025-09-01 00:00:00', NULL);
+
+-- 24) Modern Fixtures
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(24, 'Fixture', 'Unit', 980.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(24, 'Fixture', 'Unit', 1020.00, '2025-09-01 00:00:00', NULL);
+
+-- === Others (category_id = 9) ===
+-- 25) Miscellaneous Vendor A
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(25, 'Misc Service', 'Unit', 500.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(25, 'Misc Service', 'Unit', 550.00, '2025-09-01 00:00:00', NULL);
+
+-- 26) Miscellaneous Vendor B
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(26, 'Misc Service', 'Unit', 450.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(26, 'Misc Service', 'Unit', 500.00, '2025-09-01 00:00:00', NULL);
+
+-- 27) Miscellaneous Vendor C
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(27, 'Misc Service', 'Unit', 520.00, '2025-08-01 00:00:00', '2025-08-31 23:59:59'),
+(27, 'Misc Service', 'Unit', 560.00, '2025-09-01 00:00:00', NULL);
+-- --------------------------------------------------------
 
 
 DROP TABLE IF EXISTS `entities`;
