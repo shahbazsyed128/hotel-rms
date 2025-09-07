@@ -2408,13 +2408,67 @@ class Order_model extends CI_Model
 		return $this->db->insert('categories', array('category_name' => $data));
 	}
 
+	// public function get_entities_by_category($category_id){
+	// 	$this->db->select('
+	// 		e.entity_id,
+	// 		e.category_id,
+	// 		e.entity_name,
+	// 		e.contact_info,
+	// 		r.rate_id,
+	// 		r.item_name,
+	// 		r.unit,
+	// 		r.price,
+	// 		r.valid_from,
+	// 		r.valid_to
+	// 	');
+	// 	$this->db->from('entities e');
+	// 	$this->db->join('entity_item_rates r', 'e.entity_id = r.entity_id', 'left'); 
+	// 	$this->db->where('e.category_id', $category_id);
+	// 	$this->db->order_by('e.entity_id', 'ASC');
+	// 	$this->db->order_by('r.valid_from', 'DESC');
+		
+	// 	$query = $this->db->get();
+	// 	print_r($this->db->last_query()); // Debugging line to see the generated SQL query
+	// 	exit;
+	// 	return $query->result();
+	// }
+
+
 	public function get_entities_by_category($category_id){
-		$this->db->select('*');
-		$this->db->from('entities');
-		$this->db->where('category_id', $category_id);
+		$this->db->select('
+			e.entity_id,
+			e.category_id,
+			e.entity_name,
+			e.contact_info,
+			r.rate_id,
+			r.item_name,
+			r.unit,
+			r.price,
+			r.valid_from,
+			r.valid_to
+		');
+		$this->db->from('entities e');
+		$this->db->join(
+			'(SELECT rr.* 
+			FROM entity_item_rates rr
+			INNER JOIN (
+				SELECT entity_id, MAX(valid_from) AS latest_date
+				FROM entity_item_rates
+				GROUP BY entity_id
+			) x 
+			ON rr.entity_id = x.entity_id AND rr.valid_from = x.latest_date
+			) r',
+			'e.entity_id = r.entity_id',
+			'left'
+		);
+		$this->db->where('e.category_id', $category_id);
+		$this->db->order_by('e.entity_id', 'ASC');
+
 		$query = $this->db->get();
 		return $query->result();
 	}
+
+
 
 	public function add_entity($data = array())
 	{

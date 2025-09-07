@@ -378,34 +378,6 @@ $categoryEl.on('change', function(){
   $modalCatName.val(catName);
 
   if(val && val !== '__add_category__'){
-    // $.ajax({
-    //   url: 'getCategoryEntities',
-    //   type: 'GET',
-    //   data: { category_id: val },
-    //   dataType: 'json',
-    //   success: function(resp){
-    //     // resp should be an array of users/entities: [{id, name, rate}, ...]
-    //     $('#addUserBtn').prop('disabled', false);
-    //     // $userEl.prop('disabled', true).empty()
-    //     //   .append('<option value="">-- Select User/Vendor --</option>');
-    //     // if (Array.isArray(resp)) {
-    //     //   resp.forEach(function(u){
-    //     //     $userEl.append(
-    //     //       $('<option>').val(String(u.id)).text(u.name).attr('data-rate', String(u.rate || 0))
-    //     //     );
-    //     //   });
-    //     // }
-    //     // $userEl.append('<option value="__add_user__">➕ Add new user/vendor…</option>');
-    //     // $userEl.prop('disabled', false);
-    //     // setRateHint(val);
-    //   },
-    //   error: function(){
-    //     $userEl.prop('disabled', true).empty()
-    //       .append('<option value="">-- Select User/Vendor --</option>');
-    //     setRateHint('');
-    //   }
-    // });
-
     getCategoryEntities(val);
     $('#addUserBtn').prop('disabled', false);
   } else if(val === '__add_category__') {
@@ -419,6 +391,44 @@ $categoryEl.on('change', function(){
   }
 });
 
+
+ $userEl.on('change', function(){
+    var val = $(this).val();
+    // Get selected option's data attributes
+    var $opt = $(this).find('option:selected');
+    var itemName = $opt.data('item_name') || '';
+    var unit = $opt.data('unit') || '';
+    var price = $opt.data('price') || '';
+
+    // Set rate field if price is available
+    if (price !== '') {
+      $rateEl.val(price);
+    } else {
+      $rateEl.val('');
+    }
+
+    // Optionally, show hint or set placeholder for quantity/unit
+    if (unit) {
+      $qtyEl.attr('placeholder', unit);
+    } else {
+      $qtyEl.attr('placeholder', '1');
+    }
+
+    // Optionally, show item name in rate hint
+    if (itemName) {
+      $rateHintEl.text('Item: ' + itemName + (unit ? ' (' + unit + ')' : ''));
+    } else {
+      setRateHint($categoryEl.val());
+    }
+
+    // If "Add new user/vendor…" is selected, open modal
+    if (val === '__add_user__') {
+      $('#modalAddEntity').modal('show');
+      // Reset selection
+      $userEl.val('');
+    }
+  });
+  
 
 
 
@@ -439,7 +449,7 @@ $('#expenseForm').on('submit', function(e){
   if (!(qty > 0)){ $qtyEl.addClass('is-invalid'); ok = false; }
   if (!ok) return;
 
-  var catName  = categoryLabels[catKey] || catKey;
+  var catName  = $categoryEl.find('option:selected').text();
   var userName = $userEl.find('option:selected').text();
   // remove "Add new user…" suffix if present visually
   userName = userName.replace(/— Rate:.*$/,'').trim();
@@ -458,7 +468,7 @@ $('#expenseForm').on('submit', function(e){
 
   renderTable();
 
-  // reset quantity only for faster multiple entries
+  // // reset quantity only for faster multiple entries
   $qtyEl.val('');
 
   // ================= (Optional) Persist to server =================
@@ -566,7 +576,12 @@ function getCategoryEntities(id) {
       if (Array.isArray(resp)) {
         resp.forEach(function(u){
           $userEl.append(
-            $('<option>').val(String(u.entity_id)).text(u.entity_name)
+            $('<option>')
+              .val(String(u.entity_id))
+              .text(u.entity_name)
+              .attr('data-item_name', u.item_name || '')
+              .attr('data-unit', u.unit || '')
+              .attr('data-price', u.price || '')
           );
         });
       }
