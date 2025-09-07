@@ -65,9 +65,10 @@
         .token-items th {
             border-bottom: 1px solid #000;
         }
-		th.size{
-			text-align: center;
-		}
+
+        th.size {
+            text-align: center;
+        }
 
         .token-items td.size {
             text-align: center;
@@ -85,112 +86,208 @@
     </style>
     <script type="text/javascript">
         var pstatus = "<?php echo $this->uri->segment(5); ?>";
-        var returnurl = pstatus == 0 ? "<?php echo base_url('ordermanage/order/pos_invoice'); ?>" : "<?php echo base_url('ordermanage/order/pos_invoice'); ?>?tokenorder=<?php echo $orderinfo->order_id; ?>";
+        var returnurl = pstatus == 0
+            ? "<?php echo base_url('ordermanage/order/pos_invoice'); ?>"
+            : "<?php echo base_url('ordermanage/order/pos_invoice'); ?>?tokenorder=<?php echo $orderinfo->order_id; ?>";
         window.print();
-        setInterval(function() {
+        setInterval(function () {
             document.location.href = returnurl;
         }, 3000);
     </script>
 </head>
 
 <body>
+<?php
+/**
+ * Robust token print view:
+ * - Merge base items and update deltas (SUM with +/-) into a single map per kitchen.
+ * - Print exactly one row per unique (menu_id|varientid|addonsuid).
+ * - Add-ons are rendered as their own rows tied to the parent key to avoid cross-merging.
+ * - Only print rows with final qty > 0.
+ * - Deterministic token write-back at the end.
+ */
 
-    <?php
-    $this->load->model('order_model');
-    $tokenNumber = $this->order_model->getTokenNumber();
+$this->load->model('order_model');
 
-    function formatNumber($number) {
-        return intval($number);
+// --- Helpers ---
+function iint($v) { return (int)$v; }
+
+function generateTableRow($quantity, $productName, $notes, $variantName) {
+    $q = iint($quantity);
+    $p = htmlspecialchars((string)($productName ?? ''), ENT_QUOTES, 'UTF-8');
+    $n = htmlspecialchars((string)($notes ?? ''), ENT_QUOTES, 'UTF-8');
+    $v = htmlspecialchars((string)($variantName ?? ''), ENT_QUOTES, 'UTF-8');
+    return "<tr>
+                <td>{$q}</td>
+                <td>{$p}" . ($n !== '' ? "<br>{$n}" : "") . "</td>
+                <td class='size'>{$v}</td>
+            </tr>";
+}
+
+// --- Group incoming items by kitchen safely ---
+$itemsByKitchen = [];
+if (!empty($iteminfo)) {
+    foreach ($iteminfo as $it) {
+        $kid = $it->kitchenid ?? 0;
+        if (!isset($itemsByKitchen[$kid])) $itemsByKitchen[$kid] = ['iteminfo' => [], 'exitsitem' => []];
+        $itemsByKitchen[$kid]['iteminfo'][] = $it;
     }
-
-    function generateTableRow($quantity, $productName, $notes, $variantName) {
-        $quantity = formatNumber($quantity);
-        return "<tr>
-                    <td>{$quantity}</td>
-                    <td>{$productName}<br>{$notes}</td>
-                    <td class='size'>{$variantName}</td>
-                </tr>";
+}
+if (!empty($exitsitem)) {
+    foreach ($exitsitem as $ex) {
+        $kid = $ex->kitchenid ?? 0;
+        if (!isset($itemsByKitchen[$kid])) $itemsByKitchen[$kid] = ['iteminfo' => [], 'exitsitem' => []];
+        $itemsByKitchen[$kid]['exitsitem'][] = $ex;
     }
+}
 
-    $itemsByKitchen = [];
-    foreach ($iteminfo as $iteminf) {
-        $itemsByKitchen[$iteminf->kitchenid]['iteminfo'][] = $iteminf;
-    }
-    foreach ($exitsitem as $exititem) {
-        $itemsByKitchen[$exititem->kitchenid]['exitsitem'][] = $exititem;
-    }
+// --- Token handling (deterministic) ---
+$startTokenNumber   = (int)$this->order_model->getTokenNumber(); // assumed getter when no arg
+$currentTokenNumber = $startTokenNumber;
+$printedTokens      = 0;
 
-    foreach ($itemsByKitchen as $allItems) {
-        $itemcontent = "";
-        foreach ($allItems['iteminfo'] as $item) {
-            $itemcontent .= generateTableRow($item->menuqty, $item->ProductName, $item->notes, $item->variantName);
+// --- Render per kitchen ---
+foreach ($itemsByKitchen as $kid => $group) {
+    // Build a line map: unique key => ['qty','name','notes','variant']
+    $lines = [];
+
+    // 1) Base items
+    if (!empty($group['iteminfo'])) {
+        foreach ($group['iteminfo'] as $item) {
+            $menuId    = $item->menu_id   ?? $item->menuid   ?? null;
+            $variantId = $item->varientid ?? null;
+            $addonsUid = (string)($item->addonsuid ?? '');
+            if ($menuId === null || $variantId === null) continue;
+
+            $key = $menuId . '|' . $variantId . '|' . $addonsUid;
+
+            if (!isset($lines[$key])) {
+                $lines[$key] = [
+                    'qty'     => 0,
+                    'name'    => (string)($item->ProductName ?? ''),
+                    'notes'   => (string)($item->notes ?? ''),
+                    'variant' => (string)($item->variantName ?? ''),
+                ];
+            }
+            $lines[$key]['qty'] += iint($item->menuqty ?? 0);
+
+            // Base add-ons as separate rows (tied to parent key)
             if (!empty($item->add_on_id)) {
-                $addons = explode(",", $item->add_on_id);
-                $addonsqty = explode(",", $item->addonsqty);
-                foreach ($addons as $index => $addonsid) {
-                    $adonsinfo = $this->order_model->read('*', 'add_ons', array('add_on_id' => $addonsid));
-                    $itemcontent .= generateTableRow($addonsqty[$index], $adonsinfo->add_on_name, '', '');
+                $addons    = explode(",", (string)$item->add_on_id);
+                $addonsqty = !empty($item->addonsqty) ? explode(",", (string)$item->addonsqty) : [];
+                $limit     = min(count($addons), count($addonsqty));
+                for ($i = 0; $i < $limit; $i++) {
+                    $addonsid = trim($addons[$i]);
+                    $aqty     = iint($addonsqty[$i] ?? 0);
+                    if ($addonsid === '' || $aqty <= 0) continue;
+
+                    // Read once per row (you could cache if needed)
+                    $adonsinfo = $this->order_model->read('*', 'add_ons', ['add_on_id' => $addonsid]);
+                    $addonName = $adonsinfo->add_on_name ?? ('Addon #' . $addonsid);
+
+                    $akey = 'addon|' . $addonsid . '|' . $key;
+                    if (!isset($lines[$akey])) {
+                        $lines[$akey] = [
+                            'qty'     => 0,
+                            'name'    => (string)$addonName,
+                            'notes'   => '',
+                            'variant' => '',
+                        ];
+                    }
+                    $lines[$akey]['qty'] += $aqty;
                 }
             }
         }
+    }
 
-        $content = "";
-        foreach ($allItems['exitsitem'] as $exititem) {
-            // $isexitsitem = $this->order_model->readupdate('tbl_updateitems.*,SUM(tbl_updateitems.qty) as totalqty', 'tbl_updateitems', array('ordid' => $orderinfo->order_id, 'menuid' => $exititem->menu_id, 'varientid' => $exititem->varientid, 'addonsuid' => $exititem->addonsuid));
+    // 2) Update items (delta via SUM with +/-)
+    if (!empty($group['exitsitem'])) {
+        foreach ($group['exitsitem'] as $exititem) {
+            $menuId    = $exititem->menu_id   ?? $exititem->menuid   ?? null;
+            $variantId = $exititem->varientid ?? null;
+            $addonsUid = (string)($exititem->addonsuid ?? '');
+            if ($menuId === null || $variantId === null) continue;
+
+            // Aggregate delta for this exact combination
             $isexitsitem = $this->order_model->readupdate(
-                'tbl_updateitems.*, 
-                SUM(CASE 
+                'SUM(CASE 
                     WHEN isupdate IS NULL THEN qty
                     WHEN isupdate = "-" THEN -qty
                     ELSE qty
-                END) AS totalqty',
-                'tbl_updateitems', 
-                array(
-                    'ordid' => $orderinfo->order_id, 
-                    'menuid' => $exititem->menu_id, 
-                    'varientid' => $exititem->varientid, 
-                    'addonsuid' => $exititem->addonsuid
-                )
+                 END) AS totalqty',
+                'tbl_updateitems',
+                [
+                    'ordid'     => $orderinfo->order_id,
+                    'menuid'    => $menuId,
+                    'varientid' => $variantId,
+                    'addonsuid' => $addonsUid
+                ]
             );
-            
-            if (!empty($isexitsitem) && $isexitsitem->qty > 0) {
-                $content .= generateTableRow($isexitsitem->totalqty, $exititem->ProductName, $exititem->notes, $exititem->variantName);
-            }
-        }
 
-        if (!empty($content) || !empty($itemcontent)) {
-            echo "<div class='token'>
-                    <div class='token-header'>
-                        <h1>Token No: {$tokenNumber}</h1>
-                        <p>" . display('date') . ": " . date("M d, Y", strtotime($orderinfo->order_date)) . " - " . date("h:i:s A") . "</p>
-                        <p>{$customerinfo->customer_name}</p>
-                    </div>
-                    <div class='token-details'>
-                        <p>" . display('table') . ": " . (!empty($tableinfo) ? $tableinfo->tablename : 'N/A') . "</p>
-                        <p>" . display('ord_number') . ": {$orderinfo->order_id}</p>
-                    </div>
-                    <div class='token-details'>
-                        <p>" . display('waiter') . ": {$waiterinfo->first_name}</p>
-                    </div>
-                    <table class='token-items'>
-                        <thead>
-                            <tr>
-                                <th>Q</th>
-                                <th>" . display('item') . "</th>
-                                <th class='size' align='center'>" . display('size') . "</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {$itemcontent}
-                            {$content}
-                        </tbody>
-                    </table>
-                </div>";
-            $tokenNumber++;
+            $delta = iint($isexitsitem->totalqty ?? 0);
+            if ($delta === 0) continue;
+
+            $key = $menuId . '|' . $variantId . '|' . $addonsUid;
+            if (!isset($lines[$key])) {
+                // If base didn't exist (e.g., only deltas), initialize from exititem
+                $lines[$key] = [
+                    'qty'     => 0,
+                    'name'    => (string)($exititem->ProductName ?? ''),
+                    'notes'   => (string)($exititem->notes ?? ''),
+                    'variant' => (string)($exititem->variantName ?? ''),
+                ];
+            }
+            $lines[$key]['qty'] += $delta;
         }
     }
-	$this->order_model->getTokenNumber(--$tokenNumber);
-    ?>
-</body>
 
+    // 3) Build rows once, only for positive final qty
+    $rows = '';
+    foreach ($lines as $line) {
+        if (iint($line['qty']) > 0) {
+            $rows .= generateTableRow($line['qty'], $line['name'], $line['notes'], $line['variant']);
+        }
+    }
+
+    // 4) If there is anything to print for this kitchen, render the token block
+    if ($rows !== '') {
+        echo "<div class='token'>
+                <div class='token-header'>
+                    <h1>Token No: {$currentTokenNumber}</h1>
+                    <p>" . display('date') . ": " . date('M d, Y', strtotime($orderinfo->order_date)) . " - " . date('h:i:s A') . "</p>
+                    <p>" . htmlspecialchars((string)($customerinfo->customer_name ?? ''), ENT_QUOTES, 'UTF-8') . "</p>
+                </div>
+                <div class='token-details'>
+                    <p>" . display('table') . ": " . (!empty($tableinfo) ? htmlspecialchars((string)$tableinfo->tablename, ENT_QUOTES, 'UTF-8') : 'N/A') . "</p>
+                    <p>" . display('ord_number') . ": " . htmlspecialchars((string)$orderinfo->order_id, ENT_QUOTES, 'UTF-8') . "</p>
+                </div>
+                <div class='token-details'>
+                    <p>" . display('waiter') . ": " . htmlspecialchars((string)($waiterinfo->first_name ?? ''), ENT_QUOTES, 'UTF-8') . "</p>
+                </div>
+                <table class='token-items'>
+                    <thead>
+                        <tr>
+                            <th>Q</th>
+                            <th>" . display('item') . "</th>
+                            <th class='size' align='center'>" . display('size') . "</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {$rows}
+                    </tbody>
+                </table>
+            </div>";
+        $currentTokenNumber++;
+        $printedTokens++;
+    }
+}
+
+// --- Write back the last printed token once (mirrors your original setter-ish pattern)
+// If your getTokenNumber($n) updates the stored counter when given a param, keep this:
+if ($printedTokens > 0) {
+    $lastPrinted = $currentTokenNumber - 1;
+    $this->order_model->getTokenNumber($lastPrinted);
+}
+?>
+</body>
 </html>

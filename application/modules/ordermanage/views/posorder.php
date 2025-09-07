@@ -494,7 +494,7 @@ foreach ($scan as $file) {
 
           <!-- new button  expenses-->
 
-          <li> <a href="#charityorders" role="tab" data-toggle="tab" class="expenses newtab" id="todaycharityorder" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Manage Expenses</span> </a> </li>
+          <li> <a href="#manageexpenses" role="tab" data-toggle="tab" class="expenses newtab" id="todaymanageexpenses" onclick="giveselecttab(this)"><i class="fa fa-first-order smallview"></i> <span class="responsiveview">Manage Expenses</span> </a> </li>
 
           <!-- new button expences -->
 
@@ -1188,6 +1188,7 @@ foreach ($scan as $file) {
         <div class="tab-pane fade" id="employeeorders"> </div>
         <div class="tab-pane fade" id="employeeorders2"> </div>
         <div class="tab-pane fade" id="charityorders"> </div>
+        <div class="tab-pane fade" id="manageexpenses"> </div>
       </div>
     </div>
   </div>

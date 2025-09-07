@@ -453,6 +453,72 @@ class Order extends MX_Controller
 		$this->load->view('todaycharityorder');
 	}
 
+	public function showtodaymanageexpenses()
+	{	
+		$categories = $this->order_model->get_categories();
+		$this->load->view('todaymanageexpenses', compact('categories'));
+	}
+
+	public function addcategory(){
+		$category_name = $this->input->get('category_name');
+		if ($category_name) {
+			$this->order_model->add_category($category_name);
+			echo json_encode(['success' => true, 'message' => 'Category added successfully.']);
+		} else {
+			echo json_encode(['success' => false, 'message' => 'Invalid category name.']);
+		}
+	}
+
+	public function getcategories(){
+		$categories = $this->order_model->get_categories();
+		echo json_encode($categories);
+	}
+
+	public function getCategoryEntities(){
+		$category_id = $this->input->get('category_id');
+		if ($category_id) {
+			$entities = $this->order_model->get_entities_by_category($category_id);
+			echo json_encode($entities);
+		} else {
+			echo json_encode([]);
+		}
+	}
+
+
+	public function addCategoryEntity(){
+		$category_id = $this->input->get('category_id');
+		$entity_name = $this->input->get('name');
+		$item_name = $this->input->get('item_name');
+		$price = $this->input->get('price');
+		$unit = $this->input->get('unit');
+
+		if ($category_id && $entity_name) {
+			$data = [
+				'category_id' => $category_id,
+				'user_id'=> null,
+				'employee_his_id'=> null,
+				'customer_id'=> null,
+				'entity_name' => $entity_name,
+				'contact_info'=> null,
+			];
+			$this->order_model->add_category_entity($data);
+			$entity_id = $this->db->insert_id();
+
+			$item_data = [
+				'entity_id' => $entity_id,
+				'item_name' => $item_name,
+				'unit' => $unit,
+				'price' => $price,	
+			];
+
+			$this->order_model->add_entity_item_rate($item_data);
+			
+			echo json_encode(['success' => true, 'message' => 'Entity added successfully.']);
+		} else {
+			echo json_encode(['success' => false, 'message' => 'Invalid input.']);
+		}
+	}
+
 
 	public function showonlineorder()
 	{

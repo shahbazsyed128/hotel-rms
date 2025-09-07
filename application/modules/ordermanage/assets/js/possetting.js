@@ -785,6 +785,20 @@ $(document).ready(function () {
             });
         });
 
+        /* all todaymanageexpenses product as ajax */
+        $(document).on('click', '#todaymanageexpenses', function () {
+            var url = 'showtodaymanageexpenses';
+            var csrf = $('#csrfhashresarvation').val();
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: { csrf_test_name: csrf },
+                success: function (data) {
+                    $('#manageexpenses').html(data);
+                }
+            });
+        });
+
 
     /*all todayorder product as ajax*/
     $(document).on('click', '#todayonlieorder', function () {
