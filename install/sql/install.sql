@@ -1178,6 +1178,191 @@ CREATE TABLE IF NOT EXISTS `emp_attendance` (
 -- --------------------------------------------------------
 
 
+CREATE TABLE IF NOT EXISTS `entity_item_rates` (
+    `rate_id` INT(11) NOT NULL AUTO_INCREMENT,
+    `entity_id` INT(11) NOT NULL,
+    `item_name` VARCHAR(100) NOT NULL,          -- e.g. 'Milk'
+    `unit` VARCHAR(20) NOT NULL,                -- e.g. 'Litre', 'KG'
+    `price` DECIMAL(12,4) NOT NULL,             -- rate value
+    `valid_from` DATE NOT NULL,                 -- when this rate starts
+    `valid_to` DATE DEFAULT NULL,               -- null = still active
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    PRIMARY KEY (`rate_id`),
+    KEY `idx_entity_item` (`entity_id`, `item_name`, `unit`, `valid_from`),
+    CONSTRAINT `fk_entity_rate_entity`
+        FOREIGN KEY (`entity_id`) REFERENCES `entities` (`entity_id`)
+        ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+-- === Milk (category_id = 1) : entity_id 1..3 ===
+-- 1) Ali Khan Milk Supplier
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(1, 'Milk', 'Litre', 160.00, '2025-08-01', '2025-08-31'),
+(1, 'Milk', 'Litre', 170.00, '2025-09-01', NULL);
+
+-- 2) Nazeer Milk Vendor
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(2, 'Milk', 'Litre', 158.00, '2025-08-01', '2025-08-31'),
+(2, 'Milk', 'Litre', 168.00, '2025-09-01', NULL);
+
+-- 3) Fresh Dairy Center
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`) VALUES
+(3, 'Milk', 'Litre', 159.00, '2025-08-01', '2025-08-31'),
+(3, 'Milk', 'Litre', 169.00, '2025-09-01', NULL);
+
+
+-- === Employees (category_id = 2) : entity_id 4..6 ===
+-- All wages are per day (unit = 'Day')
+
+-- 4) John Doe - Salesman
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`)
+VALUES
+(4, 'Wage', 'Day', 1800.00, '2025-08-01', '2025-08-31'),
+(4, 'Wage', 'Day', 2000.00, '2025-09-01', NULL);
+
+-- 5) Maryam Bibi - Cashier
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`)
+VALUES
+(5, 'Wage', 'Day', 1500.00, '2025-08-01', '2025-08-31'),
+(5, 'Wage', 'Day', 1600.00, '2025-09-01', NULL);
+
+-- 6) Ahmed Khan - Helper
+INSERT INTO `entity_item_rates` (`entity_id`, `item_name`, `unit`, `price`, `valid_from`, `valid_to`)
+VALUES
+(6, 'Wage', 'Day', 1200.00, '2025-08-01', '2025-08-31'),
+(6, 'Wage', 'Day', 1300.00, '2025-09-01', NULL);
+    
+
+-- === Gas (category_id = 3) : entity_id 7..9 ===
+-- 7) Sui Gas Distributor
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 7, 'LPG', 'KG', 285.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 7, 'LPG', 'KG', 300.00, '2025-09-01', NULL, NOW());
+
+-- 8) Local LPG Vendor
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 8, 'LPG', 'KG', 280.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 8, 'LPG', 'KG', 295.00, '2025-09-01', NULL, NOW());
+
+-- 9) Gas Service Company
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 9, 'Cylinder (Domestic)', 'Cylinder', 3500.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 9, 'Cylinder (Domestic)', 'Cylinder', 3650.00, '2025-09-01', NULL, NOW());
+
+
+-- === Vegetables (category_id = 4) : entity_id 10..12 ===
+-- Using a generic "Vegetables" item per KG for simplicity
+-- 10) Green Market Vegetables
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 10, 'Vegetables', 'KG', 180.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 10, 'Vegetables', 'KG', 195.00, '2025-09-01', NULL, NOW());
+
+-- 11) Daily Fresh Veggies
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 11, 'Vegetables', 'KG', 175.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 11, 'Vegetables', 'KG', 190.00, '2025-09-01', NULL, NOW());
+
+-- 12) Organic Veggie Point
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 12, 'Vegetables', 'KG', 200.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 12, 'Vegetables', 'KG', 215.00, '2025-09-01', NULL, NOW());
+
+
+-- === Shop (category_id = 5) : entity_id 13..15 ===
+-- Treat as general goods per unit or per invoice service fee
+-- 13) Ali General Store
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 13, 'General Goods', 'Unit', 120.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 13, 'General Goods', 'Unit', 125.00, '2025-09-01', NULL, NOW());
+
+-- 14) City Mart
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 14, 'General Goods', 'Unit', 115.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 14, 'General Goods', 'Unit', 122.00, '2025-09-01', NULL, NOW());
+
+-- 15) Mega Store
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 15, 'General Goods', 'Unit', 130.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 15, 'General Goods', 'Unit', 135.00, '2025-09-01', NULL, NOW());
+
+
+-- === Chicken (category_id = 6) : entity_id 16..18 ===
+-- Price per KG
+-- 16) Poultry World
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 16, 'Chicken', 'KG', 520.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 16, 'Chicken', 'KG', 540.00, '2025-09-01', NULL, NOW());
+
+-- 17) Chicken Point
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 17, 'Chicken', 'KG', 510.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 17, 'Chicken', 'KG', 530.00, '2025-09-01', NULL, NOW());
+
+-- 18) Fresh Poultry House
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 18, 'Chicken', 'KG', 515.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 18, 'Chicken', 'KG', 535.00, '2025-09-01', NULL, NOW());
+
+
+-- === Electricity (category_id = 7) : entity_id 19..21 ===
+-- Tariff per kWh
+-- 19) K-Electric Service
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 19, 'Electricity', 'kWh', 32.50, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 19, 'Electricity', 'kWh', 34.00, '2025-09-01', NULL, NOW());
+
+-- 20) Power Supply Vendor
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 20, 'Electricity', 'kWh', 31.75, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 20, 'Electricity', 'kWh', 33.25, '2025-09-01', NULL, NOW());
+
+-- 21) Electricity Service Co.
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 21, 'Electricity', 'kWh', 33.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 21, 'Electricity', 'kWh', 34.50, '2025-09-01', NULL, NOW());
+
+
+-- === Fixture (category_id = 8) : entity_id 22..24 ===
+-- Per unit price for fixtures
+-- 22) Fixture & Fittings Co.
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 22, 'Fixture', 'Unit', 950.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 22, 'Fixture', 'Unit', 990.00, '2025-09-01', NULL, NOW());
+
+-- 23) Light & Fixture Supplier
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 23, 'Fixture', 'Unit', 900.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 23, 'Fixture', 'Unit', 940.00, '2025-09-01', NULL, NOW());
+
+-- 24) Modern Fixtures
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 24, 'Fixture', 'Unit', 980.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 24, 'Fixture', 'Unit', 1020.00, '2025-09-01', NULL, NOW());
+
+
+-- === Others (category_id = 9) : entity_id 25..27 ===
+-- Generic service/item per unit
+-- 25) Miscellaneous Vendor A
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 25, 'Misc Service', 'Unit', 500.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 25, 'Misc Service', 'Unit', 550.00, '2025-09-01', NULL, NOW());
+
+-- 26) Miscellaneous Vendor B
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 26, 'Misc Service', 'Unit', 450.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 26, 'Misc Service', 'Unit', 500.00, '2025-09-01', NULL, NOW());
+
+-- 27) Miscellaneous Vendor C
+INSERT INTO `entity_item_rates` VALUES
+(NULL, 27, 'Misc Service', 'Unit', 520.00, '2025-08-01', '2025-08-31', NOW()),
+(NULL, 27, 'Misc Service', 'Unit', 560.00, '2025-09-01', NULL, NOW());
+
+
+
+
 DROP TABLE IF EXISTS `entities`;
 CREATE TABLE IF NOT EXISTS `entities` (
     `entity_id` int(11) NOT NULL  AUTO_INCREMENT,
@@ -1189,6 +1374,54 @@ CREATE TABLE IF NOT EXISTS `entities` (
     `contact_info` varchar(255),
      PRIMARY KEY (`entity_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+INSERT INTO `entities` (`category_id`, `user_id`, `employee_his_id`, `customer_id`, `entity_name`, `contact_info`) VALUES
+-- Milk Vendors (category_id = 1)
+(1, NULL, NULL, NULL, 'Ali Khan Milk Supplier', 'Phone: 0300-1111111, Address: Dairy Colony'),
+(1, NULL, NULL, NULL, 'Nazeer Milk Vendor', 'Phone: 0300-2222222, Address: Milk Market'),
+(1, NULL, NULL, NULL, 'Fresh Dairy Center', 'Phone: 0300-3333333, Address: City Dairy Point'),
+
+-- Employees (category_id = 2)
+(2, NULL, 1001, NULL, 'John Doe - Salesman', 'Email: john@example.com, Phone: 0301-1234567'),
+(2, NULL, 1002, NULL, 'Maryam Bibi - Cashier', 'Email: maryam@example.com, Phone: 0301-2345678'),
+(2, NULL, 1003, NULL, 'Ahmed Khan - Helper', 'Email: ahmed@example.com, Phone: 0301-3456789'),
+
+-- Gas (category_id = 3)
+(3, NULL, NULL, NULL, 'Sui Gas Distributor', 'Phone: 021-4000001, Address: Saddar Karachi'),
+(3, NULL, NULL, NULL, 'Local LPG Vendor', 'Phone: 0302-5555555, Address: Clifton'),
+(3, NULL, NULL, NULL, 'Gas Service Company', 'Phone: 0302-6666666, Address: Korangi'),
+
+-- Vegetables (category_id = 4)
+(4, NULL, NULL, NULL, 'Green Market Vegetables', 'Phone: 0303-1111222, Address: Sabzi Mandi'),
+(4, NULL, NULL, NULL, 'Daily Fresh Veggies', 'Phone: 0303-3333444, Address: Gulshan Market'),
+(4, NULL, NULL, NULL, 'Organic Veggie Point', 'Phone: 0303-5555666, Address: Defence'),
+
+-- Shop (category_id = 5)
+(5, NULL, NULL, 2001, 'Ali General Store', 'Phone: 0304-1231231, Address: Main Bazaar'),
+(5, NULL, NULL, 2002, 'City Mart', 'Phone: 0304-2342342, Address: Shahrah-e-Faisal'),
+(5, NULL, NULL, 2003, 'Mega Store', 'Phone: 0304-3453453, Address: Clifton'),
+
+-- Chicken (category_id = 6)
+(6, NULL, NULL, NULL, 'Poultry World', 'Phone: 0305-1111000, Address: Shah Faisal Market'),
+(6, NULL, NULL, NULL, 'Chicken Point', 'Phone: 0305-2222000, Address: Gulshan-e-Iqbal'),
+(6, NULL, NULL, NULL, 'Fresh Poultry House', 'Phone: 0305-3333000, Address: Saddar'),
+
+-- Electricity (category_id = 7)
+(7, NULL, NULL, NULL, 'K-Electric Service', 'Phone: 021-9991111, Address: Civic Center'),
+(7, NULL, NULL, NULL, 'Power Supply Vendor', 'Phone: 0306-4444000, Address: Korangi'),
+(7, NULL, NULL, NULL, 'Electricity Service Co.', 'Phone: 0306-5555000, Address: North Karachi'),
+
+-- Fixture (category_id = 8)
+(8, NULL, NULL, NULL, 'Fixture & Fittings Co.', 'Phone: 0307-1111222, Address: Saddar Market'),
+(8, NULL, NULL, NULL, 'Light & Fixture Supplier', 'Phone: 0307-2222333, Address: Tariq Road'),
+(8, NULL, NULL, NULL, 'Modern Fixtures', 'Phone: 0307-3333444, Address: DHA Phase 2'),
+
+-- Others (category_id = 9)
+(9, NULL, NULL, NULL, 'Miscellaneous Vendor A', 'Phone: 0308-1111222, Address: Gulshan Block 5'),
+(9, NULL, NULL, NULL, 'Miscellaneous Vendor B', 'Phone: 0308-2222333, Address: Saddar'),
+(9, NULL, NULL, NULL, 'Miscellaneous Vendor C', 'Phone: 0308-3333444, Address: Gulistan-e-Johar');
+
 
 
 DROP TABLE IF EXISTS `expenses`;
