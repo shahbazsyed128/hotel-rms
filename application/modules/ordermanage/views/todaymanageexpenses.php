@@ -203,7 +203,19 @@ $users = [
           </div>
           <div class="form-group">
             <label>User/Vendor Name</label>
-            <input type="text" class="form-control" id="newUserName" placeholder="e.g., Ali Milk Supplier" required>
+            <input type="text" class="form-control" id="user-name" placeholder="e.g., Ali Milk Supplier" required>
+          </div>
+          <div class="form-group">
+            <label>item/Name</label>
+            <input type="text" class="form-control" id="user-item-name" placeholder="e.g., Milk" required>
+          </div>
+         <div class="form-group">
+            <label>Unit</label>
+            <input type="text" class="form-control" id="user-item-unit" placeholder="e.g., Litre" required>
+          </div>
+          <div class="form-group">
+            <label>Price</label>
+            <input type="text" class="form-control" id="user-item-price" placeholder="e.g., 169.0000" required>
           </div>
           <div id="dynamicRateFields"></div>
           <p class="text-muted" id="dynamicHint"></p>
@@ -285,7 +297,6 @@ function setRateHint(catKey){
   else                                txt = 'Enter a rate appropriate for this expense type.';
   $rateHintEl.text(txt);
 }
-
 function populateUsers(catKey){
   $userEl.prop('disabled', true).empty()
     .append('<option value="">-- Select User/Vendor --</option>');
@@ -531,13 +542,16 @@ $('#addCategory').on('click', function(e){
 });
 
 
+
 $('#addUserVendor').on('click', function(e){
   e.preventDefault();
   var catKey = $categoryEl.val();
-  var name   = ($newUserName.val() || '').trim();
-  // var rate   = Number($('#newUserRate').val());
+  var name   = ($('#user-name').val() || '').trim();
+  var price   = Number($('#user-item-price').val());
+  var item_name = ($('#user-item-name').val() || '').trim();
+  var unit = ($('#user-item-unit').val() || '').trim();
 
-  if (!catKey || !name ) {
+  if (!catKey || !name || !item_name || !unit || !price) {
     alert('Please fill all required fields.');
     return;
   }
@@ -545,7 +559,7 @@ $('#addUserVendor').on('click', function(e){
   $.ajax({
     url: 'addCategoryEntity',
     type: 'GET',
-    data: { category_id: catKey, name: name },
+    data: { category_id: catKey, name: name, item_name: item_name, unit: unit, price: price },
     dataType: 'json',
     success: function(resp) {
       if (resp.success) {

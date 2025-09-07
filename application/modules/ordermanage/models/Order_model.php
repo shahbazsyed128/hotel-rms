@@ -2469,14 +2469,15 @@ class Order_model extends CI_Model
 	}
 
 
-
-	public function add_entity($data = array())
-	{
-		return $this->db->insert('entities', $data);
-	}
+	
 
 	public function add_category_entity($data = array())
 	{
 		return $this->db->insert('entities', $data);
+	}
+
+	public function add_entity_item_rate($data = array())
+	{
+		return $this->db->insert('entity_item_rates', $data);
 	}
 }

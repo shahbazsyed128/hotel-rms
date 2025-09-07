@@ -488,6 +488,10 @@ class Order extends MX_Controller
 	public function addCategoryEntity(){
 		$category_id = $this->input->get('category_id');
 		$entity_name = $this->input->get('name');
+		$item_name = $this->input->get('item_name');
+		$price = $this->input->get('price');
+		$unit = $this->input->get('unit');
+
 		if ($category_id && $entity_name) {
 			$data = [
 				'category_id' => $category_id,
@@ -498,6 +502,17 @@ class Order extends MX_Controller
 				'contact_info'=> null,
 			];
 			$this->order_model->add_category_entity($data);
+			$entity_id = $this->db->insert_id();
+
+			$item_data = [
+				'entity_id' => $entity_id,
+				'item_name' => $item_name,
+				'unit' => $unit,
+				'price' => $price,	
+			];
+
+			$this->order_model->add_entity_item_rate($item_data);
+			
 			echo json_encode(['success' => true, 'message' => 'Entity added successfully.']);
 		} else {
 			echo json_encode(['success' => false, 'message' => 'Invalid input.']);
