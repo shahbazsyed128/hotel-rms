@@ -574,6 +574,7 @@ class Order extends MX_Controller
 				'description' => $description,
 				'status' => 1,
 				'note' => null,
+				'expense_date' => date('Y-m-d'),
 				'created_at' => date('Y-m-d H:i:s'),
 			];
 			$id = $this->order_model->add_expense($data);
@@ -584,7 +585,7 @@ class Order extends MX_Controller
 		}
 	}
 
-	public function getexpenses(){
+	public function get_expenses(){
 		$expenses = $this->order_model->get_expenses();
 		echo json_encode($expenses);
 	}

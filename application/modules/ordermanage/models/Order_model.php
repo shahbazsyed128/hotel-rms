@@ -2488,16 +2488,18 @@ class Order_model extends CI_Model
 
 	public function get_expenses($start_date = null, $end_date = null)
 	{
-		$this->db->select('*');
+		$this->db->select('expenses.*, categories.category_name, entities.entity_name');
 		$this->db->from('expenses');
-		$this->db->where('status', 1);
+		$this->db->join('categories', 'expenses.category_id = categories.category_id', 'left');
+		$this->db->join('entities', 'expenses.entity_id = entities.entity_id', 'left');
+		$this->db->where('expenses.status', 1);
 
 		if ($start_date && $end_date) {
-			$this->db->where('created_at >=', $start_date);
-			$this->db->where('created_at <=', $end_date);
+			$this->db->where('expenses.expense_date >=', $start_date);
+			$this->db->where('expenses.expense_date <=', $end_date);
 		} else {
 			$today = date('Y-m-d');
-			$this->db->where('created_at', $today);
+			$this->db->where('expenses.expense_date', $today);
 		}
 
 		$query = $this->db->get();
