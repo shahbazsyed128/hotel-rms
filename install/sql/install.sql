@@ -1394,20 +1394,25 @@ INSERT INTO `entities` (`category_id`, `user_id`, `employee_his_id`, `customer_i
 (9, NULL, NULL, NULL, 'Miscellaneous Vendor A', 'Phone: 0308-1111222, Address: Gulshan Block 5'),
 (9, NULL, NULL, NULL, 'Miscellaneous Vendor B', 'Phone: 0308-2222333, Address: Saddar'),
 (9, NULL, NULL, NULL, 'Miscellaneous Vendor C', 'Phone: 0308-3333444, Address: Gulistan-e-Johar');
-
-
+-- --------------------------------------------------------
 
 DROP TABLE IF EXISTS `expenses`;
-CREATE TABLE IF NOT EXISTS `expenses` (
-    `expense_id` int(11) NOT NULL  AUTO_INCREMENT,
-    `category_id` int(11) NOT NULL,
-    `entity_id` int(11) NOT NULL,
-    `amount` float NOT NULL,
-    `expense_date` date NOT NULL,
-    `description` varchar(255),
-    PRIMARY KEY (`expense_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+CREATE TABLE `expenses` (
+  `expense_id`   int(11)      NOT NULL AUTO_INCREMENT,
+  `category_id`  int(11)      NOT NULL,
+  `entity_id`    int(11)      NOT NULL,
+  `rate_id`      int(11)      NOT NULL,
+  `price`        float        NOT NULL,
+  `quantity`     float        NOT NULL DEFAULT 1,
+  `total_amount` float        NOT NULL,
+  `description`  varchar(255) COLLATE utf8_general_ci DEFAULT NULL,
+  `reason`       text         COLLATE utf8_general_ci DEFAULT NULL,
+  `status`       tinyint(4)   NOT NULL DEFAULT 1 COMMENT '1=active, 0=inactive',
+  `expense_date` date         NOT NULL,
+  `created_at`   timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`   timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`expense_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
