@@ -577,9 +577,8 @@ class Order extends MX_Controller
 				'expense_date' => date('Y-m-d'),
 				'created_at' => date('Y-m-d H:i:s'),
 			];
-			$id = $this->order_model->add_expense($data);
-			$record = $this->order_model->get_expense_by_id($id);
-			echo json_encode(['success' => true, 'message' => 'Expense added successfully.', 'data' => $record[0]]);
+			$this->order_model->add_expense($data);
+			echo json_encode(['success' => true, 'message' => 'Expense added successfully.']);
 		} else {
 			echo json_encode(['success' => false, 'message' => implode(', ', $errors)]);
 		}

@@ -34,6 +34,11 @@
     .btn-wide { min-width:140px; }
     .spin { animation:spin 1s linear infinite; }
     @keyframes spin { from {transform:rotate(0)} to {transform:rotate(360deg)} }
+      /* Filter bar */
+    .filter-bar { background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:10px 12px; margin-bottom:12px; box-shadow:0 1px 1px rgba(0,0,0,.03); }
+    .filter-bar .form-control { height:34px; }
+    .filter-label { font-weight:600; margin-right:6px; }
+    .badge-soft { background:#eef6ff; color:#3178c6; border:1px solid #d6e8ff; }
   </style>
 </head>
 <body>
@@ -118,6 +123,23 @@
   <div class="panel panel-default">
     <div class="panel-heading">Today’s Expenses</div>
     <div class="panel-body">
+      <!-- Filters -->
+      <div class="filter-bar row">
+        <div class="col-sm-4">
+          <label for="filterCategory" class="filter-label">Category</label>
+          <select id="filterCategory" class="form-control">
+            <option value="">All categories</option>
+          </select>
+        </div>
+        <div class="col-sm-4">
+          <label for="searchInput" class="filter-label">Search</label>
+          <input id="searchInput" type="text" class="form-control" placeholder="Search vendor / item...">
+        </div>
+        <div class="col-sm-4 text-right" style="margin-top:24px;">
+          <span id="filterCount" class="badge badge-soft">0 results</span>
+          <button type="button" id="clearFilters" class="btn btn-default">Clear</button>
+        </div>
+      </div>
       <div class="table-responsive">
         <table class="table table-bordered table-striped" id="expensesTable">
           <thead>
@@ -247,8 +269,14 @@
 
   var $modalAddCategory = $('#modalAddCategory');
   var $modalAddEntity   = $('#modalAddEntity');
+  var $modalCatName     = $('#modalCatName');
 
-  var $modalCatName = $('#modalCatName');
+  // Filters
+  var $filterCategory = $('#filterCategory');
+  var $searchInput    = $('#searchInput');
+  var $filterCount    = $('#filterCount');
+  var $clearFilters   = $('#clearFilters');
+  var filters = { category: '', search: '' };
 
   // Error elements
   var $errCategory = $('#err-category');
@@ -258,6 +286,19 @@
 
   // ========================== HELPERS ==========================
   function toMoney(n){ return (Number(n || 0)).toFixed(2); }
+  function debounce(fn, wait){ var t; return function(){ var ctx=this, args=arguments; clearTimeout(t); t=setTimeout(function(){ fn.apply(ctx,args); }, wait); }; }
+  function applyFilters(list){
+    var cat = (filters.category||'').toString();
+    var q = (filters.search||'').toLowerCase();
+    return list.filter(function(r){
+      var okCat = !cat || String(r.category_id)===cat;
+      if(!okCat) return false;
+      if(!q) return true;
+      var hay = [r.category_name, r.entity_name].join(' ').toLowerCase();
+      return hay.indexOf(q) !== -1;
+    });
+  }
+  function updateFilterCount(n){ $filterCount.text(n + ' results'); }
   function todayYmd(){
     var d = new Date();
     var m = (d.getMonth()+1).toString().padStart(2,'0');
@@ -497,9 +538,12 @@
   function reloadCategories(selectId){
     $.getJSON('getcategories').done(function(categories){
       $categoryEl.empty().append('<option value="">-- Select Category --</option>');
+      $filterCategory.empty().append('<option value="">All categories</option>');
       if (Array.isArray(categories)) {
         $.each(categories, function(_,category){
-          $categoryEl.append($('<option>').val(category.category_id).text(category.category_name));
+          var opt = $('<option>').val(category.category_id).text(category.category_name);
+          $categoryEl.append(opt.clone());
+          $filterCategory.append(opt);
         });
       }
       $categoryEl.append('<option value="__add_category__">➕ Add new category…</option>');
@@ -558,6 +602,14 @@
             amount: Number(e.total_amount) || 0
           };
         });
+        // Ensure filter dropdown has items even if categories endpoint wasn’t called
+        if ($filterCategory.children('option').length <= 1) {
+          var seen = {}; // unique
+          expenses.forEach(function(r){ if(!seen[r.category_id]){ seen[r.category_id]=r.category_name; } });
+          Object.keys(seen).forEach(function(id){
+            $filterCategory.append($('<option>').val(id).text(seen[id]));
+          });
+        }
         renderExpenses();
       }
     }).fail(function(xhr){
@@ -569,8 +621,9 @@
   // ========================== RENDER ==========================
   function renderExpenses(){
     $rowsEl.empty();
+    var rows = applyFilters(expenses);
     var total = 0;
-    expenses.forEach(function(row, idx){
+    rows.forEach(function(row, idx){
       total += row.amount;
       var $tr = $('<tr>');
       $tr.append('<td class="text-center">' + (idx+1) + '</td>');
@@ -583,16 +636,31 @@
       $rowsEl.append($tr);
     });
     $totalEl.text(toMoney(total));
+    updateFilterCount(rows.length);
   }
 
   // ========================== INIT ==========================
   // If PHP didn’t render categories (empty), allow JS reload
   <?php if (empty($categories)): ?>
   reloadCategories();
+  <?php else: ?>
+  // Also mirror server-rendered categories into filter dropdown on load
+  (function copyServerCatsToFilter(){
+    $filterCategory.empty().append('<option value="">All categories</option>');
+    $('#category option').each(function(){
+      var v = $(this).val(); var t = $(this).text();
+      if(v && v !== '__add_category__') $filterCategory.append($('<option>').val(v).text(t));
+    });
+  })();
   <?php endif; ?>
 
   getTodayExpenses();
   validateForm();
+
+  // Filter listeners
+  $filterCategory.on('change', function(){ filters.category = $(this).val(); renderExpenses(); });
+  $searchInput.on('input', debounce(function(){ filters.search = $(this).val(); renderExpenses(); }, 150));
+  $clearFilters.on('click', function(){ filters = {category:'', search:''}; $filterCategory.val(''); $searchInput.val(''); renderExpenses(); });
 
 })();
 </script>
