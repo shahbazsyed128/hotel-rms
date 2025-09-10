@@ -589,6 +589,18 @@ class Order extends MX_Controller
 		echo json_encode($expenses);
 	}
 
+	public function deleteexpense(){
+		$expense_id = $this->input->get('expense_id');
+		$reason = $this->input->get('reason');
+		if ($expense_id && is_numeric($expense_id) && $expense_id > 0 && !empty($reason)) {
+			
+			$this->order_model->delete_expense($expense_id, $reason);
+			echo json_encode(['success' => true, 'message' => 'Expense deleted successfully.']);
+		} else {
+			echo json_encode(['success' => false, 'message' => 'Invalid expense ID or reason is required.']);
+		}
+	}
+
 
 	public function showonlineorder()
 	{

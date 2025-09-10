@@ -1,11 +1,14 @@
 <?php
 // ============================================================================
 // expenses.php  (Bootstrap 3.3.7 + jQuery)
-//  - Cleaned up IDs, events, and validations
+//  - Adds confirmation modal before adding (shows total)
+//  - Quantity defaults to 1 and never clears on add
+//  - Row actions: Edit (updates rate/qty) and Delete (requires reason)
+//  - Delete sends expense_id; you can mark it inactive server-side
 //  - Aligns with backend GET endpoints:
-//      addexpense, addcategory, getcategories, addCategoryEntity, getCategoryEntities, getexpenses
+//      addexpense, addcategory, getcategories, addCategoryEntity, getCategoryEntities,
+//      get_expenses, updateexpense, deleteexpense
 //  - Sends: category_id, entity_id, item_id (from rate_id), qty, rate, amount, expense_date (today)
-//  - Better UI hints + inline errors + disabled states
 // ============================================================================
 ?>
 <!DOCTYPE html>
@@ -34,7 +37,7 @@
     .btn-wide { min-width:140px; }
     .spin { animation:spin 1s linear infinite; }
     @keyframes spin { from {transform:rotate(0)} to {transform:rotate(360deg)} }
-      /* Filter bar */
+    /* Filter bar */
     .filter-bar { background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:10px 12px; margin-bottom:12px; box-shadow:0 1px 1px rgba(0,0,0,.03); }
     .filter-bar .form-control { height:34px; }
     .filter-label { font-weight:600; margin-right:6px; }
@@ -102,7 +105,7 @@
 
           <label for="quantity" class="col-sm-2 control-label">Quantity</label>
           <div class="col-sm-2" id="fg-qty">
-            <input type="number" id="quantity" name="quantity" class="form-control" min="0.01" step="0.01" placeholder="1.00">
+            <input type="number" id="quantity" name="quantity" class="form-control" min="0.1" step="0.1" placeholder="1.00" value="1">
             <span class="help-block" id="qtyHint">Enter how many units/days/liters.</span>
             <div class="error-text" id="err-qty">Enter a valid quantity (> 0).</div>
           </div>
@@ -150,7 +153,7 @@
               <th class="text-right" style="width:120px;">Rate</th>
               <th class="text-right" style="width:100px;">Qty</th>
               <th class="text-right" style="width:140px;">Amount</th>
-              <th class="text-center" style="width:110px;">Action</th>
+              <th class="text-center" style="width:130px;">Action</th>
             </tr>
           </thead>
           <tbody id="expenseRows"></tbody>
@@ -245,6 +248,91 @@
   </div>
 </div>
 
+<!-- Confirm Add Expense -->
+<div class="modal fade" id="modalConfirmAdd" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Confirm Add</h4>
+      </div>
+      <div class="modal-body">
+        <p class="m-b-0"><strong>Category:</strong> <span id="confCat"></span></p>
+        <p class="m-b-0"><strong>User/Vendor:</strong> <span id="confUser"></span></p>
+        <p class="m-b-0"><strong>Rate × Qty:</strong> <span id="confRateQty"></span></p>
+        <p class="m-b-0"><strong>Total:</strong> <span id="confTotal"></span></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" id="confirmAddBtn" class="btn btn-primary">
+          <span class="glyphicon glyphicon-ok"></span> Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Expense -->
+<div class="modal fade" id="modalEditExpense" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="formEditExpense">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Edit Expense</h4>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="edit-expense-id">
+          <div class="form-group">
+            <label>Rate</label>
+            <input type="number" step="0.01" class="form-control" id="edit-rate" required>
+          </div>
+          <div class="form-group">
+            <label>Quantity</label>
+            <input type="number" step="0.01" class="form-control" id="edit-qty" required>
+          </div>
+          <p class="text-muted">Total will be recalculated on save.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <span class="glyphicon glyphicon-ok"></span> Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Reason -->
+<div class="modal fade" id="modalDeleteReason" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="formDeleteExpense">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Delete Expense</h4>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="delete-expense-id">
+          <p><strong>Amount:</strong> <span id="delete-amount"></span></p>
+          <div class="form-group" id="fg-del-reason">
+            <label>Reason for deletion <small class="text-muted">(required)</small></label>
+            <textarea class="form-control" id="delete-reason" rows="3" placeholder="Enter a proper reason…"></textarea>
+            <div class="error-text" id="err-del-reason">Please provide a proper reason (at least 5 characters).</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-danger">
+            <span class="glyphicon glyphicon-trash"></span> Delete
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <!-- jQuery + Bootstrap JS (remove if already included globally) -->
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -255,6 +343,7 @@
 
   // ========================== STATE ==========================
   var expenses = []; // server-sourced rows
+  var pendingAddPayload = null;
 
   // ========================== ELEMENTS ==========================
   var $categoryEl = $('#category');
@@ -340,7 +429,7 @@
     var catVal = $categoryEl.val();
     var userVal = $userEl.val();
     var rate = Number($rateEl.val());
-    var qty  = Number($qtyEl.val());
+    var qty  = Number($qtyEl.val() || 1);
 
     if (!catVal){ $categoryEl.addClass('is-invalid'); $errCategory.show(); ok = false; }
     if (!userVal){ $userEl.addClass('is-invalid'); $errUser.show(); ok = false; }
@@ -401,7 +490,7 @@
   $rateEl.on('input', validateForm);
   $qtyEl.on('input', validateForm);
 
-  // Add Expense
+  // Add Expense -> open confirm modal
   $('#expenseForm').on('submit', function(e){
     e.preventDefault();
     if(!validateForm()) return;
@@ -412,42 +501,52 @@
     var $opt   = $userEl.find('option:selected');
     var userName = $opt.text().replace(/— Rate:.*/, '').trim();
     var rate    = Number($rateEl.val());
-    var qty     = Number($qtyEl.val());
+    var qty     = Number($qtyEl.val() || 1); // default 1 if empty
     var rate_id = $opt.data('rate_id') || '';
 
     if(!rate_id){
-      // Backend expects item_id; map from rate_id. If missing, block.
       $userEl.addClass('is-invalid');
       $errUser.text('Selected user is missing item/rate. Please re-add.').show();
       return;
     }
 
-    var payload = {
+    pendingAddPayload = {
       category_id: catId,
       entity_id: Number(userId),
-      item_id: rate_id,              // IMPORTANT: backend requires item_id
+      item_id: rate_id,              // backend requires item_id
       qty: qty,
       rate: rate,
-      amount: rate * qty,            // Backend may recompute; we still send
+      amount: rate * qty,
       expense_date: todayYmd(),
-      // Optional extras (ignored by backend but useful for logs)
+      // Optional extras for logs
       catName: catName,
       userName: userName
     };
 
+    // Fill modal & show
+    $('#confCat').text(catName);
+    $('#confUser').text(userName);
+    $('#confRateQty').text(toMoney(rate) + ' × ' + toMoney(qty));
+    $('#confTotal').text(toMoney(rate * qty));
+    $('#modalConfirmAdd').modal('show');
+  });
+
+  // Confirm Add -> perform request
+  $('#confirmAddBtn').on('click', function(){
+    if(!pendingAddPayload) return;
     setLoading($btnAdd, true);
+    $('#modalConfirmAdd').modal('hide');
+
     $.ajax({
       url: 'addexpense',
       type: 'GET',
-      data: payload,
+      data: pendingAddPayload,
       dataType: 'json'
     }).done(function(resp){
       if(resp && resp.success){
         showMsg('Expense added successfully.', 'ok');
-        // Reset only qty field to speed up adding more rows
-        $qtyEl.val('');
+        $qtyEl.val('1'); // reset qty to 1
         validateForm();
-        // Refresh table from server
         getTodayExpenses();
       } else {
         showMsg((resp && resp.message) || 'Failed to add expense.', 'err');
@@ -457,6 +556,7 @@
       showMsg('Error: ' + msg, 'err');
     }).always(function(){
       setLoading($btnAdd, false);
+      pendingAddPayload = null;
     });
   });
 
@@ -480,7 +580,6 @@
       dataType: 'json'
     }).done(function(resp){
       if (resp && resp.success) {
-        // Reload categories from server
         reloadCategories(resp.new_id);
         $modalAddCategory.modal('hide');
         $('#newCatLabel').val('');
@@ -592,6 +691,7 @@
       if (Array.isArray(resp)) {
         expenses = resp.map(function(e){
           return {
+            expense_id: e.expense_id || e.id || null, // capture id for actions
             category_id: e.category_id,
             category_name: e.category_name,
             entity_id: e.entity_id,
@@ -632,12 +732,101 @@
       $tr.append('<td class="text-right">' + toMoney(row.rate) + '</td>');
       $tr.append('<td class="text-right">' + toMoney(row.qty) + '</td>');
       $tr.append('<td class="text-right">' + toMoney(row.amount) + '</td>');
-      $tr.append('<td class="text-center"><button class="btn btn-xs btn-default" disabled title="Server-managed"><span class="glyphicon glyphicon-lock"></span></button></td>');
+      $tr.append(
+        '<td class="text-center">' +
+          '<button class="btn btn-xs btn-info btn-edit" data-id="'+ (row.expense_id||'') +'" title="Edit">' +
+            '<span class="glyphicon glyphicon-pencil"></span>' +
+          '</button> ' +
+          '<button class="btn btn-xs btn-danger btn-delete" data-id="'+ (row.expense_id||'') +'" data-amount="'+ toMoney(row.amount) +'" title="Delete">' +
+            '<span class="glyphicon glyphicon-trash"></span>' +
+          '</button>' +
+        '</td>'
+      );
       $rowsEl.append($tr);
     });
     $totalEl.text(toMoney(total));
     updateFilterCount(rows.length);
   }
+
+  // ========================== ACTION HANDLERS (Edit/Delete) ==========================
+  // Open Edit
+  $rowsEl.on('click', '.btn-edit', function(){
+    var id = $(this).data('id');
+    var row = expenses.find(function(r){ return String(r.expense_id||'') === String(id); });
+    if(!row){ showMsg('Row not found.', 'err'); return; }
+    $('#edit-expense-id').val(id);
+    $('#edit-rate').val(row.rate);
+    $('#edit-qty').val(row.qty);
+    $('#modalEditExpense').modal('show');
+  });
+
+  // Save Edit
+  $('#formEditExpense').on('submit', function(e){
+    e.preventDefault();
+    var id = $('#edit-expense-id').val();
+    var rate = Number($('#edit-rate').val());
+    var qty  = Number($('#edit-qty').val());
+    if(!(rate>=0) || !(qty>0)){ showMsg('Enter valid rate and quantity.', 'err'); return; }
+
+    $.ajax({
+      url: 'updateexpense',
+      type: 'GET',
+      data: { expense_id: id, rate: rate, qty: qty, amount: rate*qty },
+      dataType: 'json'
+    }).done(function(resp){
+      if(resp && resp.success){
+        showMsg('Expense updated.', 'ok');
+        $('#modalEditExpense').modal('hide');
+        getTodayExpenses();
+      } else {
+        showMsg((resp && resp.message) || 'Failed to update expense.', 'err');
+      }
+    }).fail(function(xhr){
+      var msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : xhr.statusText;
+      showMsg('Error: ' + msg, 'err');
+    });
+  });
+
+  // Open Delete (ask for proper reason)
+  $rowsEl.on('click', '.btn-delete', function(){
+    var id = $(this).data('id');
+    var amount = $(this).data('amount');
+    $('#delete-expense-id').val(id);
+    $('#delete-amount').text(amount);
+    $('#delete-reason').val('');
+    $('#delete-reason').removeClass('is-invalid');
+    $('#err-del-reason').hide();
+    $('#modalDeleteReason').modal('show');
+  });
+
+  // Confirm Delete (require non-empty "proper" reason)
+  $('#formDeleteExpense').on('submit', function(e){
+    e.preventDefault();
+    var id = $('#delete-expense-id').val();
+    var reason = ($('#delete-reason').val()||'').trim();
+    if(reason.replace(/\s+/g,'').length < 5){
+      $('#delete-reason').addClass('is-invalid');
+      $('#err-del-reason').show();
+      return;
+    }
+    $.ajax({
+      url: 'deleteexpense', // backend should mark inactive using this expense_id
+      type: 'GET',
+      data: { expense_id: id, reason: reason },
+      dataType: 'json'
+    }).done(function(resp){
+      if(resp && resp.success){
+        showMsg('Expense deleted.', 'ok');
+        $('#modalDeleteReason').modal('hide');
+        getTodayExpenses();
+      } else {
+        showMsg((resp && resp.message) || 'Failed to delete expense.', 'err');
+      }
+    }).fail(function(xhr){
+      var msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : xhr.statusText;
+      showMsg('Error: ' + msg, 'err');
+    });
+  });
 
   // ========================== INIT ==========================
   // If PHP didn’t render categories (empty), allow JS reload

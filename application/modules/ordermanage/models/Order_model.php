@@ -2514,4 +2514,14 @@ class Order_model extends CI_Model
 		$query = $this->db->get();
 		return $query->result();
 	}
+
+	public function update_expense($data = array(), $id = null)
+	{
+		return $this->db->where('expense_id', $id)->update('expenses', $data);
+	}
+	public function delete_expense($id = null, $reason = null)
+	{
+		return $this->db->where('expense_id', $id)->update('expenses', array('status' => 0, 'reason' => $reason));
+	}
+
 }
