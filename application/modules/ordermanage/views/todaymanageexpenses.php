@@ -5,6 +5,7 @@
 //  - Quantity defaults to 1 and never clears on add
 //  - Row actions: Edit (updates rate/qty) and Delete (requires reason)
 //  - Delete sends expense_id; you can mark it inactive server-side
+//  - Print Report: Groups by Category -> rows (Vendor, Rate, Qty, Total) -> Category Subtotal + Grand Total
 //  - Aligns with backend GET endpoints:
 //      addexpense, addcategory, getcategories, addCategoryEntity, getCategoryEntities,
 //      get_expenses, updateexpense, deleteexpense
@@ -42,6 +43,25 @@
     .filter-bar .form-control { height:34px; }
     .filter-label { font-weight:600; margin-right:6px; }
     .badge-soft { background:#eef6ff; color:#3178c6; border:1px solid #d6e8ff; }
+
+    /* Report styles */
+    .report-header { margin-bottom: 15px; }
+    .report-meta { color:#666; }
+    .category-block { margin-bottom: 22px; page-break-inside: avoid; }
+    .category-title { margin:0 0 8px; font-weight:700; }
+    .category-subtotal { background:#fafafa; font-weight:700; }
+    .grand-total { background:#eef6ff; font-weight:700; }
+    .report-table > thead > tr > th { background:#f7fbff; }
+    .no-data { text-align:center; color:#999; padding:25px 0; }
+
+    /* Print layout: only print #printArea */
+    @media print {
+      body * { visibility: hidden !important; }
+      #printArea, #printArea * { visibility: visible !important; }
+      #printArea { position: absolute; left: 0; top: 0; width: 100%; }
+      .no-print { display:none !important; }
+      .category-block { page-break-after: avoid; }
+    }
   </style>
 </head>
 <body>
@@ -169,6 +189,48 @@
     </div>
   </div>
 
+  <!-- ========================= Report / Print ========================= -->
+  <div class="panel panel-default no-print">
+    <div class="panel-heading">Report</div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-sm-6">
+          <p class="text-muted m-b-0">Generate a printable report grouped by category.</p>
+        </div>
+        <div class="col-sm-6 text-right">
+          <button type="button" id="btnBuildReport" class="btn btn-default">
+            <span class="glyphicon glyphicon-eye-open"></span> Preview Report
+          </button>
+          <button type="button" id="btnPrintReport" class="btn btn-primary">
+            <span class="glyphicon glyphicon-print"></span> Print Report
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Printable Area (hidden in normal view, visible in print) -->
+  <div id="printArea" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:18px; margin-bottom:40px;">
+    <div class="report-header">
+      <h3 class="m-b-0">Expenses Report</h3>
+      <p class="report-meta m-b-0">
+        Date: <span id="reportDate"></span>
+        <span id="reportFilters" style="margin-left:10px;"></span>
+      </p>
+    </div>
+    <div id="reportBody">
+      <div class="no-data">No data to display.</div>
+    </div>
+    <table class="table table-bordered" style="margin-top:15px;">
+      <tfoot>
+        <tr class="grand-total">
+          <td class="text-right"><strong>Grand Total:</strong></td>
+          <td style="width:180px;" class="text-right"><strong id="reportGrandTotal">0.00</strong></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
 </div><!-- /container -->
 
 <!-- ========================= Modals (Bootstrap 3) ========================= -->
@@ -200,7 +262,7 @@
   </div>
 </div>
 
-<!-- Add User/Vendor (fields change by category) -->
+<!-- Add User/Vendor -->
 <div class="modal fade" id="modalAddEntity" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -359,6 +421,14 @@
   var $modalAddCategory = $('#modalAddCategory');
   var $modalAddEntity   = $('#modalAddEntity');
   var $modalCatName     = $('#modalCatName');
+
+  // Report elements
+  var $btnBuildReport = $('#btnBuildReport');
+  var $btnPrintReport = $('#btnPrintReport');
+  var $printArea      = $('#printArea');
+  var $reportBody     = $('#reportBody');
+  var $reportDate     = $('#reportDate');
+  var $reportGrandTotal = $('#reportGrandTotal');
 
   // Filters
   var $filterCategory = $('#filterCategory');
@@ -545,7 +615,7 @@
     }).done(function(resp){
       if(resp && resp.success){
         showMsg('Expense added successfully.', 'ok');
-        $qtyEl.val('1'); // reset qty to 1
+        $qtyEl.val('1'); // keep default quantity 1 after add
         validateForm();
         getTodayExpenses();
       } else {
@@ -581,7 +651,7 @@
     }).done(function(resp){
       if (resp && resp.success) {
         reloadCategories(resp.new_id);
-        $modalAddCategory.modal('hide');
+        $('#modalAddCategory').modal('hide');
         $('#newCatLabel').val('');
         showMsg('Category added.', 'ok');
       } else {
@@ -621,7 +691,7 @@
     }).done(function(resp){
       if (resp && resp.success) {
         getCategoryEntities(catId); // repopulate users
-        $modalAddEntity.modal('hide');
+        $('#modalAddEntity').modal('hide');
         $('#formAddEntity')[0].reset();
         showMsg('User/Vendor added.', 'ok');
       } else {
@@ -718,7 +788,7 @@
     });
   }
 
-  // ========================== RENDER ==========================
+  // ========================== RENDER (Table) ==========================
   function renderExpenses(){
     $rowsEl.empty();
     var rows = applyFilters(expenses);
@@ -748,9 +818,108 @@
     updateFilterCount(rows.length);
   }
 
+  // ========================== REPORT (Build & Print) ==========================
+  function groupByCategory(list){
+    var map = {};
+    list.forEach(function(r){
+      var key = r.category_id || 'uncat';
+      if(!map[key]) map[key] = { id: key, name: r.category_name || 'Uncategorized', rows: [], subtotal: 0 };
+      map[key].rows.push(r);
+      map[key].subtotal += (Number(r.amount)||0);
+    });
+    // return in category-name ascending order
+    return Object.keys(map).map(function(k){ return map[k]; })
+             .sort(function(a,b){ return (a.name||'').localeCompare(b.name||''); });
+  }
+
+  function buildReport(){
+    // Report date + filters
+    $reportDate.text(todayYmd());
+    var filterBits = [];
+    if(filters.category){
+      var label = $('#filterCategory option:selected').text() || 'Category';
+      filterBits.push('Category: ' + label);
+    }
+    if(($searchInput.val()||'').trim()){
+      filterBits.push('Search: ' + $searchInput.val().trim());
+    }
+    $('#reportFilters').text(filterBits.length ? '('+filterBits.join(' | ')+')' : '');
+
+    // Data
+    var rows = applyFilters(expenses);
+    $reportBody.empty();
+
+    if(!rows.length){
+      $reportBody.append('<div class="no-data">No data to display.</div>');
+      $reportGrandTotal.text('0.00');
+      return;
+    }
+
+    var grouped = groupByCategory(rows);
+    var grand = 0;
+
+    grouped.forEach(function(cat){
+      grand += cat.subtotal;
+      var $block = $('<div class="category-block">');
+      $block.append('<h4 class="category-title">'+ (cat.name || 'Uncategorized') +'</h4>');
+
+      var $table = $('<table class="table table-bordered report-table">');
+      var thead = ''+
+        '<thead>' +
+          '<tr>' +
+            '<th style="width:50%;">Vendor</th>' +
+            '<th class="text-right" style="width:16%;">Rate</th>' +
+            '<th class="text-right" style="width:16%;">Qty</th>' +
+            '<th class="text-right" style="width:18%;">Total</th>' +
+          '</tr>' +
+        '</thead>';
+      $table.append(thead);
+
+      var $tbody = $('<tbody>');
+      cat.rows.forEach(function(r){
+        var tr = ''+
+          '<tr>' +
+            '<td>'+ (r.entity_name || '-') +'</td>' +
+            '<td class="text-right">'+ toMoney(r.rate) +'</td>' +
+            '<td class="text-right">'+ toMoney(r.qty) +'</td>' +
+            '<td class="text-right">'+ toMoney(r.amount) +'</td>' +
+          '</tr>';
+        $tbody.append(tr);
+      });
+      $table.append($tbody);
+
+      var $tfoot = $('<tfoot>');
+      $tfoot.append(
+        '<tr class="category-subtotal">' +
+          '<td class="text-right" colspan="3">Subtotal ('+ (cat.name || '-') +'):</td>' +
+          '<td class="text-right"><strong>'+ toMoney(cat.subtotal) +'</strong></td>' +
+        '</tr>'
+      );
+      $table.append($tfoot);
+
+      $block.append($table);
+      $reportBody.append($block);
+    });
+
+    $reportGrandTotal.text(toMoney(grand));
+  }
+
+  // Buttons
+  $btnBuildReport.on('click', function(){
+    buildReport();
+    // Scroll to preview
+    $('html, body').animate({ scrollTop: $printArea.offset().top - 10 }, 200);
+  });
+
+  $btnPrintReport.on('click', function(){
+    // Always rebuild to reflect latest table filters/changes
+    buildReport();
+    window.print();
+  });
+
   // ========================== ACTION HANDLERS (Edit/Delete) ==========================
   // Open Edit
-  $rowsEl.on('click', '.btn-edit', function(){
+  $('#expenseRows').on('click', '.btn-edit', function(){
     var id = $(this).data('id');
     var row = expenses.find(function(r){ return String(r.expense_id||'') === String(id); });
     if(!row){ showMsg('Row not found.', 'err'); return; }
@@ -788,7 +957,7 @@
   });
 
   // Open Delete (ask for proper reason)
-  $rowsEl.on('click', '.btn-delete', function(){
+  $('#expenseRows').on('click', '.btn-delete', function(){
     var id = $(this).data('id');
     var amount = $(this).data('amount');
     $('#delete-expense-id').val(id);
@@ -829,11 +998,9 @@
   });
 
   // ========================== INIT ==========================
-  // If PHP didn’t render categories (empty), allow JS reload
   <?php if (empty($categories)): ?>
   reloadCategories();
   <?php else: ?>
-  // Also mirror server-rendered categories into filter dropdown on load
   (function copyServerCatsToFilter(){
     $filterCategory.empty().append('<option value="">All categories</option>');
     $('#category option').each(function(){
