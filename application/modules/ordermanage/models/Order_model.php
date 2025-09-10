@@ -2480,4 +2480,36 @@ class Order_model extends CI_Model
 	{
 		return $this->db->insert('entity_item_rates', $data);
 	}
+
+	public function add_expense($data = array())
+	{
+		return $this->db->insert('expenses', $data);
+	}
+
+	public function get_expenses($start_date = null, $end_date = null)
+	{
+		$this->db->select('*');
+		$this->db->from('expenses');
+		$this->db->where('status', 1);
+
+		if ($start_date && $end_date) {
+			$this->db->where('created_at >=', $start_date);
+			$this->db->where('created_at <=', $end_date);
+		} else {
+			$today = date('Y-m-d');
+			$this->db->where('created_at', $today);
+		}
+
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function get_expense_by_id($id)
+	{
+		$this->db->select('*');
+		$this->db->from('expenses');
+		$this->db->where('expense_id', $id);
+		$query = $this->db->get();
+		return $query->result();
+	}
 }

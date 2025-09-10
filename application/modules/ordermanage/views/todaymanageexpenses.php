@@ -239,91 +239,7 @@ function setRateHint(catKey){
   else                                txt = 'Enter a rate appropriate for this expense type.';
   $rateHintEl.text(txt);
 }
-function populateUsers(catKey){
-  $userEl.prop('disabled', true).empty()
-    .append('<option value="">-- Select User/Vendor --</option>');
 
-  $rateEl.val(''); $qtyEl.val('');
-
-  var list = usersByCategory[catKey] || [];
-  list.forEach(function(u){
-    $userEl.append(
-      $('<option>').val(String(u.id)).text(u.name).attr('data-rate', String(u.rate || 0))
-    );
-  });
-
-  // Always allow "Add new"
-  $userEl.append('<option value="__add_user__">➕ Add new user/vendor…</option>');
-  $userEl.prop('disabled', false);
-}
-
-function renderTable(){
-  $rowsEl.empty();
-  var grand = 0;
-
-  expenses.forEach(function(e, idx){
-    grand += e.amount;
-    var $tr = $('<tr>');
-    $tr.append('<td class="text-center">'+(idx+1)+'</td>');
-    $tr.append('<td class="text-center">'+e.catName+'</td>');
-    $tr.append('<td class="text-center">'+e.userName+'</td>');
-    $tr.append('<td class="text-right">'+toMoney(e.rate)+'</td>');
-    $tr.append('<td class="text-right">'+e.qty+'</td>');
-    $tr.append('<td class="text-right">'+toMoney(e.amount)+'</td>');
-    $tr.append('<td class="text-center"><button type="button" class="btn btn-danger btn-xs" data-remove="'+idx+'">Remove</button></td>');
-    $rowsEl.append($tr);
-  });
-
-  $totalEl.text(toMoney(grand));
-
-  $rowsEl.find('[data-remove]').off('click').on('click', function(){
-    var i = Number($(this).attr('data-remove'));
-    expenses.splice(i, 1);
-    renderTable();
-  });
-}
-
-function buildDynamicRateFields(catKey){
-  $dynFields.empty();
-  $dynHint.text('');
-  function group(label, innerHtml){
-    return $('<div class="form-group">').append('<label>'+label+'</label>').append(innerHtml);
-  }
-
-  if (catKey === 'employee'){
-    $dynFields
-      .append(group('Daily Wages (Rate)', '<input type="number" step="0.01" class="form-control" id="newUserRate" placeholder="e.g., 800" required>'))
-      .append(group('Designation (optional)', '<input type="text" class="form-control" id="newUserDesignation" placeholder="e.g., Waiter">'));
-    $dynHint.text('Daily wages will be used as the Rate. Quantity on the main form = number of days.');
-  }
-  else if (catKey === 'milk'){
-    $dynFields
-      .append(group('Rate per Liter', '<input type="number" step="0.01" class="form-control" id="newUserRate" placeholder="e.g., 55" required>'))
-      .append(group('Milk Type (optional)', '<input type="text" class="form-control" id="milkType" placeholder="e.g., Cow/Buffalo">'))
-      .append(group('Fat % (optional)', '<input type="number" step="0.01" class="form-control" id="milkFat" placeholder="e.g., 4.5">'));
-    $dynHint.text('Rate is per liter. Quantity on the main form = liters.');
-  }
-  else if (catKey === 'gas'){
-    $dynFields
-      .append(group('Rate per Unit', '<input type="number" step="0.01" class="form-control" id="newUserRate" placeholder="e.g., 105" required>'))
-      .append(group('Account No. (optional)', '<input type="text" class="form-control" id="gasAccount" placeholder="e.g., 123-456-789">'));
-    $dynHint.text('Rate per unit. Quantity on the main form = units consumed.');
-  }
-  else if (catKey === 'electricity'){
-    $dynFields
-      .append(group('Rate per kWh', '<input type="number" step="0.01" class="form-control" id="newUserRate" placeholder="e.g., 30" required>'))
-      .append(group('Meter No. (optional)', '<input type="text" class="form-control" id="meterNo" placeholder="e.g., K-E-123456">'));
-    $dynHint.text('Rate per kWh. Quantity on the main form = kWh consumed.');
-  }
-  else {
-    $dynFields
-      .append(group('Rate', '<input type="number" step="0.01" class="form-control" id="newUserRate" placeholder="e.g., 0" required>'))
-      .append(group('Notes (optional)', '<input type="text" class="form-control" id="otherNotes" placeholder="Any notes">'));
-    $dynHint.text('Generic rate; Quantity meaning depends on the expense.');
-  }
-}
-
-// ========================== EVENTS ==========================
 
 $categoryEl.on('change', function(){
   var val = $(this).val();
@@ -394,6 +310,7 @@ $('#expenseForm').on('submit', function(e){
   var usrVal  = $userEl.val();
   var rate    = Number($rateEl.val());
   var qty     = Number($qtyEl.val());
+  var rate_id = $userEl.find('option:selected').data('rate_id') || '';
 
   var ok = true;
   if (!catKey){ $categoryEl.addClass('is-invalid'); ok = false; }
@@ -407,40 +324,11 @@ $('#expenseForm').on('submit', function(e){
   // remove "Add new user…" suffix if present visually
   userName = userName.replace(/— Rate:.*$/,'').trim();
   var amount = rate * qty;
-  data = { category_id: catKey, catName: catName.trim(), entity_id: Number(usrVal), userName: userName, rate: rate, qty: qty, amount: amount };
+  data = { category_id: catKey, catName: catName.trim(), entity_id: Number(usrVal), userName: userName, rate_id: rate_id, rate: rate, qty: qty, amount: amount };
   addExpense(data);
-
-  // expenses.push({
-  //   catKey: catKey,
-  //   catName: catName,
-  //   userId: Number(usrVal),
-  //   userName: userName,
-  //   rate: rate,
-  //   qty: qty,
-  //   amount: amount
-  // });
-
-  // renderTable();
-
-  // // reset quantity only for faster multiple entries
-  $qtyEl.val('');
-
-  // ================= (Optional) Persist to server =================
-  /*
-  $.ajax({
-    url: '<?= /* base_url("expenses/store") */ "" ?>',
-    method: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify({ category: catKey, user_id: Number(usrVal), rate: rate, quantity: qty, amount: amount }),
-    success: function(resp){ $statusEl.text('Saved.'); },
-    error: function(xhr){ $statusEl.text('Save failed: ' + (xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : xhr.statusText)); }
-  });
-  */
 });
 
 function addExpense(data) {
-  
-
     $.ajax({
     url: 'addexpense',
     type: 'GET',
@@ -448,10 +336,8 @@ function addExpense(data) {
     dataType: 'json',
     success: function(resp) {
       if (resp.success) {
-        console.log('Expense added:', resp);
-      } else {
-        alert(resp.message || 'Failed to add category.');
-      }
+        console.log(resp);
+      } 
     },
     error: function(xhr){
       alert('Error: ' + (xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : xhr.statusText));
@@ -459,9 +345,6 @@ function addExpense(data) {
     complete: function() {
     }
   });
-
-  // expenses.push(expense);
-  // renderTable();
 }
 
 $('#addUserBtn').on('click', function(){
@@ -564,6 +447,7 @@ function getCategoryEntities(id) {
               .text(u.entity_name)
               .attr('data-item_name', u.item_name || '')
               .attr('data-unit', u.unit || '')
+              .attr('data-rate_id', u.rate_id || '')
               .attr('data-price', u.price || '')
           );
         });
@@ -574,44 +458,35 @@ function getCategoryEntities(id) {
     }
   });
 }
-// Save User/Vendor
-$('#formAddUser').on('submit', function(e){
-  e.preventDefault();
 
-  var catKey = $categoryEl.val();
-  var name   = ($newUserName.val() || '').trim();
-  var $rate  = $('#newUserRate');
-  if (!catKey || !name || !$rate.length) return;
 
-  var rate = Number($rate.val());
-  if (!(rate >= 0)){
-    $rate.addClass('is-invalid');
-    return;
-  }
-
-  var newUser = { id: __nextId++, name: name, rate: rate };
-  usersByCategory[catKey] = usersByCategory[catKey] || [];
-  usersByCategory[catKey].push(newUser);
-
-  // Rebuild user dropdown and select the new one
-  populateUsers(catKey);
-  $userEl.val(String(newUser.id));
-  $rateEl.val(String(rate));
-  // $modalAddUser.modal('hide');
-
-  // (Optional) persist vendor
-  /*
+function getTodayExpenses() {
   $.ajax({
-    url: '<?= /* base_url("vendors/store") */ "" ?>',
-    method: 'POST',
-    data: { category: catKey, name: name, rate: rate },
-    success: function(){}, error: function(){}
+    url: 'getexpenses',
+    type: 'GET',
+    dataType: 'json',
+    success: function(resp) {
+      if (Array.isArray(resp)) {
+        expenses = resp.map(function(e){
+          return {
+            catKey: e.category_id,
+            catName: e.category_name,
+            userId: e.entity_id,
+            userName: e.entity_name,
+            rate_id: e.rate_id || '',
+            rate: Number(e.price) || 0,
+            qty: Number(e.quantity) || 0,
+            amount: Number(e.total_amount) || 0
+          };
+        });
+        renderExpenses();
+      }
+    },
+    error: function(xhr){
+      alert('Error loading expenses: ' + (xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : xhr.statusText));
+    }
   });
-  */
-});
-
-// ========================== INIT ==========================
-renderTable();
+}
 </script>
 
 </body>

@@ -521,30 +521,72 @@ class Order extends MX_Controller
 
 
 	public function addexpense(){
+
 		$category_id = $this->input->get('category_id');
 		$entity_id = $this->input->get('entity_id');
-		$item_id = $this->input->get('item_id');
-		$quantity = $this->input->get('quantity');
-		$price = $this->input->get('price');
-		$total = $this->input->get('total');
-		$expense_date = $this->input->get('expense_date');
+		$rate_id = $this->input->get('rate_id');
+		$price = $this->input->get('rate');
+		$quantity = $this->input->get('qty');
+		$total_amount = $this->input->get('amount');
+		$description = $this->input->get('description');
+		$note = $this->input->get('note');
+		$status = 1;
+		$created_at = date('Y-m-d H:i:s');
 
-		if ($category_id && $entity_id && $item_id && $quantity && $price && $total && $expense_date) {
+		// Validation: description and note can be null, but if set, must be string
+		if ($description !== null && !is_string($description)) {
+			$errors[] = 'Description must be a string or null.';
+		}
+		if ($note !== null && !is_string($note)) {
+			$errors[] = 'Note must be a string or null.';
+		}
+
+		if(!$category_id || !is_numeric($category_id) || $category_id <= 0){
+			$errors[] = 'Invalid category ID.';
+		}
+		if(!$entity_id || !is_numeric($entity_id) || $entity_id <= 0){
+			$errors[] = 'Invalid entity ID.';
+		}
+		if(!$rate_id || !is_numeric($rate_id) || $rate_id <= 0){
+			$errors[] = 'Invalid rate ID.';
+		}
+		if(!$price || !is_numeric($price) || $price < 0){
+			$errors[] = 'Invalid price.';
+		}
+		if(!$quantity || !is_numeric($quantity) || $quantity <= 0){
+			$errors[] = 'Invalid quantity.';
+		}
+		if(!$total_amount || !is_numeric($total_amount) || $total_amount < 0){
+			$errors[] = 'Invalid total amount.';
+		}
+
+
+		$errors = [];
+
+		if (empty($errors)) {
 			$data = [
-				'category_id' => $category_id,
-				'entity_id' => $entity_id,
-				'item_id' => $item_id,
-				'quantity' => $quantity,
-				'price' => $price,
-				'total' => $total,
-				'expense_date' => date('Y-m-d', strtotime($expense_date)),
+				'category_id' => (int)$category_id,
+				'entity_id' => (int)$entity_id,
+				'rate_id' => (int)$rate_id,
+				'price' => (float)$price,
+				'quantity' => (float)$quantity,
+				'total_amount' => (float)$total_amount,
+				'description' => $description,
+				'status' => 1,
+				'note' => null,
 				'created_at' => date('Y-m-d H:i:s'),
 			];
-			$this->order_model->add_expense($data);
-			echo json_encode(['success' => true, 'message' => 'Expense added successfully.']);
+			$id = $this->order_model->add_expense($data);
+			$record = $this->order_model->get_expense_by_id($id);
+			echo json_encode(['success' => true, 'message' => 'Expense added successfully.', 'data' => $record[0]]);
 		} else {
-			echo json_encode(['success' => false, 'message' => 'Invalid input.']);
+			echo json_encode(['success' => false, 'message' => implode(', ', $errors)]);
 		}
+	}
+
+	public function getexpenses(){
+		$expenses = $this->order_model->get_expenses();
+		echo json_encode($expenses);
 	}
 
 
