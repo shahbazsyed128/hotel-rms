@@ -2502,6 +2502,7 @@ class Order_model extends CI_Model
 			$this->db->where('expenses.expense_date', $today);
 		}
 
+		$this->db->order_by('expenses.expense_id', 'DESC');
 		$query = $this->db->get();
 		return $query->result();
 	}

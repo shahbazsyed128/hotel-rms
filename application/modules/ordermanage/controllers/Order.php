@@ -529,16 +529,16 @@ class Order extends MX_Controller
 		$quantity = $this->input->get('qty');
 		$total_amount = $this->input->get('amount');
 		$description = $this->input->get('description');
-		$note = $this->input->get('note');
+		$reason = $this->input->get('reason');
 		$status = 1;
 		$created_at = date('Y-m-d H:i:s');
 
-		// Validation: description and note can be null, but if set, must be string
+		// Validation: description and reason can be null, but if set, must be string
 		if ($description !== null && !is_string($description)) {
 			$errors[] = 'Description must be a string or null.';
 		}
-		if ($note !== null && !is_string($note)) {
-			$errors[] = 'Note must be a string or null.';
+		if ($reason !== null && !is_string($reason)) {
+			$errors[] = 'Reason must be a string or null.';
 		}
 
 		if(!$category_id || !is_numeric($category_id) || $category_id <= 0){
@@ -573,7 +573,7 @@ class Order extends MX_Controller
 				'total_amount' => (float)$total_amount,
 				'description' => $description,
 				'status' => 1,
-				'note' => null,
+				'reason' => null,
 				'expense_date' => date('Y-m-d'),
 				'created_at' => date('Y-m-d H:i:s'),
 			];

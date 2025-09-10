@@ -105,7 +105,7 @@
 
           <label for="quantity" class="col-sm-2 control-label">Quantity</label>
           <div class="col-sm-2" id="fg-qty">
-            <input type="number" id="quantity" name="quantity" class="form-control" min="0.1" step="0.1" placeholder="1.00" value="1">
+            <input type="number" id="quantity" name="quantity" class="form-control" placeholder="1.00" value="1">
             <span class="help-block" id="qtyHint">Enter how many units/days/liters.</span>
             <div class="error-text" id="err-qty">Enter a valid quantity (> 0).</div>
           </div>
@@ -734,7 +734,7 @@
       $tr.append('<td class="text-right">' + toMoney(row.amount) + '</td>');
       $tr.append(
         '<td class="text-center">' +
-          '<button class="btn btn-xs btn-info btn-edit" data-id="'+ (row.expense_id||'') +'" title="Edit">' +
+          '<button style="display:none" class="btn btn-xs btn-info btn-edit" data-id="'+ (row.expense_id||'') +'" title="Edit">' +
             '<span class="glyphicon glyphicon-pencil"></span>' +
           '</button> ' +
           '<button class="btn btn-xs btn-danger btn-delete" data-id="'+ (row.expense_id||'') +'" data-amount="'+ toMoney(row.amount) +'" title="Delete">' +
