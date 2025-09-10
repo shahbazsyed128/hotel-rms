@@ -341,7 +341,7 @@ $(document).on('click', '#cancelreason', function(){
 						success: function(data){
 							$("#onprocesslist").html(data);
 							
-							conlose.log(prevsltab);
+							console.log(prevsltab);
 							swal("Rejected", "Your Order is Cancel", "success");
 							prevsltab.trigger('click');
 							load_unseen_notification();

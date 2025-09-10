@@ -2394,4 +2394,135 @@ class Order_model extends CI_Model
 		//echo $this->db->last_query();
 		return $orderdetails = $query->result();
 	}
+
+	public function get_categories()
+	{
+		$this->db->select('*');
+		$this->db->from('categories');
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function add_category($data = array())
+	{
+		return $this->db->insert('categories', array('category_name' => $data));
+	}
+
+	// public function get_entities_by_category($category_id){
+	// 	$this->db->select('
+	// 		e.entity_id,
+	// 		e.category_id,
+	// 		e.entity_name,
+	// 		e.contact_info,
+	// 		r.rate_id,
+	// 		r.item_name,
+	// 		r.unit,
+	// 		r.price,
+	// 		r.valid_from,
+	// 		r.valid_to
+	// 	');
+	// 	$this->db->from('entities e');
+	// 	$this->db->join('entity_item_rates r', 'e.entity_id = r.entity_id', 'left'); 
+	// 	$this->db->where('e.category_id', $category_id);
+	// 	$this->db->order_by('e.entity_id', 'ASC');
+	// 	$this->db->order_by('r.valid_from', 'DESC');
+		
+	// 	$query = $this->db->get();
+	// 	print_r($this->db->last_query()); // Debugging line to see the generated SQL query
+	// 	exit;
+	// 	return $query->result();
+	// }
+
+
+	public function get_entities_by_category($category_id){
+		$this->db->select('
+			e.entity_id,
+			e.category_id,
+			e.entity_name,
+			e.contact_info,
+			r.rate_id,
+			r.item_name,
+			r.unit,
+			r.price,
+			r.valid_from,
+			r.valid_to
+		');
+		$this->db->from('entities e');
+		$this->db->join(
+			'(SELECT rr.* 
+			FROM entity_item_rates rr
+			INNER JOIN (
+				SELECT entity_id, MAX(valid_from) AS latest_date
+				FROM entity_item_rates
+				GROUP BY entity_id
+			) x 
+			ON rr.entity_id = x.entity_id AND rr.valid_from = x.latest_date
+			) r',
+			'e.entity_id = r.entity_id',
+			'left'
+		);
+		$this->db->where('e.category_id', $category_id);
+		$this->db->order_by('e.entity_id', 'ASC');
+
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+
+	
+
+	public function add_category_entity($data = array())
+	{
+		return $this->db->insert('entities', $data);
+	}
+
+	public function add_entity_item_rate($data = array())
+	{
+		return $this->db->insert('entity_item_rates', $data);
+	}
+
+	public function add_expense($data = array())
+	{
+		return $this->db->insert('expenses', $data);
+	}
+
+	public function get_expenses($start_date = null, $end_date = null)
+	{
+		$this->db->select('expenses.*, categories.category_name, entities.entity_name');
+		$this->db->from('expenses');
+		$this->db->join('categories', 'expenses.category_id = categories.category_id', 'left');
+		$this->db->join('entities', 'expenses.entity_id = entities.entity_id', 'left');
+		$this->db->where('expenses.status', 1);
+
+		if ($start_date && $end_date) {
+			$this->db->where('expenses.expense_date >=', $start_date);
+			$this->db->where('expenses.expense_date <=', $end_date);
+		} else {
+			$today = date('Y-m-d');
+			$this->db->where('expenses.expense_date', $today);
+		}
+
+		$this->db->order_by('expenses.expense_id', 'DESC');
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function get_expense_by_id($id)
+	{
+		$this->db->select('*');
+		$this->db->from('expenses');
+		$this->db->where('expense_id', $id);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function update_expense($data = array(), $id = null)
+	{
+		return $this->db->where('expense_id', $id)->update('expenses', $data);
+	}
+	public function delete_expense($id = null, $reason = null)
+	{
+		return $this->db->where('expense_id', $id)->update('expenses', array('status' => 0, 'reason' => $reason));
+	}
+
 }
