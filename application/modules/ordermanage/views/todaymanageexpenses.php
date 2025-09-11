@@ -10,6 +10,7 @@
 //      addexpense, addcategory, getcategories, addCategoryEntity, getCategoryEntities,
 //      get_expenses, updateexpense, deleteexpense
 //  - Sends: category_id, entity_id, item_id (from rate_id), qty, rate, amount, expense_date (today)
+//  - Compact print layout to save space on paper
 // ============================================================================
 ?>
 <!DOCTYPE html>
@@ -54,13 +55,83 @@
     .report-table > thead > tr > th { background:#f7fbff; }
     .no-data { text-align:center; color:#999; padding:25px 0; }
 
-    /* Print layout: only print #printArea */
+    /* Optional: make preview look compact on-screen too when .dense is applied */
+    #printArea.dense { font-size:11px; line-height:1.15; }
+    #printArea.dense .report-header { margin-bottom:6px; }
+    #printArea.dense .report-header h3 { font-size:16px; margin:0 0 4px; }
+    #printArea.dense .report-meta { font-size:10px; margin:0; }
+    #printArea.dense .category-block { margin:6px 0; }
+    #printArea.dense .category-title { font-size:12px; margin:0 0 4px; }
+    #printArea.dense .table { margin-bottom:6px; table-layout:fixed; }
+    #printArea.dense .table > thead > tr > th,
+    #printArea.dense .table > tbody > tr > td,
+    #printArea.dense .table > tfoot > tr > th,
+    #printArea.dense .table > tfoot > tr > td {
+      padding:2px 4px;
+      line-height:1.1;
+      border-width:0.5px;
+      vertical-align:middle;
+    }
+
+    /* Print layout: only print #printArea + compact spacing */
     @media print {
+      @page { size: A4 portrait; margin: 8mm; } /* smaller margins */
+
       body * { visibility: hidden !important; }
       #printArea, #printArea * { visibility: visible !important; }
       #printArea { position: absolute; left: 0; top: 0; width: 100%; }
+
+      /* Dense print typography */
+      #printArea { font-size:11px; line-height:1.15; }
+      #printArea .report-header { margin-bottom:6px; }
+      #printArea .report-header h3 { font-size:16px; margin:0 0 4px; }
+      #printArea .report-meta { font-size:10px; margin:0; }
+
+      /* Tighter blocks & keep categories together */
+      #printArea .category-block { margin:6px 0; page-break-inside: avoid; page-break-after: avoid; }
+      #printArea .category-title { font-size:12px; margin:0 0 4px; font-weight:700; }
+
+      /* Dense tables */
+      #printArea .table {
+        margin-bottom:6px;
+        border-collapse: collapse !important;
+        table-layout: fixed;
+        width:100%;
+      }
+      #printArea .table > thead > tr > th,
+      #printArea .table > tbody > tr > td,
+      #printArea .table > tfoot > tr > th,
+      #printArea .table > tfoot > tr > td {
+        padding:2px 4px !important;
+        line-height:1.1 !important;
+        vertical-align:middle;
+        border-width:0.5px !important;
+      }
+
+      /* Remove colored headers to reduce ink and height */
+      #printArea .report-table > thead > tr > th,
+      #printArea .table thead tr th,
+      #printArea .table tfoot tr th {
+        background:#fff !important;
+      }
+
+      /* Totals rows compact but bold */
+      #printArea .category-subtotal,
+      #printArea .grand-total {
+        background:#fff !important;
+        font-weight:700;
+      }
+      #printArea .grand-total td,
+      #printArea .category-subtotal td { padding:3px 4px !important; }
+
+      /* Tighten the final grand total table spacing */
+      #printArea > table.table { margin-top:6px; }
+
+      /* Numeric alignment */
+      #printArea td.text-right { font-variant-numeric: tabular-nums; }
+
+      /* Hide anything flagged as no-print */
       .no-print { display:none !important; }
-      .category-block { page-break-after: avoid; }
     }
   </style>
 </head>
@@ -125,7 +196,7 @@
 
           <label for="quantity" class="col-sm-2 control-label">Quantity</label>
           <div class="col-sm-2" id="fg-qty">
-            <input type="number" id="quantity" name="quantity" class="form-control" placeholder="1.00" value="1">
+            <input type="number" step="0.01" id="quantity" name="quantity" class="form-control" placeholder="1.00" value="1">
             <span class="help-block" id="qtyHint">Enter how many units/days/liters.</span>
             <div class="error-text" id="err-qty">Enter a valid quantity (> 0).</div>
           </div>
@@ -218,17 +289,25 @@
         <span id="reportFilters" style="margin-left:10px;"></span>
       </p>
     </div>
-    <div id="reportBody">
-      <div class="no-data">No data to display.</div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6">
+        <div id="reportBody">
+          <div class="no-data">No data to display.</div>
+        </div>
+        <table class="table table-bordered" style="margin-top:15px;">
+          <tfoot>
+            <tr class="grand-total">
+              <td class="text-right"><strong>Grand Total:</strong></td>
+              <td style="width:180px;" class="text-right"><strong id="reportGrandTotal">0.00</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="col-sm-12 col-md-6 text-right">
+
+      </div>
     </div>
-    <table class="table table-bordered" style="margin-top:15px;">
-      <tfoot>
-        <tr class="grand-total">
-          <td class="text-right"><strong>Grand Total:</strong></td>
-          <td style="width:180px;" class="text-right"><strong id="reportGrandTotal">0.00</strong></td>
-        </tr>
-      </tfoot>
-    </table>
+ 
   </div>
 
 </div><!-- /container -->
@@ -867,7 +946,7 @@
       var thead = ''+
         '<thead>' +
           '<tr>' +
-            '<th style="width:50%;">Vendor</th>' +
+            '<th style="width:50%;">Name</th>' +
             '<th class="text-right" style="width:16%;">Rate</th>' +
             '<th class="text-right" style="width:16%;">Qty</th>' +
             '<th class="text-right" style="width:18%;">Total</th>' +
@@ -907,6 +986,8 @@
   // Buttons
   $btnBuildReport.on('click', function(){
     buildReport();
+    // Make preview compact too
+    $('#printArea').addClass('dense');
     // Scroll to preview
     $('html, body').animate({ scrollTop: $printArea.offset().top - 10 }, 200);
   });
@@ -914,6 +995,8 @@
   $btnPrintReport.on('click', function(){
     // Always rebuild to reflect latest table filters/changes
     buildReport();
+    // Ensure dense class applied before printing
+    $('#printArea').addClass('dense');
     window.print();
   });
 

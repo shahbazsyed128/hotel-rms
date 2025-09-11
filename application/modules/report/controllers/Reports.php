@@ -117,6 +117,21 @@ class Reports extends MX_Controller {
         $data['page']   = "salereportfrm";   
         echo Modules::run('template/layout', $data); 
 		}
+
+	public function SaleReportV2(){
+		$this->permission->method('report','read')->redirect();
+		$data['title']    = display('sell_report'); 
+		$settinginfo=$this->report_model->settinginfo();
+		$data['setting']=$settinginfo;
+		$data['currency']=$this->report_model->currencysetting($settinginfo->currency);
+		$data['paymentmethod']   = $this->report_model->pmethod_dropdown();
+		$data['module'] = "report";
+		$data['page']   = "salesReportV2";   
+		echo Modules::run('template/layout', $data); 
+	}
+
+
+
 	public function sellrptbydate(){
 		$this->permission->method('report','read')->redirect();
         $data['title']    = display('sell_report'); 
