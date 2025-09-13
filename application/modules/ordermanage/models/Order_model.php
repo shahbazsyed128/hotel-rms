@@ -2525,4 +2525,14 @@ class Order_model extends CI_Model
 		return $this->db->where('expense_id', $id)->update('expenses', array('status' => 0, 'reason' => $reason));
 	}
 
+	public function get_products_by_entity($id)
+	{
+		$this->db->select('*');
+		$this->db->from('products as p, product_prices as pp');
+		$this->db->where('p.entity_id', $id);
+		$this->db->where('p.product_id = pp.product_id');
+		$query = $this->db->get();
+		return $query->result();
+	}
+
 }
