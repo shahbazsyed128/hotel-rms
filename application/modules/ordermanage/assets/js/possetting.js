@@ -205,106 +205,100 @@ $('body').on('click', '#search_button', function () {
     });
 });
 
-//Product search button js
-$('body').on('click', '.select_product', function (e) {
+$(document).on('click', '.select_product', function (e) {
     e.preventDefault();
 
-    var panel = $(this);
-    var pid = panel.find('.panel-body input[name=select_product_id]').val();
-    var sizeid = panel.find('.panel-body input[name=select_product_size]').val();
-    var totalvarient = panel.find('.panel-body input[name=select_totalvarient]').val();
-    var customqty = panel.find('.panel-body input[name=select_iscustomeqty]').val();
-    var isgroup = panel.find('.panel-body input[name=select_product_isgroup]').val();
-    var catid = panel.find('.panel-body input[name=select_product_cat]').val();
-    var itemname = panel.find('.panel-body input[name=select_product_name]').val();
-    var varientname = panel.find('.panel-body input[name=select_varient_name]').val();
-    var qty = 1;
-    var price = panel.find('.panel-body input[name=select_product_price]').val();
-    var hasaddons = panel.find('.panel-body input[name=select_addons]').val();
-    var csrf = $('#csrfhashresarvation').val();
-    if (hasaddons == 0 && totalvarient == 1 && customqty == 0) {
-        /*check production*/
-        var productionsetting = $('#production_setting').val();
-        if (productionsetting == 1) {
+    const panel = $(this);
+    const pid = panel.find('.panel-body input[name=select_product_id]').val();
+    const sizeid = panel.find('.panel-body input[name=select_product_size]').val();
+    const totalVarient = panel.find('.panel-body input[name=select_totalvarient]').val();
+    const customQty = panel.find('.panel-body input[name=select_iscustomeqty]').val();
+    const isGroup = panel.find('.panel-body input[name=select_product_isgroup]').val();
+    const catid = panel.find('.panel-body input[name=select_product_cat]').val();
+    const itemName = panel.find('.panel-body input[name=select_product_name]').val();
+    const varientName = panel.find('.panel-body input[name=select_varient_name]').val();
+    const qty = 1;
+    const price = panel.find('.panel-body input[name=select_product_price]').val();
+    const hasAddons = panel.find('.panel-body input[name=select_addons]').val();
+    const csrf = $('#csrfhashresarvation').val();
 
-            var isselected = $('#productionsetting-' + pid + '-' + sizeid).length;
+    // Function to play sound
+    const playSound = () => {
+        const audio = new Audio(basicinfo.baseurl + "assets/beep-08b.mp3");
+        audio.play();
+    };
 
-            if (isselected == 1) {
+    // Function to update cart after adding a product
+    const updateCart = (data) => {
+        $('#addfoodlist').html(data);
+        const totalItem = $('#totalitem').val();
+        const totalTax = $('#tvat').val();
+        const discount = $('#tdiscount').val();
+        const totalAmount = $('#tgtotal').val();
+        const serviceCharge = $('#sc').val();
 
-                var checkqty = parseInt($('#productionsetting-' + pid + '-' + sizeid).text()) + qty;
+        $('#item-number').text(totalItem);
+        $('#getitemp').val(totalItem);
+        $('#vat').val(totalTax);
+        $('#calvat').text(totalTax);
+        $('#invoice_discount').val(discount);
+        $('#service_charge').val(serviceCharge);
+        $('#caltotal').text(totalAmount);
+        $('#grandtotal').val(totalAmount);
+        $('#orggrandTotal').val(totalAmount);
+        $('#orginattotal').val(totalAmount);
+    };
 
-
-            } else {
-                var checkqty = qty;
-            }
-
-            var checkvalue = checkproduction(pid, sizeid, checkqty);
-
-            if (checkvalue == false) {
-                return false;
-            }
-
+    // Function to handle production check
+    const checkProduction = () => {
+        const productionSetting = $('#production_setting').val();
+        if (productionSetting == 1) {
+            const isSelected = $('#productionsetting-' + pid + '-' + sizeid).length;
+            const checkQty = isSelected ? parseInt($('#productionsetting-' + pid + '-' + sizeid).text()) + qty : qty;
+            return checkproduction(pid, sizeid, checkQty);
         }
-        /*end checking*/
-        var mysound = basicinfo.baseurl + "assets/";
-        var audio = ["beep-08b.mp3"];
-        new Audio(mysound + audio[0]).play();
-        var dataString = "pid=" + pid + '&itemname=' + itemname + '&varientname=' + varientname + '&qty=' + qty + '&price=' + price + '&catid=' + catid + '&sizeid=' + sizeid + '&isgroup=' + isgroup + '&csrf_test_name=' + csrf;
-        var myurl = $('#carturl').val();
-        $.ajax({
-            type: "POST",
-            url: myurl,
-            data: dataString,
-            success: function (data) {
-                $('#addfoodlist').html(data);
-                var total = $('#grtotal').val();
-                var totalitem = $('#totalitem').val();
-                $('#item-number').text(totalitem);
-                $('#getitemp').val(totalitem);
-                var tax = $('#tvat').val();
-                $('#vat').val(tax);
-                var discount = $('#tdiscount').val();
-                var tgtotal = $('#tgtotal').val();
-                $('#calvat').text(tax);
-                $('#invoice_discount').val(discount);
-                var sc = $('#sc').val();
-                $('#service_charge').val(sc);
-                $('#caltotal').text(tgtotal);
-                $('#grandtotal').val(tgtotal);
-                $('#orggrandTotal').val(tgtotal);
-                $('#orginattotal').val(tgtotal);
-            }
+        return true;
+    };
+
+    // Handle the case when product does not have addons
+    if (hasAddons == 0 && totalVarient == 1 && customQty == 0) {
+        if (!checkProduction()) return;
+
+        playSound();
+
+        const dataString = `pid=${pid}&itemname=${itemName}&varientname=${varientName}&qty=${qty}&price=${price}&catid=${catid}&sizeid=${sizeid}&isgroup=${isGroup}&csrf_test_name=${csrf}`;
+        const cartUrl = $('#carturl').val();
+
+        $.post(cartUrl, dataString, function (data) {
+            updateCart(data);
         });
     } else {
-        var geturl = $("#addonexsurl").val();
-        var myurl = geturl + '/' + pid;
-        var dataString = "pid=" + pid + "&sid=" + sizeid + '&csrf_test_name=' + csrf;
-        $.ajax({
-            type: "POST",
-            url: geturl,
-            data: dataString,
-            success: function (data) {
-                $('.addonsinfo').html(data);
+        // Handle case with addons
+        const addonUrl = $("#addonexsurl").val() + '/' + pid;
+        const dataString = `pid=${pid}&sid=${sizeid}&csrf_test_name=${csrf}`;
 
-                $('#edit').modal('show');
+        $.post(addonUrl, dataString, function (data) {
+            $('.addonsinfo').html(data);
+            $('#edit').modal('show');
+            const totalItem = $('.totalitem').val();
+            const totalTax = $('#tvat').val();
+            const discount = $('#tdiscount').val();
+            const totalAmount = $('#tgtotal').val();
 
-                //$('#edit').find('.close').focus();
-                var totalitem = $('.totalitem').val();
-                var tax = $('#tvat').val();
-                var discount = $('#tdiscount').val();
-                var tgtotal = $('#tgtotal').val();
-                $('#vat').val(tax);
-                $('#calvat').text(tax);
-                $('#getitemp').val(totalitem);
-                $('#invoice_discount').val(discount);
-                $('#caltotal').text(tgtotal);
-                $('#grandtotal').val(tgtotal);
-                $('#orggrandTotal').val(tgtotal);
-                $('#orginattotal').val(tgtotal);
-            }
+            $('#vat').val(totalTax);
+            $('#calvat').text(totalTax);
+            $('#getitemp').val(totalItem);
+            $('#invoice_discount').val(discount);
+            $('#caltotal').text(totalAmount);
+            $('#grandtotal').val(totalAmount);
+            $('#orggrandTotal').val(totalAmount);
+            $('#orginattotal').val(totalAmount);
         });
     }
 });
+
+
+
 $(document).ready(function () {
     "use strict";
     $("#nonthirdparty").show();
