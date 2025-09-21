@@ -146,12 +146,14 @@ $startTokenNumber   = (int)$this->order_model->getTokenNumber(); // assumed gett
 $currentTokenNumber = $startTokenNumber;
 $printedTokens      = 0;
 
+
 // --- Render per kitchen ---
 foreach ($itemsByKitchen as $kid => $group) {
     // Build a line map: unique key => ['qty','name','notes','variant']
     $lines = [];
 
     // 1) Base items
+    $seenFromBase = [];
     if (!empty($group['iteminfo'])) {
         foreach ($group['iteminfo'] as $item) {
             $menuId    = $item->menu_id   ?? $item->menuid   ?? null;
@@ -170,6 +172,8 @@ foreach ($itemsByKitchen as $kid => $group) {
                 ];
             }
             $lines[$key]['qty'] += iint($item->menuqty ?? 0);
+            // mark base presence
+            $seenFromBase[$key] = true;
 
             // Base add-ons as separate rows (tied to parent key)
             if (!empty($item->add_on_id)) {
@@ -228,16 +232,18 @@ foreach ($itemsByKitchen as $kid => $group) {
             if ($delta === 0) continue;
 
             $key = $menuId . '|' . $variantId . '|' . $addonsUid;
-            if (!isset($lines[$key])) {
-                // If base didn't exist (e.g., only deltas), initialize from exititem
-                $lines[$key] = [
-                    'qty'     => 0,
-                    'name'    => (string)($exititem->ProductName ?? ''),
-                    'notes'   => (string)($exititem->notes ?? ''),
-                    'variant' => (string)($exititem->variantName ?? ''),
-                ];
+            if (empty($seenFromBase[$key])) {
+                if (!isset($lines[$key])) {
+                    // If base didn't exist (e.g., only deltas), initialize from exititem
+                    $lines[$key] = [
+                        'qty'     => 0,
+                        'name'    => (string)($exititem->ProductName ?? ''),
+                        'notes'   => (string)($exititem->notes ?? ''),
+                        'variant' => (string)($exititem->variantName ?? ''),
+                    ];
+                }
+                $lines[$key]['qty'] += $delta;
             }
-            $lines[$key]['qty'] += $delta;
         }
     }
 
