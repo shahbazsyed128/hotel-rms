@@ -1177,6 +1177,52 @@ CREATE TABLE IF NOT EXISTS `emp_attendance` (
 
 -- --------------------------------------------------------
 
+
+-- Creating products table
+
+DROP TABLE IF EXISTS `products`;
+CREATE TABLE IF NOT EXISTS `products` (
+    `product_id` INT(11) NOT NULL AUTO_INCREMENT,
+    `entity_id` INT(11) NOT NULL,                -- reference to entity
+    `product_name` VARCHAR(150) NOT NULL,         -- e.g. 'Nestle Milk'
+    `unit` VARCHAR(50) NOT NULL,                  -- e.g. 'Litre', 'KG'
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Inserting Products with entity_id 14 and 15
+INSERT INTO `products` (`entity_id`, `product_name`, `unit`, `created_at`)
+VALUES
+(14, 'Sugar', 'KG', NOW()),
+(14, 'Oil', 'Litre', NOW()),
+(15, 'Wheat', 'KG', NOW()),
+(15, 'Daal', 'KG', NOW());
+
+
+
+-- Creating product_prices table
+DROP TABLE IF EXISTS `product_prices`;
+CREATE TABLE IF NOT EXISTS `product_prices` (
+    `price_id` INT(11) NOT NULL AUTO_INCREMENT,
+    `product_id` INT(11) NOT NULL,               -- reference to product
+    `price` DECIMAL(12,4) NOT NULL,              -- price value
+    `valid_from` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,   -- when this price starts
+    `valid_to` TIMESTAMP NULL DEFAULT NULL,      -- null = still active
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`price_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- Inserting Prices for the Products (product_id references products table)
+INSERT INTO `product_prices` (`product_id`, `price`, `valid_from`, `valid_to`, `created_at`)
+VALUES
+(1, 2.99, '2025-09-01', NULL, NOW()),  -- Price for 'Sugar' (Product ID 1)
+(2, 4.50, '2025-09-01', NULL, NOW()),  -- Price for 'Oil' (Product ID 2)
+(3, 1.20, '2025-09-01', NULL, NOW()),  -- Price for 'Wheat' (Product ID 3)
+(4, 3.00, '2025-09-01', NULL, NOW());  -- Price for 'Daal' (Product ID 4)
+
+
+
 DROP TABLE IF EXISTS `entity_item_rates`;
 CREATE TABLE IF NOT EXISTS `entity_item_rates` (
     `rate_id` INT(11) NOT NULL AUTO_INCREMENT,

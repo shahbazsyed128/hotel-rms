@@ -1,0 +1,137 @@
+
+/* Professional polish */
+body { background:#f7f7f9; }
+.panel { border-radius:6px; }
+.panel-heading { font-weight:600; }
+.help-block { margin-bottom:0; }
+.form-horizontal .control-label { text-align:left; }
+.is-invalid { border-color:#d9534f; }
+.error-text { color:#d9534f; font-size:12px; margin-top:5px; display:none; }
+.table thead tr th { background:#f0f7ff; }
+.table tfoot tr th { background:#fafafa; }
+.text-right { text-align:right; }
+.m-t-10 { margin-top:10px; }
+.m-b-0 { margin-bottom:0; }
+.btn-wide { min-width:140px; }
+.spin { animation:spin 1s linear infinite; }
+@keyframes spin { from {transform:rotate(0)} to {transform:rotate(360deg)} }
+
+/* Tabs */
+#expenseTabs > li > a { font-weight:600; }
+
+/* Filter bar */
+.filter-bar { background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:10px 12px; margin-bottom:12px; box-shadow:0 1px 1px rgba(0,0,0,.03); }
+.filter-bar .form-control { height:34px; }
+.filter-label { font-weight:600; margin-right:6px; }
+.badge-soft { background:#eef6ff; color:#3178c6; border:1px solid #d6e8ff; }
+
+/* Report styles */
+.report-header { margin-bottom: 15px; }
+.report-meta { color:#666; }
+.category-block { margin-bottom: 22px; page-break-inside: avoid; }
+.category-title { margin:0 0 8px; font-weight:700; }
+.category-subtotal { background:#fafafa; font-weight:700; }
+.grand-total { background:#eef6ff; font-weight:700; }
+.report-table > thead > tr > th { background:#f7fbff; }
+.no-data { text-align:center; color:#999; padding:25px 0; }
+
+/* Dense / print tweaks */
+#printArea.dense { font-size:11px; line-height:1.15; }
+#printArea.dense .report-header { margin-bottom:6px; }
+#printArea.dense .report-header h3 { font-size:16px; margin:0 0 4px; }
+#printArea.dense .report-meta { font-size:10px; margin:0; }
+#printArea.dense .category-block { margin:6px 0; }
+#printArea.dense .category-title { font-size:12px; margin:0 0 4px; }
+#printArea.dense .table { margin-bottom:6px; table-layout:fixed; }
+#printArea.dense .table > thead > tr > th,
+#printArea.dense .table > tbody > tr > td,
+#printArea.dense .table > tfoot > tr > th,
+#printArea.dense .table > tfoot > tr > td {
+    padding:2px 4px;
+    line-height:1.1;
+    border-width:0.5px;
+    vertical-align:middle;
+}
+
+@media print {
+    @page { size: A4 portrait; margin: 8mm; }
+    body * { visibility: hidden !important; }
+    #printArea, #printArea * { visibility: visible !important; }
+    #printArea { position: absolute; left: 0; top: 0; width: 100%; }
+
+    #printArea { font-size:11px; line-height:1.15; }
+    #printArea .report-header { margin-bottom:6px; }
+    #printArea .report-header h3 { font-size:16px; margin:0 0 4px; }
+    #printArea .report-meta { font-size:10px; margin:0; }
+
+    #printArea .category-block { margin:6px 0; page-break-inside: avoid; page-break-after: avoid; }
+    #printArea .category-title { font-size:12px; margin:0 0 4px; font-weight:700; }
+
+    #printArea .table {
+    margin-bottom:6px;
+    border-collapse: collapse !important;
+    table-layout: fixed;
+    width:100%;
+    }
+    #printArea .table > thead > tr > th,
+    #printArea .table > tbody > tr > td,
+    #printArea .table > tfoot > tr > th,
+    #printArea .table > tfoot > tr > td {
+    padding:2px 4px !important;
+    line-height:1.1 !important;
+    vertical-align:middle;
+    border-width:0.5px !important;
+    }
+    #printArea .report-table > thead > tr > th,
+    #printArea .table thead tr th,
+    #printArea .table tfoot tr th { background:#fff !important; }
+    #printArea .category-subtotal,
+    #printArea .grand-total { background:#fff !important; font-weight:700; }
+    #printArea .grand-total td,
+    #printArea .category-subtotal td { padding:3px 4px !important; }
+    #printArea > table.table { margin-top:6px; }
+    #printArea td.text-right { font-variant-numeric: tabular-nums; }
+    .no-print { display:none !important; }
+}
+
+/* Product table input height (small polish) */
+#productsTable input, #productsTable select { height:30px; }
+
+/* Enhanced Product Row Styles */
+.product-row-enhanced { background: #f9f9f9; }
+.product-row-enhanced:hover { background: #f0f8ff; }
+.product-search-container { position: relative; }
+.product-suggestions { 
+    position: absolute; 
+    top: 100%; 
+    left: 0; 
+    right: 0; 
+    background: white; 
+    border: 1px solid #ddd; 
+    border-top: none; 
+    max-height: 200px; 
+    overflow-y: auto; 
+    z-index: 1000; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.product-suggestion { 
+    padding: 8px 12px; 
+    cursor: pointer; 
+    border-bottom: 1px solid #eee; 
+}
+.product-suggestion:hover { background: #f0f8ff; }
+.product-suggestion.selected { background: #e3f2fd; }
+.price-suggestions { margin-top: 2px; }
+.price-suggestions .btn { margin-right: 2px; margin-bottom: 2px; }
+.field-error { color: #d9534f; font-size: 11px; margin-top: 2px; }
+.row-error { background-color: #fdf2f2 !important; }
+.stock-indicator { font-size: 10px; }
+.quick-actions { margin-bottom: 10px; }
+.quick-actions .btn { margin-right: 5px; margin-bottom: 5px; }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .product-row-enhanced td { display: block; width: 100%; }
+    .product-row-enhanced td:before { content: attr(data-label) ": "; font-weight: bold; }
+    .product-suggestions { position: fixed; top: 50%; left: 10px; right: 10px; max-height: 50vh; }
+}
