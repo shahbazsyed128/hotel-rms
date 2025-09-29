@@ -2525,14 +2525,61 @@ class Order_model extends CI_Model
 		return $this->db->where('expense_id', $id)->update('expenses', array('status' => 0, 'reason' => $reason));
 	}
 
-	public function get_products_by_entity($id)
-	{
-		$this->db->select('*');
-		$this->db->from('products as p, product_prices as pp');
-		$this->db->where('p.entity_id', $id);
-		$this->db->where('p.product_id = pp.product_id');
-		$query = $this->db->get();
-		return $query->result();
-	}
+	// public function get_products_by_entity($entity_id)
+	// {
+	// 	return $this->db
+	// 		->select('
+	// 			p.product_id,
+	// 			p.product_name,
+	// 			pp.price_id,
+	// 			pp.purchase_price,
+	// 			pp.sale_price
+	// 		')
+	// 		->from('products p')
+	// 		->join('product_prices pp', 'pp.product_id = p.product_id', 'left')
+	// 		->where('p.entity_id', (int)$entity_id)
+	// 		// ->where('p.is_active', 1)        // uncomment if you have an active flag
+	// 		// ->where('pp.is_active', 1)       // uncomment if you only want active prices
+	// 		->order_by('p.product_name', 'ASC')
+	// 		->get()
+	// 		->result();
+	// }
+
+	public function get_products_by_entity($entity_id)
+{
+    // Subquery to grab the latest price row per product
+    $latest = "
+        SELECT product_id, MAX(price_id) AS latest_price_id
+        FROM product_prices
+        GROUP BY product_id
+    ";
+
+    // Build query
+    $this->db
+        ->select('
+            p.product_id,
+            p.product_name,
+            pp.price_id,
+            pp.purchase_price,
+            pp.sale_price
+        ')
+        ->from('products p')
+        ->join("($latest) lp", 'lp.product_id = p.product_id', 'left')
+        ->join('product_prices pp', 'pp.price_id = lp.latest_price_id', 'left')
+        ->where('p.entity_id', (int)$entity_id)
+        ->order_by('p.product_name', 'ASC');
+
+    // ---- DEBUGGING PART ----
+    // $sql = $this->db->get_compiled_select();
+    // echo $sql;
+    // exit;
+    // ------------------------
+
+    // Normally you’d run the query:
+    $query = $this->db->get();
+    return $query->result();
+}
+
+
 
 }

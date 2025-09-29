@@ -1177,49 +1177,52 @@ CREATE TABLE IF NOT EXISTS `emp_attendance` (
 
 -- --------------------------------------------------------
 
-
--- Creating products table
-
+-- ===============================
+-- DROP & CREATE: products
+-- ===============================
 DROP TABLE IF EXISTS `products`;
 CREATE TABLE IF NOT EXISTS `products` (
-    `product_id` INT(11) NOT NULL AUTO_INCREMENT,
-    `entity_id` INT(11) NOT NULL,                -- reference to entity
-    `product_name` VARCHAR(150) NOT NULL,         -- e.g. 'Nestle Milk'
-    `unit` VARCHAR(50) NOT NULL,                  -- e.g. 'Litre', 'KG'
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`product_id`)
+  `product_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `entity_id` INT(11) NOT NULL,            -- reference to vendor/entity
+  `product_name` VARCHAR(150) NOT NULL,    -- e.g. 'Nestle Milk'
+  `unit` VARCHAR(50) NOT NULL,             -- e.g. 'Litre', 'KG'
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Inserting Products with entity_id 14 and 15
-INSERT INTO `products` (`entity_id`, `product_name`, `unit`, `created_at`)
-VALUES
-(14, 'Sugar', 'KG', NOW()),
-(14, 'Oil', 'Litre', NOW()),
-(15, 'Wheat', 'KG', NOW()),
-(15, 'Daal', 'KG', NOW());
+-- Seed products (entity 14 & 15)
+INSERT INTO `products` (`entity_id`, `product_name`, `unit`, `created_at`) VALUES
+(13, 'Sugar', 'KG',   NOW()),
+(13, 'Oil',   'Litre',NOW()),
+(13, 'Wheat', 'KG',   NOW()),
+(13, 'Daal',  'KG',   NOW());
 
-
-
--- Creating product_prices table
+-- ===============================
+-- DROP & CREATE: product_prices
+-- ===============================
 DROP TABLE IF EXISTS `product_prices`;
 CREATE TABLE IF NOT EXISTS `product_prices` (
-    `price_id` INT(11) NOT NULL AUTO_INCREMENT,
-    `product_id` INT(11) NOT NULL,               -- reference to product
-    `price` DECIMAL(12,4) NOT NULL,              -- price value
-    `valid_from` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,   -- when this price starts
-    `valid_to` TIMESTAMP NULL DEFAULT NULL,      -- null = still active
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`price_id`)
+  `price_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `product_id` INT(11) NOT NULL,                 -- FK -> products.product_id
+  `purchase_price` DECIMAL(12,4) NOT NULL,       -- base cost price
+  `sale_price`     DECIMAL(12,4) NOT NULL,       -- selling price (often = purchase * 1.15)
+  `valid_from`     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `valid_to`       TIMESTAMP NULL DEFAULT NULL,  -- NULL = still active
+  `created_at`     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`price_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
--- Inserting Prices for the Products (product_id references products table)
-INSERT INTO `product_prices` (`product_id`, `price`, `valid_from`, `valid_to`, `created_at`)
-VALUES
-(1, 2.99, '2025-09-01', NULL, NOW()),  -- Price for 'Sugar' (Product ID 1)
-(2, 4.50, '2025-09-01', NULL, NOW()),  -- Price for 'Oil' (Product ID 2)
-(3, 1.20, '2025-09-01', NULL, NOW()),  -- Price for 'Wheat' (Product ID 3)
-(4, 3.00, '2025-09-01', NULL, NOW());  -- Price for 'Daal' (Product ID 4)
+-- Helper: sale_price = purchase_price * 1.15 (15% profit)
+-- Seed latest prices for product_id 1..4 (created above)
+INSERT INTO `product_prices` (`product_id`, `purchase_price`, `sale_price`, `valid_from`, `valid_to`, `created_at`) VALUES
+-- product_id 1: Sugar
+(1, 100.0000, 100.0000 * 1.15, '2025-09-01 00:00:00', NULL, NOW()),
+-- product_id 2: Oil
+(2, 200.0000, 200.0000 * 1.15, '2025-09-01 00:00:00', NULL, NOW()),
+-- product_id 3: Wheat
+(3,  80.0000,  80.0000 * 1.15, '2025-09-01 00:00:00', NULL, NOW()),
+-- product_id 4: Daal
+(4, 120.0000, 120.0000 * 1.15, '2025-09-01 00:00:00', NULL, NOW());
 
 
 

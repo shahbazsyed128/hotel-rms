@@ -590,15 +590,20 @@ class Order extends MX_Controller
 	}
 
 
-	public function getProductsByEntity(){
-		$entity_id = $this->input->get('entity_id');
-		if ($entity_id) {
-			$products = $this->order_model->get_products_by_entity($entity_id);
-			echo json_encode($products);
-		} else {
-			echo json_encode([]);
+	public function getProductsByEntity()
+	{
+		// Make sure we always send JSON
+		$this->output->set_content_type('application/json');
+
+		$entity_id = (int)$this->input->get('entity_id');
+		if (!$entity_id) {
+			return $this->output->set_output(json_encode([]));
 		}
+
+		$products = $this->order_model->get_products_by_entity($entity_id);
+		return $this->output->set_output(json_encode($products));
 	}
+
 
 	public function deleteexpense(){
 		$expense_id = $this->input->get('expense_id');

@@ -176,7 +176,9 @@
       return {
         product_id: p.product_id != null ? String(p.product_id) : '',
         product_name: p.product_name || '',
-        product_price_id: p.product_price_id != null ? String(p.product_price_id) : '',
+        // Accept either product_price_id or price_id from backend
+        product_price_id: p.product_price_id != null ? String(p.product_price_id)
+                          : (p.price_id != null ? String(p.price_id) : ''),
         purchase_price: p.purchase_price != null ? Number(p.purchase_price) : null,
         sale_price: p.sale_price != null ? Number(p.sale_price) : null
       };
@@ -190,32 +192,27 @@
 
     var $tr = $('<tr class="product-row-enhanced">').attr('data-rowid', rowId);
 
-    // Product cell: visible SELECT + quick type-ahead input (optional search UX)
+    // Product cell: visible SELECT only (no search box)
     var $productCell = $('<td>');
-    var $searchContainer = $('<div class="product-search-container">');
-    var $searchInput = $('<input type="text" class="form-control ip-product-search" placeholder="Type product name..." autocomplete="off">');
-    var $suggestions = $('<div class="product-suggestions" style="display:none;"></div>');
     var $visibleSelect = $('<select class="form-control ip-product"><option value="">-- Select Product --</option></select>');
-
     if (Array.isArray(productsList)) {
       productsList.forEach(function (p) {
-        var defPrice = (p.purchase_price != null ? p.purchase_price : (p.sale_price != null ? p.sale_price : null));
+        // Default = sale price; fallback to purchase price
+        var defSale = (p.sale_price != null ? p.sale_price : (p.purchase_price != null ? p.purchase_price : null));
         $visibleSelect.append(
           buildOption(
             p.product_id,
             p.product_name,
             {
               'data-product_name': p.product_name,
-              'data-default_price': defPrice != null ? defPrice : '',
+              'data-default_price': defSale != null ? defSale : '',
               'data-product_price_id': p.product_price_id || ''
             }
           )
         );
       });
     }
-
-    $searchContainer.append($searchInput).append($suggestions);
-    $productCell.append($visibleSelect).append($searchContainer);
+    $productCell.append($visibleSelect);
 
     // Price Cell with quick suggestion buttons
     var $priceCell = $('<td class="text-right">');
@@ -256,15 +253,13 @@
   }
 
   // Enhanced Event Handlers and Validation System
-  function setupEnhancedRowEvents($row, productsList) {
-    var $searchInput = $row.find('.ip-product-search');
-    var $suggestions = $row.find('.product-suggestions');
+  function setupEnhancedRowEvents($row, _productsList) {
     var $visibleSelect = $row.find('.ip-product');
     var $priceInput = $row.find('.ip-price');
     var $qtyInput = $row.find('.ip-qty');
     var $priceSuggestions = $row.find('.price-suggestions');
 
-    // Product select -> auto-fill price
+    // Product select -> auto-fill price with SALE (default) price
     $visibleSelect.on('change', function () {
       var $opt = $(this).find('option:selected');
       var def = Number($opt.data('default_price'));
@@ -272,24 +267,7 @@
       recalcProducts();
     });
 
-    // Optional type-ahead matcher (doesn't override the visible select; it just helps pick)
-    $searchInput.on('input', function () {
-      var query = $(this).val().toLowerCase().trim();
-      if (query.length > 1) {
-        showProductSuggestions(query, productsList, $suggestions, $visibleSelect, $priceInput, $searchInput);
-      } else {
-        $suggestions.hide();
-      }
-    });
-
-    // Hide suggestions when clicking outside
-    $(document).on('click._prodSuggest', function (e) {
-      if (!$(e.target).closest('.product-search-container').length) {
-        $suggestions.hide();
-      }
-    });
-
-    // Price suggestion buttons
+    // Price suggestion buttons -> use the same default (sale) price
     $priceSuggestions.on('click', '.price-suggestion-btn', function () {
       var $opt = $visibleSelect.find('option:selected');
       if ($opt.length && $opt.val()) {
@@ -317,36 +295,6 @@
       var rowData = extractRowData($row);
       addProductRow(rowData);
     });
-  }
-
-  function showProductSuggestions(query, productsList, $suggestions, $visibleSelect, $priceInput, $searchInput) {
-    var matches = (productsList || []).filter(function (p) {
-      return (p.product_name || '').toLowerCase().indexOf(query) !== -1;
-    }).slice(0, 10); // Limit to 10 suggestions
-
-    $suggestions.empty();
-
-    if (matches.length === 0) {
-      $suggestions.append('<div class="product-suggestion">No products found</div>');
-    } else {
-      matches.forEach(function (product) {
-        var priceBadge = (product.purchase_price || product.sale_price || '0');
-        var $suggestion = $('<div class="product-suggestion" data-product-id="' + product.product_id + '">' +
-          product.product_name +
-          '<small class="text-muted pull-right">₹' + priceBadge + '</small></div>');
-
-        $suggestion.on('click', function () {
-          // Set both: search input for visual cue and the actual select for value
-          $searchInput.val(product.product_name);
-          $visibleSelect.val(product.product_id).trigger('change');
-          $suggestions.hide();
-        });
-
-        $suggestions.append($suggestion);
-      });
-    }
-
-    $suggestions.show();
   }
 
   function validatePriceField($input, $row) {
@@ -395,7 +343,7 @@
   function extractRowData($row) {
     return {
       product_id: $row.find('.ip-product').val(),
-      product_name: $row.find('.ip-product option:selected').data('product_name') || $row.find('.ip-product-search').val(),
+      product_name: $row.find('.ip-product option:selected').data('product_name') || '',
       price: parseFloat($row.find('.ip-price').val()) || 0,
       qty: parseFloat($row.find('.ip-qty').val()) || 1
     };
@@ -407,7 +355,7 @@
       var $r = $(this);
       var productId = $r.find('.ip-product').val();
       var $optSel = $r.find('.ip-product option:selected');
-      var productName = $optSel.data('product_name') || $r.find('.ip-product-search').val() || '';
+      var productName = $optSel.data('product_name') || '';
       var productPriceId = $optSel.data('product_price_id') || '';
       var price = Number($r.find('.ip-price').val());
       var qty = Number($r.find('.ip-qty').val());
@@ -643,7 +591,8 @@
       var currentVal = $r.find('.ip-product').val() || '';
       var $sel = $('<select class="form-control ip-product"><option value="">-- Select Product --</option></select>');
       list.forEach(function (p) {
-        var defPrice = (p.purchase_price != null ? p.purchase_price : (p.sale_price != null ? p.sale_price : null));
+        // Default price = sale_price; fallback to purchase_price
+        var defPrice = (p.sale_price != null ? p.sale_price : (p.purchase_price != null ? p.purchase_price : null));
         var $opt = buildOption(p.product_id, p.product_name, {
           'data-product_name': p.product_name,
           'data-default_price': defPrice != null ? defPrice : '',
@@ -652,7 +601,7 @@
         $sel.append($opt);
       });
       $r.find('.ip-product').replaceWith($sel);
-      if (currentVal) { $sel.val(currentVal); }
+      if (currentVal) { $sel.val(currentVal).trigger('change'); }
     });
   }
 
@@ -1091,8 +1040,8 @@
 
     commonProducts.forEach(function (product) {
       addProductRow({ price: product.price, qty: 1 });
-      var $lastRow = $productRows.find('tr:last');
-      $lastRow.find('.ip-product-search').val(product.name);
+      // (Search input removed) — we no longer set a search text.
+      // User can choose the product from the dropdown if needed.
     });
   });
 
@@ -1208,7 +1157,8 @@
 
     // Save on form changes
     $categoryEl.add($userEl).on('change', saveDraft);
-    $productRows.on('input change', '.ip-product, .ip-product-search, .ip-price, .ip-qty', saveDraft);
+    // Removed '.ip-product-search' from selector (search UI removed)
+    $productRows.on('input change', '.ip-product, .ip-price, .ip-qty', saveDraft);
 
     // Clear draft on successful save
     $(document).on('expenseSaved', clearDraft);
