@@ -42,17 +42,12 @@
   var $statusEl = $('#serverStatus');
   var $btnAdd = $('#btnAddExpense');
 
-  var $modalAddCategory = $('#modalAddCategory');
-  var $modalAddEntity = $('#modalAddEntity');
-  var $modalCatName = $('#modalCatName');
-
   // Tabs
   var $tabs = $('#expenseTabs');
   var $tabClassic = $('#tab-classic');
   var $tabProducts = $('#tab-products');
 
   // Product mode elements
-  var $productModeWrap = $('#productMode');
   var $productRows = $('#productRows');
   var $productsSubtotal = $('#productsSubtotal');
 
@@ -111,6 +106,11 @@
   function syncProductsButtonDisabled(disabled) {
     $('#btnAddExpenseProducts').prop('disabled', !!disabled);
   }
+  function buildOption(value, text, attrs) {
+    var $o = $('<option>').val(String(value)).text(text);
+    if (attrs) { Object.keys(attrs).forEach(function (k) { $o.attr(k, attrs[k]); }); }
+    return $o;
+  }
 
   // ===========================================================================
   // SECTION 4: API HELPERS (all GET as per your backend)
@@ -149,7 +149,6 @@
   function setProductMode(on) {
     state.productMode = !!on;
 
-    // Switch UI tabs
     if (state.productMode) {
       $tabs.find('a[href="#tab-products"]').tab('show');
       if ($productRows.children('tr').length === 0) { addProductRow(); }
@@ -158,14 +157,8 @@
       $tabs.find('a[href="#tab-classic"]').tab('show');
     }
 
-    // Tabs handle visibility; keep totals/validation in sync.
     recalcProducts();
     validateForm();
-  }
-  function buildOption(value, text, attrs) {
-    var $o = $('<option>').val(String(value)).text(text);
-    if (attrs) { Object.keys(attrs).forEach(function (k) { $o.attr(k, attrs[k]); }); }
-    return $o;
   }
 
   // ===========================================================================
@@ -176,7 +169,6 @@
       return {
         product_id: p.product_id != null ? String(p.product_id) : '',
         product_name: p.product_name || '',
-        // Accept either product_price_id or price_id from backend
         product_price_id: p.product_price_id != null ? String(p.product_price_id)
                           : (p.price_id != null ? String(p.price_id) : ''),
         purchase_price: p.purchase_price != null ? Number(p.purchase_price) : null,
@@ -186,13 +178,12 @@
   }
 
   function productRowTemplate(prefill, productsList) {
-    var rowId = 'pr_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
     var price = prefill && prefill.price != null ? prefill.price : '';
     var qty = prefill && prefill.qty != null ? prefill.qty : 1;
 
-    var $tr = $('<tr class="product-row-enhanced">').attr('data-rowid', rowId);
+    var $tr = $('<tr class="product-row-enhanced">');
 
-    // Product cell: visible SELECT only (no search box)
+    // Product cell: SELECT only (no search input)
     var $productCell = $('<td>');
     var $visibleSelect = $('<select class="form-control ip-product"><option value="">-- Select Product --</option></select>');
     if (Array.isArray(productsList)) {
@@ -206,6 +197,8 @@
             {
               'data-product_name': p.product_name,
               'data-default_price': defSale != null ? defSale : '',
+              'data-sale_price': (p.sale_price != null ? p.sale_price : ''),
+              'data-purchase_price': (p.purchase_price != null ? p.purchase_price : ''),
               'data-product_price_id': p.product_price_id || ''
             }
           )
@@ -214,17 +207,18 @@
     }
     $productCell.append($visibleSelect);
 
-    // Price Cell with quick suggestion buttons
+    // Price Cell (with optional suggestion buttons retained)
     var $priceCell = $('<td class="text-right">');
-    var $priceInput = $('<input type="number" step="0.01" class="form-control ip-price text-right" placeholder="0.00" value="' + (price === '' ? '' : Number(price)) + '">');
-    var $priceSuggestions = $('<div class="price-suggestions"></div>');
-    $priceSuggestions.append('<button type="button" class="btn btn-xs btn-default price-suggestion-btn" data-type="suggested">Suggested</button>');
-    $priceSuggestions.append('<button type="button" class="btn btn-xs btn-default price-suggestion-btn" data-type="last">Last Price</button>');
-    $priceCell.append($priceInput).append($priceSuggestions);
+    var $priceInput = $('<input type="number" disabled step="0.1" class="form-control ip-price text-right" placeholder="0.0" value="' + (price === '' ? '' : Number(price)) + '">');
+    // var $priceSuggestions = $('<div class="price-suggestions"></div>');
+    // $priceSuggestions.append('<button type="button" class="btn btn-xs btn-default price-suggestion-btn" data-type="suggested">Suggested</button>');
+    // $priceSuggestions.append('<button type="button" class="btn btn-xs btn-default price-suggestion-btn" data-type="last">Last Price</button>');
+    // $priceCell.append($priceInput).append($priceSuggestions);
+    $priceCell.append($priceInput);
 
     // Quantity Cell
     var $qtyCell = $('<td class="text-right">');
-    var $qtyInput = $('<input type="number" step="0.01" class="form-control ip-qty text-right" placeholder="1.00" value="' + Number(qty) + '">');
+    var $qtyInput = $('<input type="number" step="0.1" class="form-control ip-qty text-right" placeholder="1.00" value="' + Number(qty) + '">');
     $qtyCell.append($qtyInput);
 
     // Total Cell
@@ -239,7 +233,7 @@
     $tr.append($productCell, $priceCell, $qtyCell, $totalCell, $actionCell);
 
     // Add enhanced event handlers
-    setupEnhancedRowEvents($tr, productsList);
+    setupEnhancedRowEvents($tr);
 
     return $tr;
   }
@@ -252,92 +246,49 @@
     recalcProducts();
   }
 
-  // Enhanced Event Handlers and Validation System
-  function setupEnhancedRowEvents($row, _productsList) {
+  function setupEnhancedRowEvents($row) {
     var $visibleSelect = $row.find('.ip-product');
     var $priceInput = $row.find('.ip-price');
     var $qtyInput = $row.find('.ip-qty');
     var $priceSuggestions = $row.find('.price-suggestions');
 
-    // Product select -> auto-fill price with SALE (default) price
+    // Product select -> auto-fill price with SALE price, fallback to PURCHASE, then default
     $visibleSelect.on('change', function () {
       var $opt = $(this).find('option:selected');
-      var def = Number($opt.data('default_price'));
-      if (!isNaN(def)) { $priceInput.val(def); }
+      var sale = parseFloat($opt.data('sale_price'));
+      var purchase = parseFloat($opt.data('purchase_price'));
+      var def = parseFloat($opt.data('default_price'));
+
+      var priceToUse = !isNaN(sale) ? sale : (!isNaN(purchase) ? purchase : (!isNaN(def) ? def : NaN));
+      if (!isNaN(priceToUse)) { $priceInput.val(priceToUse); }
+
       recalcProducts();
     });
 
-    // Price suggestion buttons -> use the same default (sale) price
+    // Price suggestion buttons -> use default (sale preferred) again
     $priceSuggestions.on('click', '.price-suggestion-btn', function () {
       var $opt = $visibleSelect.find('option:selected');
       if ($opt.length && $opt.val()) {
-        var suggestedPrice = $opt.data('default_price');
-        if (suggestedPrice && !isNaN(suggestedPrice)) {
+        var sale = parseFloat($opt.data('sale_price'));
+        var purchase = parseFloat($opt.data('purchase_price'));
+        var defAttr = parseFloat($opt.data('default_price'));
+        var suggestedPrice = !isNaN(sale) ? sale : (!isNaN(purchase) ? purchase : (!isNaN(defAttr) ? defAttr : NaN));
+        if (!isNaN(suggestedPrice)) {
           $priceInput.val(suggestedPrice);
           recalcProducts();
         }
       }
     });
 
-    // Real-time validation
-    $priceInput.on('input', function () {
-      validatePriceField($(this), $row);
-      recalcProducts();
-    });
-
-    $qtyInput.on('input', function () {
-      validateQtyField($(this), $row);
-      recalcProducts();
-    });
+    // Real-time validation (lightweight here; full validation happens in validateProducts)
+    $priceInput.on('input', recalcProducts);
+    $qtyInput.on('input', recalcProducts);
 
     // Duplicate row functionality
     $row.find('.btn-duplicate').on('click', function () {
       var rowData = extractRowData($row);
       addProductRow(rowData);
     });
-  }
-
-  function validatePriceField($input, $row) {
-    var value = parseFloat($input.val());
-    clearFieldError($input);
-
-    if (isNaN(value) || value < 0) {
-      showFieldError($input, 'Price must be a valid positive number');
-      $row.addClass('row-error');
-      return false;
-    } else {
-      $row.removeClass('row-error');
-      return true;
-    }
-  }
-
-  function validateQtyField($input, $row) {
-    var value = parseFloat($input.val());
-    clearFieldError($input);
-
-    if (isNaN(value) || value <= 0) {
-      showFieldError($input, 'Quantity must be greater than 0');
-      $row.addClass('row-error');
-      return false;
-    } else {
-      $row.removeClass('row-error');
-      return true;
-    }
-  }
-
-  function showFieldError($input, message) {
-    $input.addClass('is-invalid');
-    var $error = $input.siblings('.field-error');
-    if ($error.length === 0) {
-      $error = $('<div class="field-error"></div>');
-      $input.after($error);
-    }
-    $error.text(message).show();
-  }
-
-  function clearFieldError($input) {
-    $input.removeClass('is-invalid');
-    $input.siblings('.field-error').hide();
   }
 
   function extractRowData($row) {
@@ -382,6 +333,49 @@
       sum += total;
     });
     $productsSubtotal.text(toMoney(sum));
+  }
+
+  function validatePriceField($input, $row) {
+    var value = parseFloat($input.val());
+    clearFieldError($input);
+
+    if (isNaN(value) || value < 0) {
+      showFieldError($input, 'Price must be a valid positive number');
+      $row.addClass('row-error');
+      return false;
+    } else {
+      $row.removeClass('row-error');
+      return true;
+    }
+  }
+
+  function validateQtyField($input, $row) {
+    var value = parseFloat($input.val());
+    clearFieldError($input);
+
+    if (isNaN(value) || value <= 0) {
+      showFieldError($input, 'Quantity must be greater than 0');
+      $row.addClass('row-error');
+      return false;
+    } else {
+      $row.removeClass('row-error');
+      return true;
+    }
+  }
+
+  function showFieldError($input, message) {
+    $input.addClass('is-invalid');
+    var $error = $input.siblings('.field-error');
+    if ($error.length === 0) {
+      $error = $('<div class="field-error"></div>');
+      $input.after($error);
+    }
+    $error.text(message).show();
+  }
+
+  function clearFieldError($input) {
+    $input.removeClass('is-invalid');
+    $input.siblings('.field-error').hide();
   }
 
   function validateProducts() {
@@ -522,6 +516,27 @@
     $reportGrandTotal.text(toMoney(grand));
   }
 
+  // When a product is selected, copy its price into the row's ip-price input
+$('#productRows').on('change', '.ip-product', function () {
+  var $row = $(this).closest('tr');
+  var $opt = $(this).find('option:selected');
+
+  // Prefer sale price; fallback to purchase; then default
+  var price =
+      parseFloat($opt.data('sale_price'));
+  if (isNaN(price)) price = parseFloat($opt.data('purchase_price'));
+  if (isNaN(price)) price = parseFloat($opt.data('default_price'));
+
+  if (!isNaN(price)) {
+    $row.find('.ip-price').val(price).trigger('input'); // update totals if you listen to input
+  }
+
+  // Ensure quantity is at least 1 by default
+  var $qty = $row.find('.ip-qty');
+  if (!$qty.val()) $qty.val(1).trigger('input');
+});
+
+
   // ===========================================================================
   // SECTION 9: LOADERS (Categories, Entities, Products, Expenses)
   // ===========================================================================
@@ -596,6 +611,8 @@
         var $opt = buildOption(p.product_id, p.product_name, {
           'data-product_name': p.product_name,
           'data-default_price': defPrice != null ? defPrice : '',
+          'data-sale_price': (p.sale_price != null ? p.sale_price : ''),
+          'data-purchase_price': (p.purchase_price != null ? p.purchase_price : ''),
           'data-product_price_id': p.product_price_id || ''
         });
         $sel.append($opt);
@@ -687,7 +704,6 @@
   $categoryEl.on('change', function () {
     var val = $(this).val();
     var catName = $(this).find('option:selected').text();
-    $modalCatName.val(catName);
 
     // Toggle product mode from category label (veg/shop)
     var catLabel = catName || '';
@@ -697,7 +713,7 @@
       loadEntities(val);
       $('#addUserBtn').prop('disabled', false);
     } else if (val === '__add_category__') {
-      $modalAddCategory.modal('show');
+      $('#modalAddCategory').modal('show');
       $categoryEl.val('');
     } else {
       $userEl.prop('disabled', true).empty().append('<option value="">-- Select User/Vendor --</option>');
@@ -721,10 +737,9 @@
     }
 
     if (val === '__add_user__') {
-      $modalAddEntity.modal('show');
+      $('#modalAddEntity').modal('show');
       $userEl.val('');
     } else {
-      // Load products for this entity when in product mode
       if (state.productMode && val) {
         loadProductsForEntity(val);
       }
@@ -1040,8 +1055,7 @@
 
     commonProducts.forEach(function (product) {
       addProductRow({ price: product.price, qty: 1 });
-      // (Search input removed) — we no longer set a search text.
-      // User can choose the product from the dropdown if needed.
+      // With dropdown-only UI, user will select the actual product if needed.
     });
   });
 
@@ -1110,7 +1124,6 @@
       };
       try {
         localStorage.setItem(draftKey, JSON.stringify(formData));
-        // console.log('Draft saved');
       } catch (e) {
         console.warn('Could not save draft:', e);
       }
@@ -1157,7 +1170,6 @@
 
     // Save on form changes
     $categoryEl.add($userEl).on('change', saveDraft);
-    // Removed '.ip-product-search' from selector (search UI removed)
     $productRows.on('input change', '.ip-product, .ip-price, .ip-qty', saveDraft);
 
     // Clear draft on successful save
@@ -1170,7 +1182,6 @@
   // ===========================================================================
   // SECTION 13: INIT
   // ===========================================================================
-  // Robust init: if categories not server-rendered, fetch them; else copy to filter.
   function initCategoriesAndFilters() {
     var hasServerCats = $('#category option').length > 2; // includes default + "Add new"
     if (!hasServerCats) {

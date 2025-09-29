@@ -131,11 +131,11 @@
                   <table class="table table-bordered" id="productsTable" style="margin-bottom:8px;">
                     <thead>
                       <tr>
-                        <th style="width:38%;">Product Name</th>
-                        <th class="text-right" style="width:20%;">Price</th>
-                        <th class="text-right" style="width:20%;">Qty</th>
-                        <th class="text-right" style="width:20%;">Total</th>
-                        <th style="width:2%;"></th>
+                        <th style="width:35%;">Product Name</th>
+                        <th class="text-right" style="width:15%;">Price</th>
+                        <th class="text-right" style="width:15%;">Qty</th>
+                        <th class="text-right" style="width:25%;">Total</th>
+                        <th style="width:10%;">Action</th>
                       </tr>
                     </thead>
                     <tbody id="productRows"></tbody>
