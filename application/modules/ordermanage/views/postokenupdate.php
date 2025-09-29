@@ -103,7 +103,8 @@
  * - Merge base items and update deltas (SUM with +/-) into a single map per kitchen.
  * - Print exactly one row per unique (menu_id|varientid|addonsuid).
  * - Add-ons are rendered as their own rows tied to the parent key to avoid cross-merging.
- * - Only print rows with final qty > 0.
+ * - Print negative deltas (returns) as negative quantities (e.g., -1).
+ * - Only print rows with final qty != 0.
  * - Deterministic token write-back at the end.
  */
 
@@ -232,25 +233,41 @@ foreach ($itemsByKitchen as $kid => $group) {
             if ($delta === 0) continue;
 
             $key = $menuId . '|' . $variantId . '|' . $addonsUid;
-            if (empty($seenFromBase[$key])) {
-                if (!isset($lines[$key])) {
-                    // If base didn't exist (e.g., only deltas), initialize from exititem
-                    $lines[$key] = [
+
+            if ($delta < 0) {
+                // 🔻 PRINT RETURNS AS NEGATIVE LINES (separate entry)
+                $dkey = 'return|' . $key;
+                if (!isset($lines[$dkey])) {
+                    $lines[$dkey] = [
                         'qty'     => 0,
                         'name'    => (string)($exititem->ProductName ?? ''),
                         'notes'   => (string)($exititem->notes ?? ''),
                         'variant' => (string)($exititem->variantName ?? ''),
                     ];
                 }
-                $lines[$key]['qty'] += $delta;
+                $lines[$dkey]['qty'] += $delta; // e.g., -1, -2
+            } else {
+                // ➕ keep existing behavior for positive deltas (additions)
+                if (empty($seenFromBase[$key])) {
+                    if (!isset($lines[$key])) {
+                        // If base didn't exist (e.g., only deltas), initialize from exititem
+                        $lines[$key] = [
+                            'qty'     => 0,
+                            'name'    => (string)($exititem->ProductName ?? ''),
+                            'notes'   => (string)($exititem->notes ?? ''),
+                            'variant' => (string)($exititem->variantName ?? ''),
+                        ];
+                    }
+                    $lines[$key]['qty'] += $delta;
+                }
             }
         }
     }
 
-    // 3) Build rows once, only for positive final qty
+    // 3) Build rows once, print both positive and negative final qty
     $rows = '';
     foreach ($lines as $line) {
-        if (iint($line['qty']) > 0) {
+        if (iint($line['qty']) != 0) { // <-- print negatives too
             $rows .= generateTableRow($line['qty'], $line['name'], $line['notes'], $line['variant']);
         }
     }
@@ -289,7 +306,6 @@ foreach ($itemsByKitchen as $kid => $group) {
 }
 
 // --- Write back the last printed token once (mirrors your original setter-ish pattern)
-// If your getTokenNumber($n) updates the stored counter when given a param, keep this:
 if ($printedTokens > 0) {
     $lastPrinted = $currentTokenNumber - 1;
     $this->order_model->getTokenNumber($lastPrinted);
