@@ -86,14 +86,14 @@
             <div class="form-group">
               <label for="rate" class="col-sm-2 control-label">Rate</label>
               <div class="col-sm-2" id="fg-rate">
-                <input type="number" step="0.01" id="rate" name="rate" class="form-control" placeholder="0.00">
+                <input type="number" disabled step="0.1" id="rate" name="rate" class="form-control" placeholder="0.00">
                 <span class="help-block" id="rateHint"></span>
                 <div class="error-text" id="err-rate">Enter a valid rate (≥ 0).</div>
               </div>
 
               <label for="quantity" class="col-sm-2 control-label">Quantity</label>
               <div class="col-sm-2" id="fg-qty">
-                <input type="number" step="0.01" id="quantity" name="quantity" class="form-control" placeholder="1.00" value="1">
+                <input type="number" step="0.1" id="quantity" name="quantity" class="form-control" placeholder="1.00" value="1">
                 <span class="help-block" id="qtyHint">Enter how many units/days/liters.</span>
                 <div class="error-text" id="err-qty">Enter a valid quantity (> 0).</div>
               </div>
