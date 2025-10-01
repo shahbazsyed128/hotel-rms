@@ -1340,6 +1340,143 @@ function loadTodayExpenses() {
     }
   });
 
+
+      // Open the modal to manage products when a user clicks the "Manage Products" button
+    $('#btnManageProducts').on('click', function () {
+        // Assume entity_id is selected or passed
+        var entity_id = $('#user').val();  // Get the selected entity
+        if (!entity_id) {
+            alert('Please select a user/vendor first.');
+            return;
+        }
+
+        // Open the modal
+        $('#modalManageProducts').modal('show');
+
+        // Populate the entity name in the modal header
+        $('#modalEntityName').val($('#user option:selected').text());
+
+        // Fetch existing products for the selected entity
+        $.ajax({
+            url: 'getProductsByEntity', // Assuming this endpoint fetches products for an entity
+            type: 'GET',
+            data: { entity_id: entity_id },
+            success: function (data) {
+                var productRows = '';
+                data.forEach(function (product) {
+                     productRows += `
+                        <tr>
+                            <td>${product.product_name}</td>
+                            <td>${product.sale_price}</td>
+                            <td>
+                                <button type="button" class="btn btn-warning btn-sm editProduct" data-id="${product.product_id}" data-name="${product.product_name}" data-price="${product.sale_price}">
+                                    Edit
+                                </button>
+                                <button type="button" class="btn btn-danger btn-sm deleteProduct" data-id="${product.product_id}">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                $('#existingProducts').html(productRows);
+            },
+            error: function () {
+                alert('Error fetching products.');
+            }
+        });
+    });
+
+    // Edit product
+    $(document).on('click', '.editProduct', function () {
+        var productId = $(this).data('id');
+        var productName = $(this).data('name');
+        var productPrice = $(this).data('price');
+
+        // Show edit modal with current product data
+        $('#newProductName').val(productName);
+        $('#newProductPrice').val(productPrice);
+
+        // Update product logic on form submission
+        $('#formManageProducts').off('submit').on('submit', function (e) {
+            e.preventDefault();
+
+            var newName = $('#newProductName').val();
+            var newPrice = $('#newProductPrice').val();
+
+            // Update the product if changed
+            if (newName !== productName || newPrice !== productPrice) {
+                $.ajax({
+                    url: 'updateProduct', // Endpoint to update product
+                    type: 'POST',
+                    data: {
+                        product_id: productId,
+                        name: newName,
+                        price: newPrice
+                    },
+                    success: function () {
+                        $('#modalManageProducts').modal('hide');
+                        alert('Product updated successfully.');
+                    },
+                    error: function () {
+                        alert('Error updating product.');
+                    }
+                });
+            }
+        });
+    });
+
+    // Delete product
+    $(document).on('click', '.deleteProduct', function () {
+        var productId = $(this).data('id');
+
+        if (confirm('Are you sure you want to delete this product?')) {
+            $.ajax({
+                url: 'deleteProduct', // Endpoint to delete product
+                type: 'POST',
+                data: { product_id: productId },
+                success: function () {
+                    alert('Product deleted successfully.');
+                    $('#modalManageProducts').modal('hide');
+                },
+                error: function () {
+                    alert('Error deleting product.');
+                }
+            });
+        }
+    });
+
+    // Add new product
+    $('#formManageProducts').on('submit', function (e) {
+        e.preventDefault();
+
+        var productName = $('#newProductName').val();
+        var productPrice = $('#newProductPrice').val();
+        var entityId = $('#user').val();
+
+        if (productName && productPrice && entityId) {
+            $.ajax({
+                url: 'addProduct', // Endpoint to add new product
+                type: 'POST',
+                data: {
+                    entity_id: entityId,
+                    name: productName,
+                    price: productPrice
+                },
+                success: function () {
+                    $('#modalManageProducts').modal('hide');
+                    alert('Product added successfully.');
+                },
+                error: function () {
+                    alert('Error adding product.');
+                }
+            });
+        } else {
+            alert('Please fill all fields.');
+        }
+    });
+
+
   // Filters
   $filterCategory.on('change', function () { filters.category = $(this).val(); renderExpenses(); });
   $searchInput.on('input', debounce(function () { filters.search = $(this).val(); renderExpenses(); }, 150));

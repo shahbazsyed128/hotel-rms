@@ -123,6 +123,9 @@
                   <button type="button" id="btnDuplicateLast" class="btn btn-default btn-sm">
                     <span class="glyphicon glyphicon-copy"></span> Duplicate Last
                   </button>
+                  <button type="button" id="btnManageProducts" class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-cog"></span> Manage Products
+                  </button>
                   <span class="text-muted" style="margin-left: 15px;">
                     <small>💡 Tip: Use Ctrl+N for new row, Ctrl+S to save</small>
                   </span>
@@ -346,6 +349,63 @@
     </div>
   </div>
 </div>
+
+
+<!-- Manage Products Modal -->
+<div class="modal fade" id="modalManageProducts" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="formManageProducts">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Manage Products</h4>
+        </div>
+        <div class="modal-body">
+          <!-- Selected Entity Info -->
+          <div class="form-group">
+            <label>Entity</label>
+            <input type="text" class="form-control" id="modalEntityName" readonly>
+          </div>
+
+          <!-- Existing Products Table -->
+          <div class="table-responsive">
+            <table class="table table-bordered" id="existingProductsTable">
+              <thead>
+                <tr>
+                  <th>Product Name</th>
+                  <th>Price</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="existingProducts"></tbody>
+            </table>
+          </div>
+
+          <!-- Add New Product -->
+          <hr>
+          <div class="form-group" id="fg-newproduct-name">
+            <label>Product Name</label>
+            <input type="text" class="form-control" id="newProductName" placeholder="Enter product name" required>
+            <div class="error-text" id="err-newproduct-name">Please enter a product name.</div>
+          </div>
+
+          <div class="form-group" id="fg-newproduct-price">
+            <label>Product Price</label>
+            <input type="number" class="form-control" id="newProductPrice" step="0.01" placeholder="Enter product price" required>
+            <div class="error-text" id="err-newproduct-price">Please enter a valid price.</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <span class="glyphicon glyphicon-ok"></span> Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
 <!-- Confirm Add Expense -->
 <div class="modal fade" id="modalConfirmAdd" tabindex="-1" role="dialog" aria-hidden="true">
