@@ -525,6 +525,7 @@ class Order extends MX_Controller
 		$category_id = $this->input->get('category_id');
 		$entity_id = $this->input->get('entity_id');
 		$rate_id = $this->input->get('rate_id');
+		$product_id = $this->input->get('product_id');
 		$price = $this->input->get('rate');
 		$quantity = $this->input->get('qty');
 		$total_amount = $this->input->get('amount');
@@ -568,6 +569,7 @@ class Order extends MX_Controller
 				'category_id' => (int)$category_id,
 				'entity_id' => (int)$entity_id,
 				'rate_id' => (int)$rate_id,
+				'product_id' => (int)$product_id,
 				'price' => (float)$price,
 				'quantity' => (float)$quantity,
 				'total_amount' => (float)$total_amount,

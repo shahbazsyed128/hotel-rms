@@ -104,7 +104,7 @@
     $('.error-text').hide();
   }
   function syncProductsButtonDisabled(disabled) {
-    $('#btnAddExpenseProducts').prop('disabled', !!disabled);
+    // $('#btnAddExpenseProducts').prop('disabled', !!disabled);
   }
   function buildOption(value, text, attrs) {
     var $o = $('<option>').val(String(value)).text(text);
@@ -121,7 +121,10 @@
   function apiGetCategories() { return apiGet('getcategories'); }
   function apiGetEntities(category_id) { return apiGet('getCategoryEntities', { category_id: category_id }); }
   function apiGetProducts(entity_id) { return apiGet('getProductsByEntity', { entity_id: entity_id }); }
-  function apiAddExpense(payload) { return apiGet('addexpense', payload); }
+  function apiAddExpense(payload) { 
+    console.log('API Add Expense', payload);
+    return apiGet('addexpense', payload); 
+  }
   function apiGetExpenses() { return apiGet('get_expenses'); }
   function apiUpdateExpense(p) { return apiGet('updateexpense', p); }
   function apiDeleteExpense(p) { return apiGet('deleteexpense', p); }
@@ -406,36 +409,96 @@
   // ===========================================================================
   // SECTION 8: RENDER
   // ===========================================================================
+  // function renderExpenses() {
+  //   $rowsEl.empty();
+  //   var rows = applyFilters(state.expenses);
+  //   var total = 0;
+  //   rows.forEach(function (row, idx) {
+  //     total += Number(row.amount) || 0;
+  //     var nameBits = (row.entity_name || '-');
+  //     var label = (row.product_name || row.item_name);
+  //     if (label) { nameBits += ' — ' + label; }
+
+  //     var $tr = $('<tr>');
+  //     $tr.append('<td class="text-center">' + (idx + 1) + '</td>');
+  //     $tr.append('<td class="text-center">' + (row.category_name || '-') + '</td>');
+  //     $tr.append('<td class="text-center">' + nameBits + '</td>');
+  //     $tr.append('<td class="text-right">' + toMoney(row.rate) + '</td>');
+  //     $tr.append('<td class="text-right">' + toMoney(row.qty) + '</td>');
+  //     $tr.append('<td class="text-right">' + toMoney(row.amount) + '</td>');
+  //     $tr.append(
+  //       '<td class="text-center">' +
+  //       '<button style="display:none" class="btn btn-xs btn-info btn-edit" data-id="' + (row.expense_id || '') + '" title="Edit">' +
+  //       '<span class="glyphicon glyphicon-pencil"></span>' +
+  //       '</button> ' +
+  //       '<button class="btn btn-xs btn-danger btn-delete" data-id="' + (row.expense_id || '') + '" data-amount="' + toMoney(row.amount) + '" title="Delete">' +
+  //       '<span class="glyphicon glyphicon-trash"></span>' +
+  //       '</button>' +
+  //       '</td>'
+  //     );
+  //     $rowsEl.append($tr);
+  //   });
+  //   $totalEl.text(toMoney(total));
+  //   updateFilterCount(rows.length);
+  // }
+
+
   function renderExpenses() {
-    $rowsEl.empty();
-    var rows = applyFilters(state.expenses);
-    var total = 0;
+    $rowsEl.empty();  // Clear the existing rows in the table
+    var rows = applyFilters(state.expenses);  // Apply filters to the expenses
+    var total = 0;  // Initialize total amount for all expenses
+
+    // Loop through each row (expense) and render it in the table
     rows.forEach(function (row, idx) {
+      // Add the amount for this row to the total
       total += Number(row.amount) || 0;
+
+      // Set up the name for the row: entity name and product or item name
       var nameBits = (row.entity_name || '-');
       var label = (row.product_name || row.item_name);
       if (label) { nameBits += ' — ' + label; }
 
+      // Create a new table row
       var $tr = $('<tr>');
+
+      // Add the row number
       $tr.append('<td class="text-center">' + (idx + 1) + '</td>');
+
+      // Add the category name
       $tr.append('<td class="text-center">' + (row.category_name || '-') + '</td>');
+
+      // Add the name (entity and product/item)
       $tr.append('<td class="text-center">' + nameBits + '</td>');
-      $tr.append('<td class="text-right">' + toMoney(row.rate) + '</td>');
-      $tr.append('<td class="text-right">' + toMoney(row.qty) + '</td>');
-      $tr.append('<td class="text-right">' + toMoney(row.amount) + '</td>');
+
+      // Add the rate, ensuring it's properly formatted
+      $tr.append('<td class="text-right">' + toMoney(row.rate || 0) + '</td>');
+
+      // Add the quantity, ensuring it's a valid number
+      $tr.append('<td class="text-right">' + toMoney(row.qty || 0) + '</td>');
+
+      // Add the total amount, ensuring it's a valid number
+      $tr.append('<td class="text-right">' + toMoney(row.amount || 0) + '</td>');
+
+      // Add action buttons (edit and delete)
       $tr.append(
         '<td class="text-center">' +
-        '<button style="display:none" class="btn btn-xs btn-info btn-edit" data-id="' + (row.expense_id || '') + '" title="Edit">' +
-        '<span class="glyphicon glyphicon-pencil"></span>' +
-        '</button> ' +
-        '<button class="btn btn-xs btn-danger btn-delete" data-id="' + (row.expense_id || '') + '" data-amount="' + toMoney(row.amount) + '" title="Delete">' +
-        '<span class="glyphicon glyphicon-trash"></span>' +
-        '</button>' +
+          '<button style="display:none" class="btn btn-xs btn-info btn-edit" data-id="' + (row.expense_id || '') + '" title="Edit">' +
+            '<span class="glyphicon glyphicon-pencil"></span>' +
+          '</button> ' +
+          '<button class="btn btn-xs btn-danger btn-delete" data-id="' + (row.expense_id || '') + '" data-amount="' + toMoney(row.amount || 0) + '" title="Delete">' +
+            '<span class="glyphicon glyphicon-trash"></span>' +
+          '</button>' +
         '</td>'
       );
+
+      // Append the row to the table body
       $rowsEl.append($tr);
     });
+
+    // Update the total amount at the bottom of the table
     $totalEl.text(toMoney(total));
+
+    // Update the filter count to show how many results were displayed
     updateFilterCount(rows.length);
   }
 
@@ -451,70 +514,198 @@
       .sort(function (a, b) { return (a.name || '').localeCompare(b.name || ''); });
   }
 
-  function buildReport() {
-    $reportDate.text(todayYmd());
-    var bits = [];
-    if (filters.category) {
-      var label = $('#filterCategory option:selected').text() || 'Category';
-      bits.push('Category: ' + label);
-    }
-    if (($searchInput.val() || '').trim()) {
-      bits.push('Search: ' + $searchInput.val().trim());
-    }
-    $('#reportFilters').text(bits.length ? '(' + bits.join(' | ') + ')' : '');
+  // function buildReport() {
+  //   $reportDate.text(todayYmd());
+  //   var bits = [];
+  //   if (filters.category) {
+  //     var label = $('#filterCategory option:selected').text() || 'Category';
+  //     bits.push('Category: ' + label);
+  //   }
+  //   if (($searchInput.val() || '').trim()) {
+  //     bits.push('Search: ' + $searchInput.val().trim());
+  //   }
+  //   $('#reportFilters').text(bits.length ? '(' + bits.join(' | ') + ')' : '');
 
-    var rows = applyFilters(state.expenses);
-    $reportBody.empty();
+  //   var rows = applyFilters(state.expenses);
+  //   $reportBody.empty();
 
-    if (!rows.length) {
-      $reportBody.append('<div class="no-data">No data to display.</div>');
-      $reportGrandTotal.text('0.00');
-      return;
-    }
+  //   if (!rows.length) {
+  //     $reportBody.append('<div class="no-data">No data to display.</div>');
+  //     $reportGrandTotal.text('0.00');
+  //     return;
+  //   }
 
-    var grouped = groupByCategory(rows);
-    var grand = 0;
+  //   var grouped = groupByCategory(rows);
+  //   var grand = 0;
 
-    grouped.forEach(function (cat) {
-      grand += cat.subtotal;
-      var $block = $('<div class="category-block">');
-      $block.append('<h4 class="category-title">' + (cat.name || 'Uncategorized') + '</h4>');
+  //   grouped.forEach(function (cat) {
+  //     grand += cat.subtotal;
+  //     var $block = $('<div class="category-block">');
+  //     $block.append('<h4 class="category-title">' + (cat.name || 'Uncategorized') + '</h4>');
 
-      var $table = $('<table class="table table-bordered report-table">');
-      $table.append(
-        '<thead><tr>' +
-        '<th style="width:50%;">Name</th>' +
-        '<th class="text-right" style="width:16%;">Rate</th>' +
-        '<th class="text-right" style="width:16%;">Qty</th>' +
-        '<th class="text-right" style="width:18%;">Total</th>' +
-        '</tr></thead>'
-      );
+  //     var $table = $('<table class="table table-bordered report-table">');
+  //     $table.append(
+  //       '<thead><tr>' +
+  //       '<th style="width:50%;">Name</th>' +
+  //       '<th class="text-right" style="width:16%;">Rate</th>' +
+  //       '<th class="text-right" style="width:16%;">Qty</th>' +
+  //       '<th class="text-right" style="width:18%;">Total</th>' +
+  //       '</tr></thead>'
+  //     );
 
-      var $tbody = $('<tbody>');
+  //     var $tbody = $('<tbody>');
+  //     cat.rows.forEach(function (r) {
+  //       var nm = (r.entity_name || '-') + (r.product_name ? ' — ' + r.product_name : (r.item_name ? ' — ' + r.item_name : ''));
+  //       $tbody.append(
+  //         '<tr>' +
+  //         '<td>' + nm + '</td>' +
+  //         '<td class="text-right">' + toMoney(r.rate) + '</td>' +
+  //         '<td class="text-right">' + toMoney(r.qty) + '</td>' +
+  //         '<td class="text-right">' + toMoney(r.amount) + '</td>' +
+  //         '</tr>'
+  //       );
+  //     });
+  //     $table.append($tbody);
+  //     $table.append(
+  //       '<tfoot><tr class="category-subtotal">' +
+  //       '<td class="text-right" colspan="3">Subtotal (' + (cat.name || '-') + '):</td>' +
+  //       '<td class="text-right"><strong>' + toMoney(cat.subtotal) + '</strong></td>' +
+  //       '</tr></tfoot>'
+  //     );
+  //     $block.append($table);
+  //     $reportBody.append($block);
+  //   });
+
+  //   $reportGrandTotal.text(toMoney(grand));
+  // }
+
+function buildReport() {
+  $reportDate.text(todayYmd());  // Set today's date for the report
+  var bits = [];
+  
+  // Add filters to the report header if applied
+  if (filters.category) {
+    var label = $('#filterCategory option:selected').text() || 'Category';
+    bits.push('Category: ' + label);
+  }
+  if (($searchInput.val() || '').trim()) {
+    bits.push('Search: ' + $searchInput.val().trim());
+  }
+  $('#reportFilters').text(bits.length ? '(' + bits.join(' | ') + ')' : '');
+
+  var rows = applyFilters(state.expenses);  // Apply the active filters to the expenses
+  $reportBody.empty();  // Clear the existing report body
+
+  if (!rows.length) {
+    $reportBody.append('<div class="no-data">No data to display.</div>');
+    $reportGrandTotal.text('0.00');
+    return;
+  }
+
+  console.log("Rows after filter:", rows);  // Debugging: Check filtered rows
+
+  // Group by category
+  var grouped = groupByCategory(rows);
+  console.log("Grouped expenses by category:", grouped);  // Debugging: Check grouped expenses
+  
+  var grand = 0;  // Initialize grand total of all categories
+
+  grouped.forEach(function (cat) {
+    console.log("Processing category:", cat.name);  // Debugging: Check category name
+    grand += cat.subtotal;
+    var $block = $('<div class="category-block">');
+    $block.append('<h4 class="category-title">' + (cat.name || 'Uncategorized') + '</h4>');
+
+    // Check if it's a "shop" or "vegetable" category
+    var isVegShop = isVegShopCategoryLabel(cat.name);
+    console.log("Is VegShop Category?", isVegShop);  // Debugging: Check if it's a "shop" or "vegetable"
+
+    var $table = $('<table class="table table-bordered report-table">');
+    $table.append(
+      '<thead><tr>' +
+      '<th style="width:50%;">Name</th>' +
+      '<th class="text-right" style="width:16%;">Rate</th>' +
+      '<th class="text-right" style="width:16%;">Qty</th>' +
+      '<th class="text-right" style="width:18%;">Total</th>' +
+      '</tr></thead>'
+    );
+
+    var $tbody = $('<tbody>');
+
+    if (isVegShop) {
+      // Group the products by product_id and sum quantities and amounts
+      var groupedProducts = {};
+
+      cat.rows.forEach(function (r) {
+        // Debugging: Log product_id for each row
+        console.log(`Processing row: product_id = ${r.product_id}, product_name = ${r.product_name}, price = ${r.price}, quantity = ${r.quantity}, total_amount = ${r.total_amount}`);
+
+        var key = r.product_id;  // Group by product_id
+        if (!key) {
+          console.warn("Warning: Missing product_id for product", r.product_name);
+        }
+
+        if (!groupedProducts[key]) {
+          groupedProducts[key] = {
+            product_name: r.product_name,
+            rate: parseFloat(r.price),  // Ensure price is a float for calculation
+            qty: 0,
+            amount: 0
+          };
+        }
+        
+        // Sum quantities and amounts for grouped products
+        groupedProducts[key].qty += parseFloat(r.quantity);  // Sum up quantities
+        groupedProducts[key].amount += parseFloat(r.total_amount);  // Sum up amounts
+      });
+
+      // Debugging: Check grouped products
+      console.log("Grouped products:", groupedProducts);
+
+      // Render the grouped products
+      Object.values(groupedProducts).forEach(function (prod) {
+        console.log(`Rendering product: ${prod.product_name} | Qty: ${prod.qty} | Total: ${prod.amount}`);  // Debugging: Check rendered product
+        $tbody.append(
+          '<tr>' +
+          '<td>' + prod.product_name + '</td>' +
+          '<td class="text-right">' + toMoney(prod.rate) + '</td>' +
+          '<td class="text-right">' + toMoney(prod.qty) + '</td>' +
+          '<td class="text-right">' + toMoney(prod.amount) + '</td>' +
+          '</tr>'
+        );
+      });
+    } else {
+      // For non "shop" or "vegetable" categories, render as normal
       cat.rows.forEach(function (r) {
         var nm = (r.entity_name || '-') + (r.product_name ? ' — ' + r.product_name : (r.item_name ? ' — ' + r.item_name : ''));
         $tbody.append(
           '<tr>' +
           '<td>' + nm + '</td>' +
-          '<td class="text-right">' + toMoney(r.rate) + '</td>' +
-          '<td class="text-right">' + toMoney(r.qty) + '</td>' +
-          '<td class="text-right">' + toMoney(r.amount) + '</td>' +
+          '<td class="text-right">' + toMoney(r.price) + '</td>' +  // price should be used for rate
+          '<td class="text-right">' + toMoney(r.quantity) + '</td>' +
+          '<td class="text-right">' + toMoney(r.total_amount) + '</td>' +
           '</tr>'
         );
       });
-      $table.append($tbody);
-      $table.append(
-        '<tfoot><tr class="category-subtotal">' +
-        '<td class="text-right" colspan="3">Subtotal (' + (cat.name || '-') + '):</td>' +
-        '<td class="text-right"><strong>' + toMoney(cat.subtotal) + '</strong></td>' +
-        '</tr></tfoot>'
-      );
-      $block.append($table);
-      $reportBody.append($block);
-    });
+    }
 
-    $reportGrandTotal.text(toMoney(grand));
-  }
+    $table.append($tbody);
+    $table.append(
+      '<tfoot><tr class="category-subtotal">' +
+      '<td class="text-right" colspan="3">Subtotal (' + (cat.name || '-') + '):</td>' +
+      '<td class="text-right"><strong>' + toMoney(cat.subtotal) + '</strong></td>' +
+      '</tr></tfoot>'
+    );
+    $block.append($table);
+    $reportBody.append($block);
+  });
+
+  $reportGrandTotal.text(toMoney(grand));  // Display grand total at the bottom of the report
+  console.log("Grand total of all categories:", grand);  // Debugging: Check grand total
+}
+
+
+
 
   // When a product is selected, copy its price into the row's ip-price input
 $('#productRows').on('change', '.ip-product', function () {
@@ -622,39 +813,100 @@ $('#productRows').on('change', '.ip-product', function () {
     });
   }
 
-  function loadTodayExpenses() {
-    return apiGetExpenses().done(function (resp) {
-      if (Array.isArray(resp)) {
-        state.expenses = resp.map(function (e) {
-          return {
-            expense_id: e.expense_id || e.id || null,
-            category_id: e.category_id,
-            category_name: e.category_name,
-            entity_id: e.entity_id,
-            entity_name: e.entity_name,
-            product_name: e.product_name || '',  // if backend returns product label
-            item_name: e.item_name || '',        // for classic mode rows
-            rate_id: e.rate_id || '',
-            rate: Number(e.price) || Number(e.rate) || 0,
-            qty: Number(e.quantity) || Number(e.qty) || 0,
-            amount: Number(e.total_amount) || Number(e.amount) || 0
-          };
+  // function loadTodayExpenses() {
+  //   return apiGetExpenses().done(function (resp) {
+  //     if (Array.isArray(resp)) {
+  //       state.expenses = resp.map(function (e) {
+  //         return {
+  //           expense_id: e.expense_id || e.id || null,
+  //           category_id: e.category_id,
+  //           category_name: e.category_name,
+  //           entity_id: e.entity_id,
+  //           entity_name: e.entity_name,
+  //           product_name: e.product_name || '',  // if backend returns product label
+  //           item_name: e.item_name || '',        // for classic mode rows
+  //           rate_id: e.rate_id || '',
+  //           rate: Number(e.price) || Number(e.rate) || 0,
+  //           qty: Number(e.quantity) || Number(e.qty) || 0,
+  //           amount: Number(e.total_amount) || Number(e.amount) || 0
+  //         };
+  //       });
+  //       // Ensure filter dropdown has items if categories endpoint wasn’t called
+  //       if ($filterCategory.children('option').length <= 1) {
+  //         var seen = {};
+  //         state.expenses.forEach(function (r) { if (!seen[r.category_id]) { seen[r.category_id] = r.category_name; } });
+  //         Object.keys(seen).forEach(function (id) {
+  //           $filterCategory.append(buildOption(id, seen[id]));
+  //         });
+  //       }
+  //       renderExpenses();
+  //     }
+  //   }).fail(function (xhr) {
+  //     var msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : xhr.statusText;
+  //     showMsg('Error loading expenses: ' + msg, 'err');
+  //   });
+  // }
+
+function loadTodayExpenses() {
+  console.log("Loading today's expenses...");  // Debugging: Log when the expenses are being loaded
+
+  return apiGetExpenses().done(function (resp) {
+    console.log("API Response for expenses:", resp);  // Debugging: Log the API response
+
+    if (Array.isArray(resp)) {
+      state.expenses = resp.map(function (e) {
+        console.log("Processing expense:", e);  // Debugging: Log each expense entry
+
+        return {
+          expense_id: e.expense_id || e.id || null,
+          category_id: e.category_id,
+          category_name: e.category_name,
+          entity_id: e.entity_id,
+          entity_name: e.entity_name,
+          product_id: e.product_id || '',
+          product_name: e.product_name || '',  // Use product_name or fallback to an empty string
+          item_name: e.item_name || '',        // For classic mode rows
+          rate_id: e.rate_id || '',
+          rate: parseFloat(e.price) || 0,
+          price: parseFloat(e.price) || 0,  // Make sure the price is a valid number
+          qty: parseFloat(e.quantity) || 0, 
+          quantity: parseFloat(e.quantity) || 0,  // Ensure quantity is a valid number
+          amount: parseFloat(e.total_amount) || 0,
+          total_amount: parseFloat(e.total_amount) || 0,  // Ensure total amount is a valid number
+          expense_date: e.expense_date || '',  // Fallback to an empty string if date is missing
+          description: e.description || '',
+          reason: e.reason || ''
+        };
+      });
+
+      console.log("Mapped expenses:", state.expenses);  // Debugging: Log the mapped expenses
+
+      // Ensure filter dropdown has items if categories endpoint wasn’t called
+      if ($filterCategory.children('option').length <= 1) {
+        var seen = {};
+        state.expenses.forEach(function (r) {
+          if (!seen[r.category_id]) {
+            seen[r.category_id] = r.category_name;
+          }
         });
-        // Ensure filter dropdown has items if categories endpoint wasn’t called
-        if ($filterCategory.children('option').length <= 1) {
-          var seen = {};
-          state.expenses.forEach(function (r) { if (!seen[r.category_id]) { seen[r.category_id] = r.category_name; } });
-          Object.keys(seen).forEach(function (id) {
-            $filterCategory.append(buildOption(id, seen[id]));
-          });
-        }
-        renderExpenses();
+        Object.keys(seen).forEach(function (id) {
+          $filterCategory.append(buildOption(id, seen[id]));
+        });
       }
-    }).fail(function (xhr) {
-      var msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : xhr.statusText;
-      showMsg('Error loading expenses: ' + msg, 'err');
-    });
-  }
+
+      renderExpenses();  // Call render function to update the UI with the loaded data
+
+    } else {
+      console.warn("API response is not an array. Received:", resp);  // Debugging: Warn if response is not an array
+    }
+  }).fail(function (xhr) {
+    var msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : xhr.statusText;
+    showMsg('Error loading expenses: ' + msg, 'err');
+  });
+}
+
+
+
 
   // ===========================================================================
   // SECTION 10: VALIDATION
@@ -1072,24 +1324,6 @@ $('#productRows').on('change', '.ip-product', function () {
     if ($lastRow.length) {
       var rowData = extractRowData($lastRow);
       addProductRow(rowData);
-    }
-  });
-
-  // Keyboard shortcuts
-  $(document).on('keydown', function (e) {
-    if (e.ctrlKey) {
-      switch (e.key) {
-        case 'n': // Ctrl+N = New product row
-          e.preventDefault();
-          addProductRow();
-          break;
-        case 's': // Ctrl+S = Save
-          e.preventDefault();
-          if (!$('#btnAddExpenseProducts').prop('disabled') || !$btnAdd.prop('disabled')) {
-            $('#expenseForm').submit();
-          }
-          break;
-      }
     }
   });
 
