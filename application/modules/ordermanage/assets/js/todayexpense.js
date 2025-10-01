@@ -1004,6 +1004,14 @@ function loadTodayExpenses() {
     validateForm();
   });
 
+  $("#addUserBtn").on('click', function () {
+    var catId = $categoryEl.val();
+    var catName = $categoryEl.find('option:selected').text().trim();
+    $('#entity-category-id').val(catId); // Make sure your modal has an input with this id
+    $('#modalCatName').val(catName); // Store the category name in this input (add hidden input if needed)
+    $('#modalAddEntity').modal('show');
+  });
+
   // Save Category
   $('#addCategory').on('click', function (e) {
     e.preventDefault();
