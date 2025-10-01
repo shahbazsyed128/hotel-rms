@@ -989,11 +989,16 @@ function loadTodayExpenses() {
     }
 
     if (val === '__add_user__') {
+      // Get the selected category id and set it in the modal
+      var catId = $categoryEl.val();
+      var catName = $categoryEl.find('option:selected').text().trim();
+      $('#entity-category-id').val(catId); // Make sure your modal has an input with this id
+      $('#modalCatName').val(catName); // Store the category name in this input (add hidden input if needed)
       $('#modalAddEntity').modal('show');
       $userEl.val('');
     } else {
       if (state.productMode && val) {
-        loadProductsForEntity(val);
+      loadProductsForEntity(val);
       }
     }
     validateForm();
