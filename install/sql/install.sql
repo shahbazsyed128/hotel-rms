@@ -1451,6 +1451,7 @@ CREATE TABLE `expenses` (
   `category_id`  int(11)      NOT NULL,
   `entity_id`    int(11)      NOT NULL,
   `rate_id`      int(11)      NOT NULL,
+  `product_id`   int(11)      NOT NULL,
   `price`        float        NOT NULL,
   `quantity`     float        NOT NULL DEFAULT 1,
   `total_amount` float        NOT NULL,
