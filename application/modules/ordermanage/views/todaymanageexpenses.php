@@ -394,6 +394,12 @@
             <input type="number" class="form-control" id="newProductPrice" step="0.01" placeholder="Enter product price" required>
             <div class="error-text" id="err-newproduct-price">Please enter a valid price.</div>
           </div>
+                
+          <div class="form-group" id="fg-newproduct-unit">
+            <label>Product Unit</label>
+            <input type="text" class="form-control" id="newProductUnit" placeholder="Enter product unit" required>
+            <div class="error-text" id="err-newproduct-unit">Please enter a valid unit.</div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

@@ -1364,20 +1364,21 @@ function loadTodayExpenses() {
             success: function (data) {
                 var productRows = '';
                 data.forEach(function (product) {
-                     productRows += `
-                        <tr>
-                            <td>${product.product_name}</td>
-                            <td>${product.sale_price}</td>
-                            <td>
-                                <button type="button" class="btn btn-warning btn-sm editProduct" data-id="${product.product_id}" data-name="${product.product_name}" data-price="${product.sale_price}">
-                                    Edit
-                                </button>
-                                <button type="button" class="btn btn-danger btn-sm deleteProduct" data-id="${product.product_id}">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    `;
+                  productRows += `
+                    <tr>
+                      <td>${product.product_name}</td>
+                      <td>${product.sale_price}</td>
+                      <td>${product.unit || ''}</td>
+                      <td>
+                        <button type="button" class="btn btn-warning btn-sm editProduct" data-id="${product.product_id}" data-name="${product.product_name}" data-price="${product.sale_price}" data-unit="${product.unit || ''}">
+                          Edit
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm deleteProduct" data-id="${product.product_id}">
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  `;
                 });
                 $('#existingProducts').html(productRows);
             },
@@ -1392,10 +1393,12 @@ function loadTodayExpenses() {
         var productId = $(this).data('id');
         var productName = $(this).data('name');
         var productPrice = $(this).data('price');
+        var productUnit = $(this).data('unit'); // Assuming unit is not available in the button data
 
         // Show edit modal with current product data
         $('#newProductName').val(productName);
         $('#newProductPrice').val(productPrice);
+        $('#newProductUnit').val(productUnit); // Assuming unit is not available in the button data
 
         // Update product logic on form submission
         $('#formManageProducts').off('submit').on('submit', function (e) {
@@ -1403,16 +1406,18 @@ function loadTodayExpenses() {
 
             var newName = $('#newProductName').val();
             var newPrice = $('#newProductPrice').val();
+            var newUnit = $('#newProductUnit').val(); // Assuming unit is not available in the button data
 
             // Update the product if changed
-            if (newName !== productName || newPrice !== productPrice) {
+            if (newName !== productName || newPrice !== productPrice || newUnit !== productUnit) {
                 $.ajax({
                     url: 'updateProduct', // Endpoint to update product
-                    type: 'POST',
+                    type: 'GET',
                     data: {
                         product_id: productId,
-                        name: newName,
-                        price: newPrice
+                        product_name: newName,
+                        price: newPrice,
+                        unit: newUnit
                     },
                     success: function () {
                         $('#modalManageProducts').modal('hide');
@@ -1433,7 +1438,7 @@ function loadTodayExpenses() {
         if (confirm('Are you sure you want to delete this product?')) {
             $.ajax({
                 url: 'deleteProduct', // Endpoint to delete product
-                type: 'POST',
+                type: 'GET',
                 data: { product_id: productId },
                 success: function () {
                     alert('Product deleted successfully.');
@@ -1453,15 +1458,17 @@ function loadTodayExpenses() {
         var productName = $('#newProductName').val();
         var productPrice = $('#newProductPrice').val();
         var entityId = $('#user').val();
+        var productUnit = $('#newProductUnit').val();
 
-        if (productName && productPrice && entityId) {
+        if (productName && productPrice && entityId && productUnit) {
             $.ajax({
                 url: 'addProduct', // Endpoint to add new product
-                type: 'POST',
+                type: 'GET',
                 data: {
                     entity_id: entityId,
-                    name: productName,
-                    price: productPrice
+                    product_name: productName,
+                    price: productPrice,
+                    unit: productUnit
                 },
                 success: function () {
                     $('#modalManageProducts').modal('hide');

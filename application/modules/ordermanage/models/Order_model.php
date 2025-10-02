@@ -2526,61 +2526,121 @@ class Order_model extends CI_Model
 		return $this->db->where('expense_id', $id)->update('expenses', array('status' => 0, 'reason' => $reason));
 	}
 
-	// public function get_products_by_entity($entity_id)
-	// {
-	// 	return $this->db
-	// 		->select('
-	// 			p.product_id,
-	// 			p.product_name,
-	// 			pp.price_id,
-	// 			pp.purchase_price,
-	// 			pp.sale_price
-	// 		')
-	// 		->from('products p')
-	// 		->join('product_prices pp', 'pp.product_id = p.product_id', 'left')
-	// 		->where('p.entity_id', (int)$entity_id)
-	// 		// ->where('p.is_active', 1)        // uncomment if you have an active flag
-	// 		// ->where('pp.is_active', 1)       // uncomment if you only want active prices
-	// 		->order_by('p.product_name', 'ASC')
-	// 		->get()
-	// 		->result();
-	// }
-
 	public function get_products_by_entity($entity_id)
-{
-    // Subquery to grab the latest price row per product
-    $latest = "
-        SELECT product_id, MAX(price_id) AS latest_price_id
-        FROM product_prices
-        GROUP BY product_id
-    ";
+	{
+		// Subquery to grab the latest price row per product
+		$latest = "
+			SELECT product_id, MAX(price_id) AS latest_price_id
+			FROM product_prices
+			GROUP BY product_id
+		";
 
-    // Build query
-    $this->db
-        ->select('
-            p.product_id,
-            p.product_name,
-            pp.price_id,
-            pp.purchase_price,
-            pp.sale_price
-        ')
-        ->from('products p')
-        ->join("($latest) lp", 'lp.product_id = p.product_id', 'left')
-        ->join('product_prices pp', 'pp.price_id = lp.latest_price_id', 'left')
-        ->where('p.entity_id', (int)$entity_id)
-        ->order_by('p.product_name', 'ASC');
+		// Build query
+		$this->db
+			->select('
+				p.product_id,
+				p.product_name,
+				p.unit,
+				pp.price_id,
+				pp.purchase_price,
+				pp.sale_price
+			')
+			->from('products p')
+			->join("($latest) lp", 'lp.product_id = p.product_id', 'left')
+			->join('product_prices pp', 'pp.price_id = lp.latest_price_id', 'left')
+			->where('p.entity_id', (int)$entity_id)
+			->order_by('p.product_name', 'ASC');
 
-    // ---- DEBUGGING PART ----
-    // $sql = $this->db->get_compiled_select();
-    // echo $sql;
-    // exit;
-    // ------------------------
+		// ---- DEBUGGING PART ----
+		// $sql = $this->db->get_compiled_select();
+		// echo $sql;
+		// exit;
+		// ------------------------
 
-    // Normally you’d run the query:
-    $query = $this->db->get();
-    return $query->result();
-}
+		// Normally you’d run the query:
+		$query = $this->db->get();
+		return $query->result();
+	}
 
+	public function delete_product($product_id) {
+		// Delete from product_prices first
+		$this->db->where('product_id', $product_id)->delete('product_prices');
+		// Then delete from products
+		return $this->db->where('product_id', $product_id)->delete('products');
+	}
+
+
+
+	public function addProduct($entity_id, $product_name, $sale_price, $unit = null) {
+        // Insert new product into the products table
+        $data = [
+            'entity_id' => $entity_id,
+            'product_name' => $product_name,
+            'unit' => $unit,
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+
+        $this->db->insert('products', $data);
+        $product_id = $this->db->insert_id();
+
+        // Insert product price into the product_prices table
+        $price_data = [
+            'product_id' => $product_id,
+            'sale_price' => $sale_price,
+            'purchase_price' => 0, // Assuming purchase price is not provided
+            'valid_from' => date('Y-m-d H:i:s'),
+            'valid_to' => NULL,
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+
+        $this->db->insert('product_prices', $price_data);
+
+        return $product_id; // Return the new product_id
+    }
+
+    // Update product name and insert new price
+    public function updateProduct($product_id, $product_name, $new_sale_price, $unit = null) {
+        // Fetch the current product data
+        $product = $this->db->get_where('products', ['product_id' => $product_id])->row();
+
+        // If the product exists, update the name and insert a new price
+        if ($product) {
+            // 1. Update the product name and unit
+            $update_product_data = [
+                'product_name' => $product_name,
+                'unit' => $unit,  // Optional: Update the unit if provided
+            ];
+
+            $this->db->where('product_id', $product_id)
+                     ->update('products', $update_product_data);
+
+            // 2. Close the previous price by setting `valid_to` to the current timestamp
+            $current_price = $this->db->order_by('valid_from', 'DESC')
+                                      ->get_where('product_prices', ['product_id' => $product_id, 'valid_to' => NULL])
+                                      ->row();
+
+            if ($current_price) {
+                $this->db->where('price_id', $current_price->price_id)
+                         ->update('product_prices', ['valid_to' => date('Y-m-d H:i:s')]);
+
+                // 3. Insert the new price record with the new sale price
+                $price_data = [
+                    'product_id' => $product_id,
+                    'sale_price' => $new_sale_price,
+                    'purchase_price' => 0,  // Assuming purchase price is not provided
+                    'valid_from' => date('Y-m-d H:i:s'),
+                    'valid_to' => NULL,  // The new price is valid indefinitely until the next price change
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
+
+                $this->db->insert('product_prices', $price_data);
+
+                return true; // Return success
+            }
+        }
+        
+        return false; // Return failure if no current price is found
+    }
 
 
 }

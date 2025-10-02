@@ -592,6 +592,151 @@ class Order extends MX_Controller
 	}
 
 
+	// public function addProduct() {
+	// 	$entity_id = $this->input->get('entity_id');
+	// 	$product_name = $this->input->get('product_name');
+	// 	$sale_price = $this->input->get('price');
+	// 	$unit = $this->input->get('unit');
+
+	// 	if ($entity_id && $product_name && $sale_price) {
+	// 		// Insert new product into the products table
+	// 		$data = [
+	// 			'entity_id' => $entity_id,
+	// 			'product_name' => $product_name,
+	// 			'unit' => $unit,
+	// 			'created_at' => date('Y-m-d H:i:s')
+	// 		];
+			
+	// 		$this->db->insert('products', $data);
+	// 		$product_id = $this->db->insert_id();
+
+	// 		// Insert product price into the product_prices table
+	// 		$price_data = [
+	// 			'product_id' => $product_id,
+	// 			'sale_price' => $sale_price,
+	// 			'purchase_price' => 0, // Assuming purchase price is not provided
+	// 			'valid_from' => date('Y-m-d H:i:s'),
+	// 			'valid_to' => NULL,
+	// 			'created_at' => date('Y-m-d H:i:s')
+	// 		];
+
+	// 		$this->db->insert('product_prices', $price_data);
+
+	// 		echo json_encode(['success' => true, 'message' => 'Product added successfully.']);
+	// 	} else {
+	// 		echo json_encode(['success' => false, 'message' => 'Invalid input.']);
+	// 	}
+	// }
+
+	// public function updateProduct() {
+	// 	$product_id = $this->input->get('product_id');
+	// 	$product_name = $this->input->get('product_name');
+	// 	$new_sale_price = $this->input->get('price');
+	// 	$unit = $this->input->get('unit');
+
+	// 	if ($product_id && $product_name && $new_sale_price) {
+	// 		// Fetch the current product data
+	// 		$product = $this->db->get_where('products', ['product_id' => $product_id])->row();
+
+	// 		// If the product exists, update the name and insert a new price
+	// 		if ($product) {
+	// 			// 1. Update the product name and unit
+	// 			$update_product_data = [
+	// 				'product_name' => $product_name,
+	// 				'unit' => $unit,  // Optional: Update the unit if provided
+	// 			];
+
+	// 			$this->db->where('product_id', $product_id)
+	// 					->update('products', $update_product_data);
+
+	// 			// 2. Close the previous price by setting `valid_to` to the current timestamp
+	// 			$current_price = $this->db->order_by('valid_from', 'DESC')
+	// 									->get_where('product_prices', ['product_id' => $product_id, 'valid_to' => NULL])
+	// 									->row();
+
+	// 			if ($current_price) {
+	// 				$this->db->where('price_id', $current_price->price_id)
+	// 						->update('product_prices', ['valid_to' => date('Y-m-d H:i:s')]);
+
+	// 				// 3. Insert the new price record with the new sale price
+	// 				$price_data = [
+	// 					'product_id' => $product_id,
+	// 					'sale_price' => $new_sale_price,
+	// 					'purchase_price' => 0,  // Assuming purchase price is not provided
+	// 					'valid_from' => date('Y-m-d H:i:s'),
+	// 					'valid_to' => NULL,  // The new price is valid indefinitely until the next price change
+	// 					'created_at' => date('Y-m-d H:i:s')
+	// 				];
+
+	// 				$this->db->insert('product_prices', $price_data);
+
+	// 				echo json_encode(['success' => true, 'message' => 'Product name and price updated successfully.']);
+	// 			} else {
+	// 				echo json_encode(['success' => false, 'message' => 'Current price not found for this product.']);
+	// 			}
+	// 		} else {
+	// 			echo json_encode(['success' => false, 'message' => 'Product not found.']);
+	// 		}
+	// 	} else {
+	// 		echo json_encode(['success' => false, 'message' => 'Invalid input.']);
+	// 	}
+	// }
+
+	public function deleteProduct() {
+		$product_id = $this->input->get('product_id');
+
+		if ($product_id && is_numeric($product_id) && $product_id > 0) {
+			// Call model method to delete product
+			$this->order_model->delete_product($product_id);
+			echo json_encode(['success' => true, 'message' => 'Product deleted successfully.']);
+		} else {
+			echo json_encode(['success' => false, 'message' => 'Invalid product ID.']);
+		}
+	}
+
+	// Add new product
+
+	public function addProduct() {
+        $entity_id = $this->input->get('entity_id');
+        $product_name = $this->input->get('product_name');
+        $sale_price = $this->input->get('price');
+        $unit = $this->input->get('unit');
+
+        if ($entity_id && $product_name && $sale_price) {
+            // Call model method to add product
+            $product_id = $this->order_model->addProduct($entity_id, $product_name, $sale_price, $unit);
+
+            if ($product_id) {
+                echo json_encode(['success' => true, 'message' => 'Product added successfully.']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Error adding product.']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Invalid input.']);
+        }
+    }
+
+    // Update product name and price
+    public function updateProduct() {
+        $product_id = $this->input->get('product_id');
+        $product_name = $this->input->get('product_name');
+        $new_sale_price = $this->input->get('price');
+        $unit = $this->input->get('unit');
+
+        if ($product_id && $product_name && $new_sale_price) {
+            // Call model method to update product
+            $updated = $this->order_model->updateProduct($product_id, $product_name, $new_sale_price, $unit);
+
+            if ($updated) {
+                echo json_encode(['success' => true, 'message' => 'Product name and price updated successfully.']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Error updating product.']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Invalid input.']);
+        }
+    }
+
 	public function getProductsByEntity()
 	{
 		// Make sure we always send JSON
