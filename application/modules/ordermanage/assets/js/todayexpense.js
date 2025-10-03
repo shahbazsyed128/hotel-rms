@@ -1078,6 +1078,9 @@ function loadTodayExpenses() {
 
   // Products tab -> trigger same submit
   $('#btnAddExpenseProducts').on('click', function () {
+    // Print token for the products in expense form
+    var products = getProductRows();
+    console.log('Products token:', JSON.stringify(products));
     $('#expenseForm').submit();
   });
 
