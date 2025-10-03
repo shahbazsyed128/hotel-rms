@@ -665,23 +665,23 @@ function buildReport() {
     return;
   }
 
-  console.log("Rows after filter:", rows);  // Debugging: Check filtered rows
+  // console.log("Rows after filter:", rows);  // Debugging: Check filtered rows
 
   // Group by category
   var grouped = groupByCategory(rows);
-  console.log("Grouped expenses by category:", grouped);  // Debugging: Check grouped expenses
+  // console.log("Grouped expenses by category:", grouped);  // Debugging: Check grouped expenses
   
   var grand = 0;  // Initialize grand total of all categories
 
   grouped.forEach(function (cat) {
-    console.log("Processing category:", cat.name);  // Debugging: Check category name
+    // console.log("Processing category:", cat.name);  // Debugging: Check category name
     grand += cat.subtotal;
     var $block = $('<div class="category-block">');
     $block.append('<h4 class="category-title">' + (cat.name || 'Uncategorized') + '</h4>');
 
     // Check if it's a "shop" or "vegetable" category
     var isVegShop = isVegShopCategoryLabel(cat.name);
-    console.log("Is VegShop Category?", isVegShop);  // Debugging: Check if it's a "shop" or "vegetable"
+    // console.log("Is VegShop Category?", isVegShop);  // Debugging: Check if it's a "shop" or "vegetable"
 
     var $table = $('<table class="table table-bordered report-table">');
     $table.append(
@@ -701,7 +701,7 @@ function buildReport() {
 
       cat.rows.forEach(function (r) {
         // Debugging: Log product_id for each row
-        console.log(`Processing row: product_id = ${r.product_id}, product_name = ${r.product_name}, price = ${r.price}, quantity = ${r.quantity}, total_amount = ${r.total_amount}`);
+        // console.log(`Processing row: product_id = ${r.product_id}, product_name = ${r.product_name}, price = ${r.price}, quantity = ${r.quantity}, total_amount = ${r.total_amount}`);
 
         var key = r.product_id;  // Group by product_id
         if (!key) {
@@ -723,11 +723,11 @@ function buildReport() {
       });
 
       // Debugging: Check grouped products
-      console.log("Grouped products:", groupedProducts);
+      // console.log("Grouped products:", groupedProducts);
 
       // Render the grouped products
       Object.values(groupedProducts).forEach(function (prod) {
-        console.log(`Rendering product: ${prod.product_name} | Qty: ${prod.qty} | Total: ${prod.amount}`);  // Debugging: Check rendered product
+        // console.log(`Rendering product: ${prod.product_name} | Qty: ${prod.qty} | Total: ${prod.amount}`);  // Debugging: Check rendered product
         $tbody.append(
           '<tr>' +
           '<td>' + prod.product_name + '</td>' +
@@ -764,7 +764,7 @@ function buildReport() {
   });
 
   $reportGrandTotal.text(toMoney(grand));  // Display grand total at the bottom of the report
-  console.log("Grand total of all categories:", grand);  // Debugging: Check grand total
+  // console.log("Grand total of all categories:", grand);  // Debugging: Check grand total
 }
 
 
@@ -911,14 +911,14 @@ $('#productRows').on('change', '.ip-product', function () {
   // }
 
 function loadTodayExpenses() {
-  console.log("Loading today's expenses...");  // Debugging: Log when the expenses are being loaded
+  // console.log("Loading today's expenses...");  // Debugging: Log when the expenses are being loaded
 
   return apiGetExpenses().done(function (resp) {
-    console.log("API Response for expenses:", resp);  // Debugging: Log the API response
+    // console.log("API Response for expenses:", resp);  // Debugging: Log the API response
 
     if (Array.isArray(resp)) {
       state.expenses = resp.map(function (e) {
-        console.log("Processing expense:", e);  // Debugging: Log each expense entry
+        // console.log("Processing expense:", e);  // Debugging: Log each expense entry
 
         return {
           expense_id: e.expense_id || e.id || null,
@@ -942,7 +942,7 @@ function loadTodayExpenses() {
         };
       });
 
-      console.log("Mapped expenses:", state.expenses);  // Debugging: Log the mapped expenses
+      // console.log("Mapped expenses:", state.expenses);  // Debugging: Log the mapped expenses
 
       // Ensure filter dropdown has items if categories endpoint wasn’t called
       if ($filterCategory.children('option').length <= 1) {
