@@ -1236,7 +1236,9 @@ function loadTodayExpenses() {
         amount: rate * qty,
         expense_date: todayYmd(),
         catName: catName,
-        userName: userName
+        userName: userName,
+        item_name: itemName,   // <-- add
+        unit: unit  
       };
 
       $('#confCat').text(catName);
@@ -1310,6 +1312,30 @@ function loadTodayExpenses() {
             showMsg('Failed to add products: ' + errorMessages.join(', '), 'err');
           }
           
+// Build token data for successful items (if any)
+var successfulItems = [];
+if (responses && responses.length) {
+  successfulItems = state.pendingAdd.items.filter(function(_it, idx){
+    var r = responses[idx];
+    // $.when with multiple calls returns an array-of-arrays sometimes; normalize:
+    var payload = Array.isArray(r) ? r[0] : r;
+    return payload && payload.success;
+  }).map(function(it){
+    return { name: it.product_name || '-', qty: it.qty, rate: it.rate, amount: it.amount };
+  });
+}
+
+if (successfulItems.length > 0) {
+  askAndPrintToken({
+    catName: state.pendingAdd.catName,
+    userName: state.pendingAdd.userName,
+    date: todayYmd(),
+    items: successfulItems,
+    grand: successfulItems.reduce(function(s, x){ return s + (x.amount || 0); }, 0)
+  });
+}
+
+
           $productRows.empty();
           addProductRow();
           recalcProducts();
@@ -1351,6 +1377,21 @@ function loadTodayExpenses() {
           if (resp && resp.success) {
             var message = resp.message || 'Expense added successfully.';
             showMsg(message, 'ok');
+
+            // Build a one-line token
+            askAndPrintToken({
+              catName: state.pendingAdd.catName,
+              userName: state.pendingAdd.userName,
+              date: state.pendingAdd.expense_date,
+              items: [{
+                name: (state.pendingAdd.item_name || 'Item') + (state.pendingAdd.unit ? ' (' + state.pendingAdd.unit + ')' : ''),
+                qty: state.pendingAdd.qty,
+                rate: state.pendingAdd.rate,
+                amount: state.pendingAdd.amount
+              }],
+              grand: state.pendingAdd.amount
+            });
+
             $qtyEl.val('1');
             validateForm();
             loadTodayExpenses();
@@ -1358,6 +1399,7 @@ function loadTodayExpenses() {
           } else {
             showMsg((resp && resp.message) || 'Failed to add expense.', 'err');
           }
+
         })
         .fail(function (xhr) {
           var msg = 'Error adding expense: ';
@@ -1739,6 +1781,76 @@ function loadTodayExpenses() {
     // Load draft on page load
     loadDraft();
   }
+
+
+  // ===========================================================================
+  // SECTION X: TOKEN PRINT (small receipt)
+  // ===========================================================================
+  function buildTokenHtml(meta) {
+    // meta = { catName, userName, date, items: [{name, qty, rate, amount}], grand }
+    var styles = `
+      <style>
+        *{font-family: Arial, sans-serif;}
+        .token { width: 320px; margin: 0 auto; }
+        .token h3 { text-align:center; margin: 8px 0; }
+        .meta { font-size: 12px; margin-bottom: 8px; }
+        .meta div { margin: 2px 0; }
+        table { width:100%; border-collapse: collapse; font-size: 12px; }
+        th, td { border-bottom: 1px solid #ddd; padding: 4px; text-align:right; }
+        th:first-child, td:first-child { text-align:left; }
+        tfoot td { font-weight: bold; }
+        .foot { text-align:center; font-size:11px; margin-top:10px; color:#666; }
+      </style>
+    `;
+    var rows = (meta.items || []).map(function(it){
+      return '<tr>' +
+        '<td>' + (it.name || '-') + '</td>' +
+        '<td>' + toMoney(it.qty || 0) + '</td>' +
+        '<td>' + toMoney(it.rate || 0) + '</td>' +
+        '<td>' + toMoney(it.amount || 0) + '</td>' +
+      '</tr>';
+    }).join('');
+
+    var html = `
+      <div class="token">
+        <h3>Expense Token</h3>
+        <div class="meta">
+          <div><strong>Date:</strong> ${meta.date || todayYmd()}</div>
+          <div><strong>Category:</strong> ${meta.catName || '-'}</div>
+          <div><strong>Vendor:</strong> ${meta.userName || '-'}</div>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Item</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
+          </thead>
+          <tbody>${rows}</tbody>
+          <tfoot>
+            <tr><td colspan="3" style="text-align:right">Grand:</td><td>${toMoney(meta.grand || 0)}</td></tr>
+          </tfoot>
+        </table>
+        <div class="foot">Thank you</div>
+      </div>
+    `;
+    return '<!doctype html><html><head><meta charset="utf-8">' + styles + '</head><body>' + html + '</body></html>';
+  }
+
+  function askAndPrintToken(meta) {
+    try {
+      var want = window.confirm('Print token?');
+      if (!want) return;
+      var w = window.open('', 'token_print', 'width=360,height=600');
+      if (!w) { alert('Popup blocked. Please allow popups to print.'); return; }
+      w.document.open();
+      w.document.write(buildTokenHtml(meta));
+      w.document.close();
+      w.focus();
+      // delay print slightly so content paints
+      setTimeout(function(){ w.print(); }, 200);
+    } catch(e) {
+      console.warn('Token print failed:', e);
+    }
+  }
+
 
   // ===========================================================================
   // SECTION 13: INIT
