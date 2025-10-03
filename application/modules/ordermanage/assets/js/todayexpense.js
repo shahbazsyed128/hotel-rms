@@ -1388,99 +1388,119 @@ function loadTodayExpenses() {
         });
     });
 
+    // Helper to refresh products after add/edit/delete
+    function refreshProductsAfterChange() {
+      var entityId = $('#user').val();
+      if (entityId) {
+        loadProductsForEntity(entityId);
+      }
+      clearDraft();
+      // Clear form inputs in the manage products modal
+      $('#newProductName').val('');
+      $('#newProductPrice').val('');
+      $('#newProductUnit').val('');
+      window.location.reload(); // Reload the page to reflect changes
+    }
+
     // Edit product
     $(document).on('click', '.editProduct', function () {
-        var productId = $(this).data('id');
-        var productName = $(this).data('name');
-        var productPrice = $(this).data('price');
-        var productUnit = $(this).data('unit'); // Assuming unit is not available in the button data
+      var productId = $(this).data('id');
+      var productName = $(this).data('name');
+      var productPrice = $(this).data('price');
+      var productUnit = $(this).data('unit');
 
-        // Show edit modal with current product data
-        $('#newProductName').val(productName);
-        $('#newProductPrice').val(productPrice);
-        $('#newProductUnit').val(productUnit); // Assuming unit is not available in the button data
+      // Show edit modal with current product data
+      $('#newProductName').val(productName);
+      $('#newProductPrice').val(productPrice);
+      $('#newProductUnit').val(productUnit);
 
-        // Update product logic on form submission
-        $('#formManageProducts').off('submit').on('submit', function (e) {
-            e.preventDefault();
+      // Update product logic on form submission
+      $('#formManageProducts').off('submit').on('submit', function (e) {
+        e.preventDefault();
 
-            var newName = $('#newProductName').val();
-            var newPrice = $('#newProductPrice').val();
-            var newUnit = $('#newProductUnit').val(); // Assuming unit is not available in the button data
+        var newName = $('#newProductName').val();
+        var newPrice = $('#newProductPrice').val();
+        var newUnit = $('#newProductUnit').val();
 
-            // Update the product if changed
-            if (newName !== productName || newPrice !== productPrice || newUnit !== productUnit) {
-                $.ajax({
-                    url: 'updateProduct', // Endpoint to update product
-                    type: 'GET',
-                    data: {
-                        product_id: productId,
-                        product_name: newName,
-                        price: newPrice,
-                        unit: newUnit
-                    },
-                    success: function () {
-                        $('#modalManageProducts').modal('hide');
-                        alert('Product updated successfully.');
-                    },
-                    error: function () {
-                        alert('Error updating product.');
-                    }
-                });
+        // Update the product if changed
+        if (newName !== productName || newPrice !== productPrice || newUnit !== productUnit) {
+          $.ajax({
+            url: 'updateProduct',
+            type: 'GET',
+            data: {
+              product_id: productId,
+              product_name: newName,
+              price: newPrice,
+              unit: newUnit
+            },
+            success: function () {
+              $('#modalManageProducts').modal('hide');
+              alert('Product updated successfully.');
+               window.location.reload();
+              refreshProductsAfterChange();
+            },
+            error: function () {
+              alert('Error updating product.');
             }
-        });
+          });
+        }
+      });
     });
 
     // Delete product
     $(document).on('click', '.deleteProduct', function () {
-        var productId = $(this).data('id');
+      var productId = $(this).data('id');
 
-        if (confirm('Are you sure you want to delete this product?')) {
-            $.ajax({
-                url: 'deleteProduct', // Endpoint to delete product
-                type: 'GET',
-                data: { product_id: productId },
-                success: function () {
-                    alert('Product deleted successfully.');
-                    $('#modalManageProducts').modal('hide');
-                },
-                error: function () {
-                    alert('Error deleting product.');
-                }
-            });
-        }
+      if (confirm('Are you sure you want to delete this product?')) {
+        $.ajax({
+          url: 'deleteProduct',
+          type: 'GET',
+          data: { product_id: productId },
+          success: function () {
+            alert('Product deleted successfully.');
+            $('#modalManageProducts').modal('hide');
+             window.location.reload();
+            refreshProductsAfterChange();
+          },
+          error: function () {
+            alert('Error deleting product.');
+          }
+        });
+      }
     });
 
     // Add new product
     $('#formManageProducts').on('submit', function (e) {
-        e.preventDefault();
+      e.preventDefault();
 
-        var productName = $('#newProductName').val();
-        var productPrice = $('#newProductPrice').val();
-        var entityId = $('#user').val();
-        var productUnit = $('#newProductUnit').val();
+      var productName = $('#newProductName').val();
+      var productPrice = $('#newProductPrice').val();
+      var entityId = $('#user').val();
+      var productUnit = $('#newProductUnit').val();
 
-        if (productName && productPrice && entityId && productUnit) {
-            $.ajax({
-                url: 'addProduct', // Endpoint to add new product
-                type: 'GET',
-                data: {
-                    entity_id: entityId,
-                    product_name: productName,
-                    price: productPrice,
-                    unit: productUnit
-                },
-                success: function () {
-                    $('#modalManageProducts').modal('hide');
-                    alert('Product added successfully.');
-                },
-                error: function () {
-                    alert('Error adding product.');
-                }
-            });
-        } else {
-            alert('Please fill all fields.');
-        }
+      if (productName && productPrice && entityId && productUnit) {
+        $.ajax({
+          url: 'addProduct',
+          type: 'GET',
+          data: {
+            entity_id: entityId,
+            product_name: productName,
+            price: productPrice,
+            unit: productUnit
+          },
+          success: function () {
+            $('#modalManageProducts').modal('hide');
+            alert('Product added successfully.');
+             window.location.reload();
+            refreshProductsAfterChange();
+          },
+          error: function () {
+            alert('Error adding product.');
+          }
+        });
+      } else {
+        alert('Please fill all fields.');
+      }
     });
 
 
@@ -1557,7 +1577,7 @@ function loadTodayExpenses() {
     }
 
     // Auto-save every 30 seconds
-    setInterval(saveDraft, 30000);
+    // setInterval(saveDraft, 30000);
 
     // Save on form changes
     $categoryEl.add($userEl).on('change', saveDraft);
