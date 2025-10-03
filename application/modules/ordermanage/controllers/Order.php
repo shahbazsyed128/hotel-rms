@@ -6070,6 +6070,7 @@ private function generate_order_data($list,$type = null)
 		$data['userinfo'] = $this->db->select('*')->from('user')->where('id', $saveid)->get()->row();
 		$data['registerinfo'] = $checkuser;
 		$data['totalamount'] = $this->order_model->collectcash($saveid, $checkuser->opendate);
+		$data['totalexpenses'] = $this->order_model->total_expenses($saveid, $checkuser->opendate);
 		if (!empty($checkuser)) {
 			$this->load->view('cashregisterclose', $data);
 		} else {

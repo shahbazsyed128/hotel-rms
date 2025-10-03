@@ -2242,6 +2242,20 @@ class Order_model extends CI_Model
 		return $orderdetails = $query->result();
 	}
 
+	public function total_expenses($id, $tdate)
+	{
+		$crdate = date('Y-m-d H:i:s');
+		$where = "expenses.created_at Between '$tdate' AND '$crdate'";
+		$this->db->select('SUM(expenses.total_amount) as totalexpense');
+		$this->db->from('expenses');
+		// $this->db->where('expense.create_by', $id);
+		$this->db->where($where);
+		$query = $this->db->get();
+		// echo $this->db->last_query();
+		// exit;
+		return $expense = $query->row();
+	}
+
 	public function changecash($id, $tdate)
 	{
 		$crdate = date('Y-m-d H:i:s');
