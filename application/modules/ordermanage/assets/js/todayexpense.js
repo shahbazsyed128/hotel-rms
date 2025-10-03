@@ -77,6 +77,69 @@
   // ===========================================================================
   function toMoney(n) { return (Number(n || 0)).toFixed(2); }
   function debounce(fn, wait) { var t; return function () { var ctx = this, args = arguments; clearTimeout(t); t = setTimeout(function () { fn.apply(ctx, args); }, wait); }; }
+  
+  // Add styles for product confirmation display
+  function addProductConfirmationStyles() {
+    if ($('#productConfirmationStyles').length === 0) {
+      var styles = `
+        <style id="productConfirmationStyles">
+          .product-confirmation-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            margin-top: 10px;
+          }
+          .product-item {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+          .product-item:last-child {
+            border-bottom: none;
+          }
+          .product-name {
+            font-weight: bold;
+            flex: 2;
+            color: #333;
+          }
+          .product-qty {
+            color: #666;
+            margin: 0 10px;
+            flex: 1;
+            text-align: center;
+          }
+          .product-rate {
+            color: #666;
+            margin: 0 10px;
+            flex: 1;
+            text-align: center;
+          }
+          .product-total {
+            font-weight: bold;
+            color: #28a745;
+            flex: 1;
+            text-align: right;
+          }
+          .classic-confirmation {
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            margin-top: 10px;
+          }
+          .classic-confirmation strong {
+            color: #495057;
+          }
+        </style>
+      `;
+      $('head').append(styles);
+    }
+  }
   function todayYmd() {
     var d = new Date();
     var m = (d.getMonth() + 1).toString().padStart(2, '0');
@@ -1134,9 +1197,30 @@ function loadTodayExpenses() {
         grand: batchTotal
       };
 
+      // Show detailed confirmation for products
       $('#confCat').text(catName);
       $('#confUser').text(userName);
-      $('#confRateQty').text(items.length + ' product(s)');
+      
+      // Build detailed product list for confirmation
+      var productDetails = '';
+      var isVegCategory = isVegShopCategoryLabel(catName);
+      
+      if (isVegCategory) {
+        productDetails = '<div class="product-confirmation-list"><strong>Products & Quantities:</strong><br>';
+        items.forEach(function(item, index) {
+          productDetails += '<div class="product-item">';
+          productDetails += '<span class="product-name">' + (item.product_name || 'Unknown Product') + '</span> ';
+          productDetails += '<span class="product-qty">× ' + toMoney(item.qty) + '</span> ';
+          productDetails += '<span class="product-rate">@ ' + toMoney(item.price) + '</span> ';
+          productDetails += '<span class="product-total">= ' + toMoney(item.price * item.qty) + '</span>';
+          productDetails += '</div>';
+        });
+        productDetails += '</div>';
+        $('#confRateQty').html(productDetails);
+      } else {
+        $('#confRateQty').text(items.length + ' product(s)');
+      }
+      
       $('#confTotal').text(toMoney(batchTotal));
       $('#modalConfirmAdd').modal('show');
 
@@ -1157,7 +1241,17 @@ function loadTodayExpenses() {
 
       $('#confCat').text(catName);
       $('#confUser').text(userName);
-      $('#confRateQty').text(toMoney(rate) + ' × ' + toMoney(qty));
+      
+      // Show detailed confirmation for classic mode
+      var itemName = $opt.data('item_name') || 'Item';
+      var unit = $opt.data('unit') || 'unit';
+      var classicDetails = '<div class=\"classic-confirmation\">';
+      classicDetails += '<strong>Item:</strong> ' + itemName + '<br>';
+      classicDetails += '<strong>Rate:</strong> ' + toMoney(rate) + ' per ' + unit + '<br>';
+      classicDetails += '<strong>Quantity:</strong> ' + toMoney(qty) + ' ' + unit + '(s)';
+      classicDetails += '</div>';
+      
+      $('#confRateQty').html(classicDetails);
       $('#confTotal').text(toMoney(rate * qty));
       $('#modalConfirmAdd').modal('show');
     }
@@ -1172,6 +1266,8 @@ function loadTodayExpenses() {
     function sendAdd(p) { return apiAddExpense(p); }
 
     if (state.pendingAdd.mode === 'products') {
+      console.log('Adding products:', state.pendingAdd.items);
+      
       var reqs = state.pendingAdd.items.map(function (it) {
         return sendAdd({
           category_id: state.pendingAdd.category_id,
@@ -1188,7 +1284,32 @@ function loadTodayExpenses() {
 
       $.when.apply($, reqs)
         .done(function () {
-          showMsg('Products added successfully.', 'ok');
+          // Handle multiple responses from server
+          var responses = Array.prototype.slice.call(arguments);
+          var successCount = 0;
+          var errorMessages = [];
+          
+          responses.forEach(function(resp, index) {
+            if (resp && resp.success) {
+              successCount++;
+            } else {
+              var productName = state.pendingAdd.items[index] ? state.pendingAdd.items[index].product_name : 'Product ' + (index + 1);
+              errorMessages.push(productName + ': ' + (resp && resp.message ? resp.message : 'Failed to add'));
+            }
+          });
+          
+          if (successCount === responses.length) {
+            var isVegCategory = isVegShopCategoryLabel(state.pendingAdd.catName);
+            var message = isVegCategory ? 
+              successCount + ' products added successfully to ' + state.pendingAdd.catName :
+              'Products added successfully.';
+            showMsg(message, 'ok');
+          } else if (successCount > 0) {
+            showMsg(successCount + ' of ' + responses.length + ' products added. Errors: ' + errorMessages.join(', '), 'err');
+          } else {
+            showMsg('Failed to add products: ' + errorMessages.join(', '), 'err');
+          }
+          
           $productRows.empty();
           addProductRow();
           recalcProducts();
@@ -1196,8 +1317,15 @@ function loadTodayExpenses() {
           $(document).trigger('expenseSaved');
         })
         .fail(function (xhr) {
-          var msg = (xhr && xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : (xhr && xhr.statusText) || 'Failed.';
-          showMsg('Error adding products: ' + msg, 'err');
+          var msg = 'Error adding products: ';
+          if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
+            msg += xhr.responseJSON.message;
+          } else if (xhr && xhr.statusText) {
+            msg += xhr.statusText;
+          } else {
+            msg += 'Network error occurred';
+          }
+          showMsg(msg, 'err');
         })
         .always(function () {
           setLoading($btnAdd, false);
@@ -1205,6 +1333,7 @@ function loadTodayExpenses() {
         });
 
     } else {
+      // Classic mode
       var payload = {
         category_id: state.pendingAdd.category_id,
         entity_id: state.pendingAdd.entity_id,
@@ -1214,10 +1343,14 @@ function loadTodayExpenses() {
         amount: state.pendingAdd.amount,
         expense_date: state.pendingAdd.expense_date
       };
+      
+      console.log('Adding single expense:', payload);
+      
       sendAdd(payload)
         .done(function (resp) {
           if (resp && resp.success) {
-            showMsg('Expense added successfully.', 'ok');
+            var message = resp.message || 'Expense added successfully.';
+            showMsg(message, 'ok');
             $qtyEl.val('1');
             validateForm();
             loadTodayExpenses();
@@ -1227,8 +1360,15 @@ function loadTodayExpenses() {
           }
         })
         .fail(function (xhr) {
-          var msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : xhr.statusText;
-          showMsg('Error: ' + msg, 'err');
+          var msg = 'Error adding expense: ';
+          if (xhr.responseJSON && xhr.responseJSON.message) {
+            msg += xhr.responseJSON.message;
+          } else if (xhr.statusText) {
+            msg += xhr.statusText;
+          } else {
+            msg += 'Network error occurred';
+          }
+          showMsg(msg, 'err');
         })
         .always(function () {
           setLoading($btnAdd, false);
@@ -1618,6 +1758,7 @@ function loadTodayExpenses() {
   }
 
   // Init
+  addProductConfirmationStyles();
   initCategoriesAndFilters();
   loadTodayExpenses();
   validateForm();
