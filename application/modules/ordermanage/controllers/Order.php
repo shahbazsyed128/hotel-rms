@@ -587,7 +587,13 @@ class Order extends MX_Controller
 	}
 
 	public function get_expenses(){
-		$expenses = $this->order_model->get_expenses();
+		$saveid = $this->session->userdata('id');
+		$checkuser = $this->db->select('*')->from('tbl_cashregister')->where('userid', $saveid)->where('status', 0)->order_by('id', 'DESC')->get()->row();
+		if(!$checkuser){
+			echo json_encode(['success' => false, 'message' => 'No open cash register found for the user.','error_code' => 4,]);
+			return;
+		}
+		$expenses = $this->order_model->get_expenses($checkuser->opendate);
 		echo json_encode($expenses);
 	}
 

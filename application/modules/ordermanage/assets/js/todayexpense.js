@@ -898,6 +898,13 @@ function loadTodayExpenses() {
 
     } else {
       console.warn("API response is not an array. Received:", resp);  // Debugging: Warn if response is not an array
+      if(resp && typeof resp === 'object' && resp.error_code == 4){
+        // Handle specific error case
+        alert(resp.message + ' Click okay to continue. page will be redirected to order management.');
+        setTimeout(function() {
+          window.location.href = 'pos_invoice'; // Redirect to login page after 1 second
+        }, 1000);
+      }
     }
   }).fail(function (xhr) {
     var msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : xhr.statusText;

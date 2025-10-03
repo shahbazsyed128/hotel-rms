@@ -2500,7 +2500,29 @@ class Order_model extends CI_Model
 		return $this->db->insert('expenses', $data);
 	}
 
-	public function get_expenses($start_date = null, $end_date = null)
+	// public function get_expenses($start_date = null, $end_date = null)
+	// {
+	// 	$this->db->select('expenses.*, categories.category_name, entities.entity_name, products.product_name, products.product_id, products.unit');
+	// 	$this->db->from('expenses');
+	// 	$this->db->join('categories', 'expenses.category_id = categories.category_id', 'left');
+	// 	$this->db->join('entities', 'expenses.entity_id = entities.entity_id', 'left');
+	// 	$this->db->join('products', 'expenses.product_id = products.product_id', 'left');
+	// 	$this->db->where('expenses.status', 1);
+
+	// 	if ($start_date && $end_date) {
+	// 		$this->db->where('expenses.expense_date >=', $start_date);
+	// 		$this->db->where('expenses.expense_date <=', $end_date);
+	// 	} else {
+	// 		$today = date('Y-m-d');
+	// 		$this->db->where('expenses.expense_date', $today);
+	// 	}
+
+	// 	$this->db->order_by('expenses.expense_id', 'DESC');
+	// 	$query = $this->db->get();
+	// 	return $query->result();
+	// }
+
+	public function get_expenses($tdate)
 	{
 		$this->db->select('expenses.*, categories.category_name, entities.entity_name, products.product_name, products.product_id, products.unit');
 		$this->db->from('expenses');
@@ -2509,13 +2531,9 @@ class Order_model extends CI_Model
 		$this->db->join('products', 'expenses.product_id = products.product_id', 'left');
 		$this->db->where('expenses.status', 1);
 
-		if ($start_date && $end_date) {
-			$this->db->where('expenses.expense_date >=', $start_date);
-			$this->db->where('expenses.expense_date <=', $end_date);
-		} else {
-			$today = date('Y-m-d');
-			$this->db->where('expenses.expense_date', $today);
-		}
+		$crdate = date('Y-m-d H:i:s');
+		$where = "expenses.created_at Between '$tdate' AND '$crdate'";
+		$this->db->where($where);
 
 		$this->db->order_by('expenses.expense_id', 'DESC');
 		$query = $this->db->get();
