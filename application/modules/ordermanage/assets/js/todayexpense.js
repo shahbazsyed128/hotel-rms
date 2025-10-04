@@ -1292,11 +1292,26 @@ function loadTodayExpenses() {
           var errorMessages = [];
           
           responses.forEach(function(resp, index) {
-            if (resp && resp.success) {
+            // jQuery $.when wraps responses in arrays for multiple calls
+            var actualResponse = Array.isArray(resp) ? resp[0] : resp;
+            
+            console.log('Processing response', index, ':', actualResponse);
+            
+            var isSuccess = actualResponse && (
+              actualResponse.success === true || 
+              actualResponse.success === 1 || 
+              actualResponse.success === '1' ||
+              actualResponse.status === 'success'
+            );
+            
+            if (isSuccess) {
               successCount++;
+              console.log('✓ Success for product', index);
             } else {
               var productName = state.pendingAdd.items[index] ? state.pendingAdd.items[index].product_name : 'Product ' + (index + 1);
-              errorMessages.push(productName + ': ' + (resp && resp.message ? resp.message : 'Failed to add'));
+              var errorMsg = actualResponse && actualResponse.message ? actualResponse.message : 'Failed to add';
+              errorMessages.push(productName + ': ' + errorMsg);
+              console.log('✗ Failed for product', index, '- Response:', actualResponse);
             }
           });
           
@@ -1319,7 +1334,12 @@ if (responses && responses.length) {
     var r = responses[idx];
     // $.when with multiple calls returns an array-of-arrays sometimes; normalize:
     var payload = Array.isArray(r) ? r[0] : r;
-    return payload && payload.success;
+    return payload && (
+      payload.success === true || 
+      payload.success === 1 || 
+      payload.success === '1' ||
+      payload.status === 'success'
+    );
   }).map(function(it){
     return { name: it.product_name || '-', qty: it.qty, rate: it.rate, amount: it.amount };
   });
