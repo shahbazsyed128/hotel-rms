@@ -2233,6 +2233,7 @@ class Order_model extends CI_Model
 		$this->db->from('multipay_bill');
 		$this->db->join('bill', 'bill.order_id=multipay_bill.order_id', 'left');
 		$this->db->join('payment_method', 'payment_method.payment_method_id=multipay_bill.payment_type_id', 'left');
+
 		$this->db->where('bill.create_by', $id);
 		$this->db->where($where);
 		$this->db->where('bill.bill_status', 1);
@@ -2241,6 +2242,34 @@ class Order_model extends CI_Model
 		//echo $this->db->last_query();
 		return $orderdetails = $query->result();
 	}
+
+
+	public function customertypewise($id, $tdate)
+	{
+		$crdate = date('Y-m-d H:i:s');
+		$where = "bill.create_at BETWEEN '$tdate' AND '$crdate'";
+
+		$this->db->select("
+			bill.create_by,
+			SUM(CASE WHEN customer_order.cutomertype = 5 THEN multipay_bill.amount ELSE 0 END) AS employee_sales,
+			SUM(CASE WHEN customer_order.cutomertype = 6 THEN multipay_bill.amount ELSE 0 END) AS guest_sales,
+			SUM(CASE WHEN customer_order.cutomertype = 7 THEN multipay_bill.amount ELSE 0 END) AS charity_sales,
+			SUM(CASE WHEN customer_order.cutomertype NOT IN (5,6,7) THEN multipay_bill.amount ELSE 0 END) AS total_sales,
+			SUM(multipay_bill.amount) AS total_amount,
+			payment_method.payment_method
+		");
+		$this->db->from('multipay_bill');
+		$this->db->join('bill', 'bill.order_id = multipay_bill.order_id', 'left');
+		$this->db->join('payment_method', 'payment_method.payment_method_id = multipay_bill.payment_type_id', 'left');
+		$this->db->join('customer_order', 'customer_order.order_id = bill.order_id', 'left');
+		$this->db->where('bill.create_by', $id);
+		$this->db->where($where);
+		$this->db->where('bill.bill_status', 1);
+		$this->db->group_by('multipay_bill.payment_type_id');
+		$query = $this->db->get();
+		return $query->result();
+	}
+
 
 	public function total_expenses($id, $tdate)
 	{
@@ -2255,6 +2284,71 @@ class Order_model extends CI_Model
 		// exit;
 		return $expense = $query->row();
 	}
+
+	public function getKitchens($onlyActive = false)
+	{
+		$this->db->select('kitchenid, kitchen_name');
+		$this->db->from('tbl_kitchen');
+
+		// If you track active rows, uncomment and adjust the column name:
+		if ($onlyActive) {
+			$this->db->where('status', 1); // or 'is_active', if that's your column
+		}
+
+		$this->db->order_by('kitchen_name', 'ASC');
+		return $this->db->get()->result(); // objects; use ->result_array() if you prefer arrays
+	}
+
+
+
+	/**
+	 * Kitchen-wise items report (summary)
+	 * - Sums total quantity and total price for all items in the given kitchen and date range, for completed orders (status=4)
+	 * - Also returns breakdown by customer type, including type name
+	 */
+	public function itemsKiReport($kid, $userid, $start_date)
+	{
+		// Get total for all customer types
+		$this->db->select("
+			SUM(order_menu.menuqty) as total_qty,
+			SUM(order_menu.price * order_menu.menuqty) as total_price
+		");
+		$this->db->from('order_menu');
+		$this->db->join('customer_order', 'customer_order.order_id = order_menu.order_id', 'left');
+		$this->db->join('item_foods', 'item_foods.ProductsID = order_menu.menu_id', 'left');
+		$this->db->join('bill', 'bill.order_id = customer_order.order_id', 'left');
+		$this->db->where('item_foods.kitchenid', $kid);
+		$this->db->where('customer_order.order_status', 4);
+		$this->db->where('bill.create_by', $userid);
+		$this->db->where('bill.create_at >=', $start_date);
+		$total = $this->db->get()->row();
+
+		// Get totals grouped by customer type, including type name
+		$this->db->select("
+			customer_order.cutomertype,
+			customer_type.customer_type as type_name,
+			SUM(order_menu.menuqty) as total_qty,
+			SUM(order_menu.price * order_menu.menuqty) as total_price
+		");
+		$this->db->from('order_menu');
+		$this->db->join('customer_order', 'customer_order.order_id = order_menu.order_id', 'left');
+		$this->db->join('item_foods', 'item_foods.ProductsID = order_menu.menu_id', 'left');
+		$this->db->join('bill', 'bill.order_id = customer_order.order_id', 'left');
+		$this->db->join('customer_type', 'customer_order.cutomertype = customer_type.customer_type_id', 'left');
+		$this->db->where('item_foods.kitchenid', $kid);
+		$this->db->where('customer_order.order_status', 4);
+		$this->db->where('bill.create_by', $userid);
+		$this->db->where('bill.create_at >=', $start_date);
+		$this->db->group_by('customer_order.cutomertype');
+		$by_type = $this->db->get()->result();
+
+		return [
+			'total' => $total,
+			'by_type' => $by_type
+		];
+	}
+
+
 
 	public function changecash($id, $tdate)
 	{

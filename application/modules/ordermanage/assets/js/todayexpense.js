@@ -1864,8 +1864,22 @@ if (successfulItems.length > 0) {
       w.document.write(buildTokenHtml(meta));
       w.document.close();
       w.focus();
+      
       // delay print slightly so content paints
-      setTimeout(function(){ w.print(); }, 200);
+      setTimeout(function(){ 
+        w.print(); 
+        
+        // Close window after print dialog
+        // Give some time for print dialog to appear and user to interact
+        setTimeout(function() {
+          try {
+            w.close();
+          } catch(e) {
+            console.log('Could not auto-close print window:', e);
+          }
+        }, 100); // Close after 100 milliseconds
+        
+      }, 200);
     } catch(e) {
       console.warn('Token print failed:', e);
     }
