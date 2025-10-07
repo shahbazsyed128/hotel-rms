@@ -91,16 +91,16 @@
               ?>
               
               <?php if ($shopBeveragesSales > 0 || $shopExpenses > 0) { ?>
-              <tr>
+              <tr style="background-color: #e8f4fd;">
                 <td align="right" colspan="2">
-                  Shop - Beverages Sales<br>
+                  <em>Shop - Beverages Sales (Info Only)</em><br>
                   <?php if ($shopExpenses > 0) { ?>Expenses - Shop<br><?php } ?>
-                  <strong>Total Amount for Shop</strong>
+                  <strong>Amount to be Given to Shop</strong>          
                 </td>
                 <td align="right">
-                  - <?php echo number_format($shopBeveragesSales, 2); ?><br>
+                  <em><?php echo number_format($shopBeveragesSales, 2); ?></em><br>
                   <?php if ($shopExpenses > 0) { ?>- <?php echo number_format($shopExpenses, 2); ?><br><?php } ?>
-                  <strong>- <?php echo number_format($totalShopAmount, 2); ?></strong>
+                  <strong><?php echo number_format($totalShopAmount, 2); ?></strong>
                 </td>
               </tr>
               <?php } ?>
@@ -141,7 +141,7 @@
               </tr>
               <tr>
                 <td align="right" colspan="2">Remaining Balance</td>
-                <td align="right"><?php echo number_format($customertypewise->total_sales + $registerinfo->opening_balance - $otherExpenses - $totalShopAmount, 2); ?></td>
+                <td align="right"><?php echo number_format($customertypewise->total_sales + $registerinfo->opening_balance - $otherExpenses - $shopExpenses, 2); ?></td>
               </tr>
               <!-- Expenses Total Row Added -->
               
@@ -234,7 +234,7 @@
               <div class="form-group row">
                 <label for="totalamount" class="col-sm-4 col-form-label"><?php echo display('total_amount');?></label>
                 <div class="col-sm-7">
-                  <input type="text" class="form-control" id="totalamount" name="totalamount" value="<?php echo number_format($customertypewise->total_sales + $registerinfo->opening_balance - $otherExpenses - $totalShopAmount, 2); ?>"/>
+                  <input type="text" class="form-control" id="totalamount" name="totalamount" value="<?php echo number_format($customertypewise->total_sales + $registerinfo->opening_balance - $otherExpenses - $shopExpenses, 2); ?>"/>
                 </div>
               </div>
               <div class="form-group row">
