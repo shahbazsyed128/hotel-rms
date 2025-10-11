@@ -3,8 +3,34 @@
 
 
       <div class="modal-header">
-  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
+  <button type="button" class="close" data-dismiss="modal" aria-lab              <?php if ($shopBeveragesSales > 0 || $shopExpenses > 0) { ?>
+              <?php if ($shopRegularSales > 0) { ?>
+              <tr style="background-color: #e8f4fd;">
+                <td align="right" colspan="2"><em>Shop - Regular Sales (Info Only)</em></td>
+                <td align="right"><em><?php echo number_format($shopRegularSales, 2); ?></em></td>
+              </tr>
+              <?php } ?>
+              <?php if ($shopEmployeeSales > 0 || $shopGuestSales > 0 || $shopCharitySales > 0) { ?>
+              <tr>
+                <td align="right" colspan="2">
+                  <?php if ($shopEmployeeSales > 0) { ?>Shop - Employee Sales<br><?php } ?>
+                  <?php if ($shopGuestSales > 0) { ?>Shop - Guest Sales<br><?php } ?>
+                  <?php if ($shopCharitySales > 0) { ?>Shop - Charity Sales<?php } ?>
+                </td>
+                <td align="right">
+                  <?php if ($shopEmployeeSales > 0) { ?>- <?php echo number_format($shopEmployeeSales, 2); ?><br><?php } ?>
+                  <?php if ($shopGuestSales > 0) { ?>- <?php echo number_format($shopGuestSales, 2); ?><br><?php } ?>
+                  <?php if ($shopCharitySales > 0) { ?>- <?php echo number_format($shopCharitySales, 2); ?><?php } ?>
+                </td>
+              </tr>
+              <?php } ?>
+              <?php if ($shopExpenses > 0) { ?>
+              <tr>
+                <td align="right" colspan="2"><strong>Expenses - Shop</strong></td>
+                <td align="right"><strong>- <?php echo number_format($shopExpenses, 2); ?></strong></td>
+              </tr>
+              <?php } ?>
+              <?php } ?>   <span aria-hidden="true">&times;</span>
   </button>
   <h3 class="m-0 p-0">Current Register <span id="rpth">( <?php echo $newDate = date("d M, Y H:i", strtotime($registerinfo->opendate));?> - <?php echo date('d M, Y H:i')?> )</span></h3>
 </div>
@@ -58,18 +84,43 @@
                 </td>
               </tr>
               <?php 
+              // Calculate total hotel cash sale with shop (after subtracting all discount sales)
+              $totalHotelCashSaleWithShop = $customertypewise->total_amount - $customertypewise->employee_sales - $customertypewise->guest_sales - $customertypewise->charity_sales - $shopEmployeeSales - $shopGuestSales - $shopCharitySales;
+              ?>
+              <tr style="background-color: #d4edda; font-weight: bold;">
+                <td align="right" colspan="2"><strong>Total Hotel Cash Sale With Shop</strong></td>
+                <td align="right"><strong><?php echo number_format($totalHotelCashSaleWithShop, 2); ?></strong></td>
+              </tr>
+              <?php 
               // Calculate shop-related amounts
               $shopBeveragesSales = 0;
               $shopExpenses = 0;
               $otherExpenses = 0;
               $totalKitchenSales = 0;
               
-              // Get Shop - Beverages sales (Kitchen ID: 13)
+              // Get Shop - Beverages sales breakdown by customer type (Kitchen ID: 13)
+              $shopEmployeeSales = 0;
+              $shopGuestSales = 0;
+              $shopCharitySales = 0;
+              $shopRegularSales = 0;
+              
               if (!empty($kitchenItemsReport)) {
                 foreach ($kitchenItemsReport as $kitchen) {
-                  if ($kitchen['kitchenid'] == 13 && !empty($kitchen['items']['total']) && $kitchen['items']['total']->total_price > 0) {
-                    $shopBeveragesSales = $kitchen['items']['total']->total_price;
-                    $totalKitchenSales = $shopBeveragesSales;
+                  if ($kitchen['kitchenid'] == 13 && !empty($kitchen['items']['by_type'])) {
+                    foreach ($kitchen['items']['by_type'] as $type) {
+                      $typeName = strtolower($type->type_name ?: 'regular');
+                      if (strpos($typeName, 'employee') !== false) {
+                        $shopEmployeeSales += $type->total_price;
+                      } elseif (strpos($typeName, 'guest') !== false) {
+                        $shopGuestSales += $type->total_price;
+                      } elseif (strpos($typeName, 'charity') !== false) {
+                        $shopCharitySales += $type->total_price;
+                      } else {
+                        $shopRegularSales += $type->total_price;
+                      }
+                    }
+                    $shopBeveragesSales = $shopEmployeeSales + $shopGuestSales + $shopCharitySales + $shopRegularSales;
+                    $totalKitchenSales = $shopEmployeeSales + $shopGuestSales + $shopCharitySales; // Only discount types
                     break;
                   }
                 }
@@ -91,18 +142,46 @@
               ?>
               
               <?php if ($shopBeveragesSales > 0 || $shopExpenses > 0) { ?>
-              <tr style="background-color: #e8f4fd;">
+              <tr>
                 <td align="right" colspan="2">
-                  <em>Shop - Beverages Sales (Info Only)</em><br>
-                  <?php if ($shopExpenses > 0) { ?>Expenses - Shop<br><?php } ?>
-                  <strong>Amount to be Given to Shop</strong>          
+                  <?php if ($shopRegularSales > 0) { ?>Shop - Regular Sales<br><?php } ?>
+                  <?php if ($shopEmployeeSales > 0) { ?>Shop - Employee Sales<br><?php } ?>
+                  <?php if ($shopGuestSales > 0) { ?>Shop - Guest Sales<br><?php } ?>
+                  <?php if ($shopCharitySales > 0) { ?>Shop - Charity Sales<?php } ?>
                 </td>
                 <td align="right">
-                  <em><?php echo number_format($shopBeveragesSales, 2); ?></em><br>
-                  <?php if ($shopExpenses > 0) { ?>- <?php echo number_format($shopExpenses, 2); ?><br><?php } ?>
-                  <strong><?php echo number_format($totalShopAmount, 2); ?></strong>
+                  <?php if ($shopRegularSales > 0) { ?>- <?php echo number_format($shopRegularSales, 2); ?><br><?php } ?>
+                  <?php if ($shopEmployeeSales > 0) { ?>- <?php echo number_format($shopEmployeeSales, 2); ?><br><?php } ?>
+                  <?php if ($shopGuestSales > 0) { ?>- <?php echo number_format($shopGuestSales, 2); ?><br><?php } ?>
+                  <?php if ($shopCharitySales > 0) { ?>- <?php echo number_format($shopCharitySales, 2); ?><?php } ?>
                 </td>
               </tr>
+              <?php 
+              // Calculate total shop sales (all categories)
+              $totalShopSales = $shopRegularSales + $shopEmployeeSales + $shopGuestSales + $shopCharitySales;
+              ?>
+              <?php if ($totalShopSales > 0) { ?>
+              <tr style="background-color: #e8f4fd; font-weight: bold;">
+                <td align="right" colspan="2"><strong>Total Sales to be Given to Shop</strong></td>
+                <td align="right"><strong>- <?php echo number_format($totalShopSales, 2); ?></strong></td>
+              </tr>
+              <?php } ?>
+              <?php if ($shopExpenses > 0) { ?>
+              <tr>
+                <td align="right" colspan="2">Expenses - Shop</td>
+                <td align="right">- <?php echo number_format($shopExpenses, 2); ?></td>
+              </tr>
+              <?php } ?>
+              <?php 
+              // Calculate total amount to be given to shop (Total Shop Sales + Shop Expenses)
+              $totalShopAmountToGive = $totalShopSales + $shopExpenses;
+              ?>
+              <?php if ($totalShopAmountToGive > 0) { ?>
+              <tr style="background-color: #fff3cd; font-weight: bold;">
+                <td align="right" colspan="2"><strong>Total Amount to be Given to Shop</strong></td>
+                <td align="right"><strong>- <?php echo number_format($totalShopAmountToGive, 2); ?></strong></td>
+              </tr>
+              <?php } ?>
               <?php } ?>
               
               <?php if ($otherExpenses > 0) { ?>
@@ -141,7 +220,16 @@
               </tr>
               <tr>
                 <td align="right" colspan="2">Remaining Balance</td>
-                <td align="right"><?php echo number_format($customertypewise->total_sales + $registerinfo->opening_balance - $otherExpenses - $shopExpenses, 2); ?></td>
+                <td align="right"><?php echo number_format($customertypewise->total_sales + $registerinfo->opening_balance - $otherExpenses - $totalShopAmountToGive, 2); ?></td>
+              </tr>
+              <?php 
+              // Calculate Total Profit or Loss (Remaining Balance - Opening Balance)
+              $remainingBalance = $customertypewise->total_sales + $registerinfo->opening_balance - $otherExpenses - $totalShopAmountToGive;
+              $totalProfitLoss = $remainingBalance - $registerinfo->opening_balance;
+              ?>
+              <tr style="background-color: <?php echo ($totalProfitLoss >= 0) ? '#d4edda' : '#f8d7da'; ?>; font-weight: bold;">
+                <td align="right" colspan="2"><strong>Total <?php echo ($totalProfitLoss >= 0) ? 'Profit' : 'Loss'; ?></strong></td>
+                <td align="right"><strong><?php echo ($totalProfitLoss >= 0 ? '+' : '') . ' ' . number_format($totalProfitLoss, 2); ?></strong></td>
               </tr>
               <!-- Expenses Total Row Added -->
               
@@ -234,7 +322,7 @@
               <div class="form-group row">
                 <label for="totalamount" class="col-sm-4 col-form-label"><?php echo display('total_amount');?></label>
                 <div class="col-sm-7">
-                  <input type="text" class="form-control" id="totalamount" name="totalamount" value="<?php echo number_format($customertypewise->total_sales + $registerinfo->opening_balance - $otherExpenses - $shopExpenses, 2); ?>"/>
+                  <input type="text" class="form-control" id="totalamount" name="totalamount" value="<?php echo number_format($customertypewise->total_sales + $registerinfo->opening_balance - $otherExpenses - $totalShopAmountToGive, 2); ?>"/>
                 </div>
               </div>
               <div class="form-group row">
