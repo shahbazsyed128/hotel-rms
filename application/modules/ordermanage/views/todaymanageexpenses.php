@@ -22,6 +22,164 @@
   <!-- Bootstrap 3.3.7 + jQuery (remove if your layout already includes them) -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="<?php echo base_url('application/modules/ordermanage/assets/css/todayexpense.css'); ?>" type="text/css">
+  
+  <!-- Print Styles - Preserve Preview Design -->
+  <style>
+    @media print {
+      /* Hide non-essential elements for printing */
+      .no-print, .btn, .form-control, .modal, 
+      .page-header, .panel, .panel-heading, .panel-body, .form-group,
+      .container > *:not(#printArea) {
+        display: none !important;
+      }
+      
+      /* Page setup */
+      @page {
+        margin: 0.5in !important;
+        size: A4 !important;
+      }
+      
+      /* Body and HTML setup */
+      html, body {
+        height: auto !important;
+        background: white !important;
+        font-size: 12px !important;
+        line-height: 1.4 !important;
+        color: #000 !important;
+      }
+      
+      /* Container reset */
+      .container {
+        width: 100% !important;
+        max-width: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      
+      /* PrintArea - preserve original styling */
+      #printArea {
+        display: block !important;
+        background: #fff !important;
+        border: 1px solid #e6e9ee !important;
+        border-radius: 6px !important;
+        padding: 15px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-shadow: none !important;
+        page-break-after: avoid !important;
+        page-break-inside: avoid !important;
+      }
+      
+      /* Report header - preserve spacing */
+      .report-header {
+        margin-bottom: 15px !important;
+      }
+      
+      .report-header h3 {
+        font-size: 18px !important;
+        margin-bottom: 5px !important;
+        color: #000 !important;
+      }
+      
+      .report-meta {
+        font-size: 12px !important;
+        color: #666 !important;
+      }
+      
+      /* Table styling - preserve original borders and colors */
+      .table {
+        border-collapse: collapse !important;
+        width: 100% !important;
+        margin: 15px 0 !important;
+        font-size: 11px !important;
+        border: 1px solid #ddd !important;
+      }
+      
+      .table td, .table th {
+        border: 1px solid #ddd !important;
+        padding: 6px 8px !important;
+        font-size: 11px !important;
+        color: #000 !important;
+        background-color: #fff !important;
+      }
+      
+      .table th {
+        background-color: #f5f5f5 !important;
+        font-weight: bold !important;
+      }
+      
+      .table-bordered {
+        border: 1px solid #ddd !important;
+      }
+      
+      .table-bordered td, .table-bordered th {
+        border: 1px solid #ddd !important;
+      }
+      
+      /* Text alignment preserved */
+      .text-right {
+        text-align: right !important;
+      }
+      
+      .text-center {
+        text-align: center !important;
+      }
+      
+      /* Report body */
+      #reportBody {
+        margin: 0 !important;
+      }
+      
+      /* No data message */
+      .no-data {
+        padding: 10px 0 !important;
+        font-size: 14px !important;
+        text-align: center !important;
+        color: #666 !important;
+      }
+      
+      /* Grand total row */
+      .grand-total {
+        page-break-inside: avoid !important;
+        background-color: #f9f9f9 !important;
+      }
+      
+      .grand-total td, .grand-total th {
+        font-weight: bold !important;
+        background-color: #f9f9f9 !important;
+      }
+      
+      /* Category headers in report */
+      .category-header {
+        background-color: #f0f0f0 !important;
+        font-weight: bold !important;
+      }
+      
+      /* Preserve strong/bold text */
+      strong, b {
+        font-weight: bold !important;
+        color: #000 !important;
+      }
+      
+      /* Remove shadows and effects but preserve layout */
+      * {
+        text-shadow: none !important;
+        box-shadow: none !important;
+      }
+      
+      /* Prevent widows and orphans */
+      p, h1, h2, h3, h4, h5, h6 {
+        orphans: 3 !important;
+        widows: 3 !important;
+      }
+      
+      /* Ensure proper spacing */
+      .m-b-0 {
+        margin-bottom: 0 !important;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -250,7 +408,7 @@
   </div>
 
   <!-- Printable Area -->
-  <div id="printArea" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:18px; margin-bottom:40px;">
+  <div id="printArea" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0; max-width:100%; overflow:hidden; min-height:auto;">
     <div class="report-header">
       <h3 class="m-b-0">Expenses Report</h3>
       <p class="report-meta m-b-0">
