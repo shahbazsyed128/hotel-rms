@@ -1099,9 +1099,9 @@ function printComprehensiveReport() {
     // Wait for content to load then print and close
     setTimeout(function() {
         printWindow.focus();
-        // printWindow.print();
+        printWindow.print();
         setTimeout(function() {
-            // printWindow.close();
+            printWindow.close();
         }, 1000);
     }, 800);
 }
