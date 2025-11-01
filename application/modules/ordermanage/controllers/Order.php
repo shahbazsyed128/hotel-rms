@@ -6113,6 +6113,185 @@ private function generate_order_data($list,$type = null)
 			exit;
 		}
 	}
+
+	public function dailycomprehensivereport()
+	{
+		$saveid = $this->session->userdata('id');
+		$checkuser = $this->db->select('*')->from('tbl_cashregister')->where('userid', $saveid)->where('status', 0)->order_by('id', 'DESC')->get()->row();
+		
+		if (empty($checkuser)) {
+			$data['error'] = 'No open cash register found. Please open cash register first.';
+			$data['reportDate'] = date('Y-m-d');
+			$data['reportTime'] = date('H:i:s');
+			$this->load->view('dailycomprehensivereport', $data);
+			return;
+		}
+
+		// User and register info
+		$data['userinfo'] = $this->db->select('*')->from('user')->where('id', $saveid)->get()->row();
+		$data['registerinfo'] = $checkuser;
+
+		// === SALES DATA ===
+		$data['totalamount'] = $this->order_model->collectcash($saveid, $checkuser->opendate);
+		$data['customertypewise'] = $this->order_model->customertypewise($saveid, $checkuser->opendate);
+		$data['customertypewise'] = !empty($data['customertypewise']) ? $data['customertypewise'][0] : null;
+
+		// === EXPENSES DATA ===
+		$data['totalexpenses'] = $this->order_model->total_expenses($saveid, $checkuser->opendate);
+		
+		// Get expenses by category - try different approaches
+		$expenses = $this->order_model->get_expenses($checkuser->opendate);
+		
+		// Also try getting expenses for today to ensure we capture all
+		$todayExpenses = $this->order_model->get_todays_expenses();
+		
+		// Merge both results to ensure completeness
+		$allExpenses = array();
+		if (!empty($expenses)) {
+			$allExpenses = array_merge($allExpenses, $expenses);
+		}
+		if (!empty($todayExpenses)) {
+			foreach ($todayExpenses as $todayExp) {
+				// Check if this expense is already in the array to avoid duplicates
+				$found = false;
+				foreach ($allExpenses as $existing) {
+					if (isset($existing->expense_id) && isset($todayExp->expense_id) && 
+						$existing->expense_id == $todayExp->expense_id) {
+						$found = true;
+						break;
+					}
+				}
+				if (!$found) {
+					$allExpenses[] = $todayExp;
+				}
+			}
+		}
+		
+		$expensesByCategory = array();
+		$detailedExpenses = array();
+		
+		if (!empty($allExpenses)) {
+			foreach ($allExpenses as $expense) {
+				$categoryName = 'Uncategorized';
+				
+				// Try multiple fields for category name
+				if (isset($expense->category_name) && !empty($expense->category_name)) {
+					$categoryName = $expense->category_name;
+				} elseif (isset($expense->category) && !empty($expense->category)) {
+					$categoryName = $expense->category;
+				} elseif (isset($expense->expense_category) && !empty($expense->expense_category)) {
+					$categoryName = $expense->expense_category;
+				}
+				
+				// Standardize category names
+				if (stripos($categoryName, 'other') !== false) {
+					$categoryName = 'Others';
+				} elseif (stripos($categoryName, 'vegetable') !== false) {
+					$categoryName = 'Vegetables';
+				} elseif (stripos($categoryName, 'chicken') !== false) {
+					$categoryName = 'Chicken';
+				} elseif (stripos($categoryName, 'employee') !== false || 
+						  stripos($categoryName, 'staff') !== false || 
+						  stripos($categoryName, 'salary') !== false) {
+					$categoryName = 'Employees';
+				}
+				
+				if (!isset($expensesByCategory[$categoryName])) {
+					$expensesByCategory[$categoryName] = 0;
+				}
+				
+				$amount = 0;
+				if (isset($expense->total_amount) && !empty($expense->total_amount)) {
+					$amount = $expense->total_amount;
+				} elseif (isset($expense->amount) && !empty($expense->amount)) {
+					$amount = $expense->amount;
+				} elseif (isset($expense->expense_amount) && !empty($expense->expense_amount)) {
+					$amount = $expense->expense_amount;
+				}
+				
+				$expensesByCategory[$categoryName] += $amount;
+				
+				if (!isset($detailedExpenses[$categoryName])) {
+					$detailedExpenses[$categoryName] = array();
+				}
+				$detailedExpenses[$categoryName][] = $expense;
+			}
+		}
+		
+		$data['expenses'] = $allExpenses;
+		
+		$data['expenses'] = $expenses;
+		$data['expensesByCategory'] = $expensesByCategory;
+		$data['detailedExpenses'] = $detailedExpenses;
+
+		// Kitchen items section removed as per request
+
+		// === SHOP SALES DATA (Dynamic from Kitchen ID 13) ===
+		$shopEmployeeSales = 0;
+		$shopGuestSales = 0;
+		$shopCharitySales = 0;
+		$shopRegularSales = 0;
+		
+		// Get kitchen items report for shop sales calculation
+		$findkitchen = $this->order_model->getKitchens(true);
+		foreach ($findkitchen as $kitchen) {
+			if ($kitchen->kitchenid == 13) { // Kitchen ID 13 is Shop - Beverages
+				$kitchenid = $kitchen->kitchenid;
+				$findkitchenitems = $this->order_model->itemsKiReport($kitchenid, $saveid, $checkuser->opendate);
+				
+				if (!empty($findkitchenitems['by_type'])) {
+					foreach ($findkitchenitems['by_type'] as $type) {
+						$typeName = strtolower($type->type_name ?: 'regular');
+						if (strpos($typeName, 'employee') !== false) {
+							$shopEmployeeSales += $type->total_price;
+						} elseif (strpos($typeName, 'guest') !== false) {
+							$shopGuestSales += $type->total_price;
+						} elseif (strpos($typeName, 'charity') !== false) {
+							$shopCharitySales += $type->total_price;
+						} else {
+							$shopRegularSales += $type->total_price;
+						}
+					}
+				}
+				break;
+			}
+		}
+		
+		$shopSalesData = (object)array(
+			'shop_regular_sales' => $shopRegularSales,
+			'shop_employee_sales' => $shopEmployeeSales,
+			'shop_guest_sales' => $shopGuestSales,
+			'total_shop_sales' => $shopRegularSales + $shopEmployeeSales + $shopGuestSales
+		);
+		
+		$data['shopSalesData'] = $shopSalesData;
+		
+		// === SHOP EXPENSES (Dynamic from expensesByCategory) ===
+		$shopExpenses = 0;
+		if (!empty($expensesByCategory)) {
+			foreach ($expensesByCategory as $categoryName => $amount) {
+				if (strtolower($categoryName) == 'shop' || strpos(strtolower($categoryName), 'shop') !== false) {
+					$shopExpenses += $amount;
+				}
+			}
+		}
+		$data['shopExpenses'] = $shopExpenses;
+
+		// === SUMMARY CALCULATIONS ===
+		$totalSales = 0;
+		if (isset($data['totalamount'][0]->totalamount)) {
+			$totalSales = $data['totalamount'][0]->totalamount;
+		}
+		
+		$totalExpenses = $data['totalexpenses'] ?: 0;
+		$data['netProfit'] = $totalSales - $totalExpenses;
+		$data['reportDate'] = date('Y-m-d');
+		$data['reportTime'] = date('H:i:s');
+
+		$this->load->view('dailycomprehensivereport', $data);
+	}
+
+
 	public function closecashregister()
 	{
 		$this->form_validation->set_rules('totalamount', display('amount'), 'required');
@@ -6135,6 +6314,8 @@ private function generate_order_data($list,$type = null)
 			}
 		}
 	}
+
+
 	public function closecashregisterprint()
 	{
 		$this->form_validation->set_rules('totalamount', display('amount'), 'required');

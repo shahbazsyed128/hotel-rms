@@ -2634,6 +2634,25 @@ class Order_model extends CI_Model
 		return $query->result();
 	}
 
+	public function get_todays_expenses()
+	{
+		$today_start = date('Y-m-d 00:00:00');
+		$today_end = date('Y-m-d 23:59:59');
+		
+		$this->db->select('expenses.*, categories.category_name, entities.entity_name, products.product_name, products.product_id, products.unit');
+		$this->db->from('expenses');
+		$this->db->join('categories', 'expenses.category_id = categories.category_id', 'left');
+		$this->db->join('entities', 'expenses.entity_id = entities.entity_id', 'left');
+		$this->db->join('products', 'expenses.product_id = products.product_id', 'left');
+		$this->db->where('expenses.status', 1);
+		$this->db->where('expenses.created_at >=', $today_start);
+		$this->db->where('expenses.created_at <=', $today_end);
+		$this->db->order_by('expenses.expense_id', 'DESC');
+		
+		$query = $this->db->get();
+		return $query->result();
+	}
+
 	public function get_expense_by_id($id)
 	{
 		$this->db->select('*');
