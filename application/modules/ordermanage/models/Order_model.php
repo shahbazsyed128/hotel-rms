@@ -2225,9 +2225,12 @@ class Order_model extends CI_Model
 	{
 		return $this->db->where('id', $data["id"])->update('tbl_cashregister', $data);
 	}
-	public function collectcash($id, $tdate)
+	public function collectcash($id, $tdate, $enddate = null)
 	{
-		$crdate = date('Y-m-d H:i:s');
+		// If no end date provided, use current time (for active cash counter)
+		// If end date provided, use it (for previous cash counter)
+		$crdate = $enddate ? $enddate : date('Y-m-d H:i:s');
+		print_r($crdate);
 		$where = "bill.create_at Between '$tdate' AND '$crdate'";
 		$this->db->select('bill.*,multipay_bill.payment_type_id,SUM(multipay_bill.amount) as totalamount,payment_method.payment_method');
 		$this->db->from('multipay_bill');
@@ -2239,14 +2242,20 @@ class Order_model extends CI_Model
 		$this->db->where('bill.bill_status', 1);
 		$this->db->group_by('multipay_bill.payment_type_id');
 		$query = $this->db->get();
-		//echo $this->db->last_query();
+		// Store query for display in view (only if debug mode)
+		if (isset($GLOBALS['debugMode']) && $GLOBALS['debugMode']) {
+			if (!isset($GLOBALS['queryLog'])) $GLOBALS['queryLog'] = array();
+			$GLOBALS['queryLog'][] = "COLLECT CASH QUERY: " . $this->db->last_query();
+		}
 		return $orderdetails = $query->result();
 	}
 
 
-	public function customertypewise($id, $tdate)
+	public function customertypewise($id, $tdate, $enddate = null)
 	{
-		$crdate = date('Y-m-d H:i:s');
+		// If no end date provided, use current time (for active cash counter)
+		// If end date provided, use it (for previous cash counter)
+		$crdate = $enddate ? $enddate : date('Y-m-d H:i:s');
 		$where = "bill.create_at BETWEEN '$tdate' AND '$crdate'";
 
 		$this->db->select("
@@ -2267,21 +2276,31 @@ class Order_model extends CI_Model
 		$this->db->where('bill.bill_status', 1);
 		$this->db->group_by('multipay_bill.payment_type_id');
 		$query = $this->db->get();
+		// Store query for display in view (only if debug mode)
+		if (isset($GLOBALS['debugMode']) && $GLOBALS['debugMode']) {
+			if (!isset($GLOBALS['queryLog'])) $GLOBALS['queryLog'] = array();
+			$GLOBALS['queryLog'][] = "CUSTOMER TYPE WISE SALES QUERY: " . $this->db->last_query();
+		}
 		return $query->result();
 	}
 
 
-	public function total_expenses($id, $tdate)
+	public function total_expenses($id, $tdate, $enddate = null)
 	{
-		$crdate = date('Y-m-d H:i:s');
+		// If no end date provided, use current time (for active cash counter)
+		// If end date provided, use it (for previous cash counter)
+		$crdate = $enddate ? $enddate : date('Y-m-d H:i:s');
 		$where = "expenses.created_at Between '$tdate' AND '$crdate'";
 		$this->db->select('SUM(expenses.total_amount) as totalexpense');
 		$this->db->from('expenses');
 		// $this->db->where('expense.create_by', $id);
 		$this->db->where($where);
 		$query = $this->db->get();
-		// echo $this->db->last_query();
-		// exit;
+		// Store query for display in view (only if debug mode)
+		if (isset($GLOBALS['debugMode']) && $GLOBALS['debugMode']) {
+			if (!isset($GLOBALS['queryLog'])) $GLOBALS['queryLog'] = array();
+			$GLOBALS['queryLog'][] = "TOTAL EXPENSES QUERY: " . $this->db->last_query();
+		}
 		return $expense = $query->row();
 	}
 
@@ -2396,6 +2415,11 @@ class Order_model extends CI_Model
 		$this->db->where($where);
 		$this->db->where('bill.bill_status', 1);
 		$query = $this->db->get();
+		// Store query for display in view (only if debug mode)
+		if (isset($GLOBALS['debugMode']) && $GLOBALS['debugMode']) {
+			if (!isset($GLOBALS['queryLog'])) $GLOBALS['queryLog'] = array();
+			$GLOBALS['queryLog'][] = "BILL SUMMARY QUERY: " . $this->db->last_query();
+		}
 		return $billinfo = $query->row();
 	}
 	public function collectcashsummery($id, $tdate, $crdate)
@@ -2410,7 +2434,11 @@ class Order_model extends CI_Model
 		$this->db->where('bill.bill_status', 1);
 		$this->db->group_by('multipay_bill.payment_type_id');
 		$query = $this->db->get();
-		//echo $this->db->last_query();
+		// Store query for display in view (only if debug mode)
+		if (isset($GLOBALS['debugMode']) && $GLOBALS['debugMode']) {
+			if (!isset($GLOBALS['queryLog'])) $GLOBALS['queryLog'] = array();
+			$GLOBALS['queryLog'][] = "COLLECT CASH SUMMARY QUERY: " . $this->db->last_query();
+		}
 		return $orderdetails = $query->result();
 	}
 	public function changecashsummery($id, $tdate, $crdate)
@@ -2639,7 +2667,7 @@ class Order_model extends CI_Model
 	// 	return $query->result();
 	// }
 
-	public function get_expenses($tdate)
+	public function get_expenses($tdate, $enddate = null)
 	{
 		$this->db->select('expenses.*, categories.category_name, entities.entity_name, products.product_name, products.product_id, products.unit');
 		$this->db->from('expenses');
@@ -2648,12 +2676,19 @@ class Order_model extends CI_Model
 		$this->db->join('products', 'expenses.product_id = products.product_id', 'left');
 		$this->db->where('expenses.status', 1);
 
-		$crdate = date('Y-m-d H:i:s');
+		// If no end date provided, use current time (for active cash counter)
+		// If end date provided, use it (for previous cash counter)
+		$crdate = $enddate ? $enddate : date('Y-m-d H:i:s');
 		$where = "expenses.created_at Between '$tdate' AND '$crdate'";
 		$this->db->where($where);
 
 		$this->db->order_by('expenses.expense_id', 'DESC');
 		$query = $this->db->get();
+		// Store query for display in view (only if debug mode)
+		if (isset($GLOBALS['debugMode']) && $GLOBALS['debugMode']) {
+			if (!isset($GLOBALS['queryLog'])) $GLOBALS['queryLog'] = array();
+			$GLOBALS['queryLog'][] = "GET EXPENSES QUERY: " . $this->db->last_query();
+		}
 		return $query->result();
 	}
 
@@ -2673,6 +2708,11 @@ class Order_model extends CI_Model
 		$this->db->order_by('expenses.expense_id', 'DESC');
 		
 		$query = $this->db->get();
+		// Store query for display in view (only if debug mode)
+		if (isset($GLOBALS['debugMode']) && $GLOBALS['debugMode']) {
+			if (!isset($GLOBALS['queryLog'])) $GLOBALS['queryLog'] = array();
+			$GLOBALS['queryLog'][] = "GET TODAYS EXPENSES QUERY: " . $this->db->last_query();
+		}
 		return $query->result();
 	}
 

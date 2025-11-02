@@ -302,7 +302,7 @@
   <div class="page-header no-print" style="margin-top:0;">
     <div class="row">
       <div class="col-md-8">
-        <!-- <h3 class="m-b-0">Daily Comprehensive Report <small class="text-muted">Complete business overview</small></h3> -->
+        <h3 class="m-b-0">Daily Comprehensive Report <small class="text-muted">Complete business overview</small></h3>
       </div>
       <div class="col-md-4 text-right">
         <button type="button" id="btnPrintReport" class="btn btn-primary">
@@ -311,6 +311,155 @@
       </div>
     </div>
   </div>
+
+  <!-- ========================= Report Filters ========================= -->
+  <div class="panel panel-default no-print" style="margin-bottom: 20px;">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <span class="glyphicon glyphicon-filter"></span> Report Filters
+      </h4>
+    </div>
+    <div class="panel-body">
+      <form method="GET" action="<?php echo current_url(); ?>" class="form-horizontal" style="background: #f9f9f9; padding: 20px; border-radius: 8px; border: 1px solid #e0e0e0;">
+        <div class="row" style="margin-bottom: 15px;">
+          <div class="col-md-3" style="margin-bottom: 15px;">
+            <div class="form-group" style="margin-bottom: 10px; margin-right:0px;">
+              <label class="control-label" style="font-weight: 600; margin-bottom: 5px; display: block;">Filter Type:</label>
+              <select name="filter_type" id="filter_type" class="form-control" onchange="toggleFilterOptions()" style="padding: 8px 12px;">
+                <option value="current" <?php echo (!isset($filterType) || $filterType == 'current') ? 'selected' : ''; ?>>Current Register</option>
+                <option value="date_range" <?php echo (isset($filterType) && $filterType == 'date_range') ? 'selected' : ''; ?>>Date Range</option>
+                <option value="cash_register" <?php echo (isset($filterType) && $filterType == 'cash_register') ? 'selected' : ''; ?>>Specific Cash Register</option>
+                <option value="day_sales" <?php echo (isset($filterType) && $filterType == 'day_sales') ? 'selected' : ''; ?>>Day Sales (6AM-6PM)</option>
+                <option value="night_sales" <?php echo (isset($filterType) && $filterType == 'night_sales') ? 'selected' : ''; ?>>Night Sales (6PM-6AM)</option>
+                <option value="all_dates" <?php echo (isset($filterType) && $filterType == 'all_dates') ? 'selected' : ''; ?>>All Time</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="col-md-3" id="date_range_filters" style="display: none; margin-bottom: 15px;">
+            <div class="form-group" style="margin-bottom: 10px; margin-right:0px;">
+              <label class="control-label" style="font-weight: 600; margin-bottom: 5px; display: block;">Start Date:</label>
+              <input type="date" name="start_date" class="form-control" value="<?php echo isset($startDate) ? $startDate : ''; ?>" style="padding: 8px 12px;">
+            </div>
+          </div>
+          
+          <div class="col-md-3" id="date_range_filters2" style="display: none; margin-bottom: 15px;">
+            <div class="form-group" style="margin-bottom: 10px; margin-right:0px;">
+              <label class="control-label" style="font-weight: 600; margin-bottom: 5px; display: block;">End Date:</label>
+              <input type="date" name="end_date" class="form-control" value="<?php echo isset($endDate) ? $endDate : ''; ?>" style="padding: 8px 12px;">
+            </div>
+          </div>
+          
+          <div class="col-md-4" id="cash_register_filter" style="display: none; margin-bottom: 15px;">
+            <div class="form-group" style="margin-bottom: 10px; margin-right:0px;">
+              <label class="control-label" style="font-weight: 600; margin-bottom: 5px; display: block;">Cash Register:</label>
+              <select name="cash_register_id" class="form-control" style="padding: 8px 12px;">
+                <option value="">Select Cash Register</option>
+                <?php if (!empty($cashRegisters)): ?>
+                  <?php foreach ($cashRegisters as $register): ?>
+                    <option value="<?php echo $register->id; ?>" <?php echo (isset($cashRegisterId) && $cashRegisterId == $register->id) ? 'selected' : ''; ?>>
+                      <?php echo !empty($register->counter_name) ? $register->counter_name : 'Counter #' . $register->counter_no; ?> - <?php echo $register->firstname . ' ' . $register->lastname; ?> 
+                      (<?php echo date('M d, Y H:i', strtotime($register->opendate)); ?> - <?php echo date('M d, Y H:i', strtotime($register->closedate)); ?>)
+                    </option>
+                  <?php endforeach; ?>
+                <?php endif; ?>
+              </select>
+            </div>
+          </div>
+          
+          <div class="col-md-2" style="margin-bottom: 15px;">
+            <div class="form-group" style="margin-bottom: 10px; margin-right:0px;">
+              <label class="control-label" style="font-weight: 600; margin-bottom: 0px; display: block;">&nbsp;</label>
+              <button type="submit" class="btn btn-success form-control" style="padding: 5px 15px; font-weight: 600; margin-top: 5px;">
+                <span class="glyphicon glyphicon-search"></span> Apply Filter
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-12">
+            <small class="text-muted">
+              <strong>Current Filter:</strong> 
+              <?php 
+              if (!isset($filterType) || $filterType == 'current') {
+                echo 'Current Open Register';
+              } elseif ($filterType == 'date_range') {
+                echo 'Date Range: ' . (isset($startDate) ? $startDate : 'Not set') . ' to ' . (isset($endDate) ? $endDate : 'Not set');
+              } elseif ($filterType == 'cash_register') {
+                echo 'Specific Cash Register' . (isset($selectedRegister) ? ' (Counter ' . $selectedRegister->counter_no . ')' : '');
+              } elseif ($filterType == 'all_dates') {
+                echo 'All Time Data';
+              }
+              ?>
+            </small>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function toggleFilterOptions() {
+      var filterType = document.getElementById('filter_type').value;
+      var dateRangeFilters = document.getElementById('date_range_filters');
+      var dateRangeFilters2 = document.getElementById('date_range_filters2');
+      var cashRegisterFilter = document.getElementById('cash_register_filter');
+      
+      // Hide all filters first
+      dateRangeFilters.style.display = 'none';
+      dateRangeFilters2.style.display = 'none';
+      cashRegisterFilter.style.display = 'none';
+      
+      // Show relevant filters
+      if (filterType == 'date_range') {
+        dateRangeFilters.style.display = 'block';
+        dateRangeFilters2.style.display = 'block';
+      } else if (filterType == 'cash_register') {
+        cashRegisterFilter.style.display = 'block';
+      }
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      toggleFilterOptions();
+    });
+  </script>
+
+  <!-- Debug Info (Remove in production) -->
+  <?php if (isset($debugInfo)): ?>
+    <div class="alert alert-info no-print" style="margin-bottom: 10px;">
+      <strong>Debug Info:</strong> 
+      Filter: <?php echo $debugInfo['filterType']; ?> | 
+      Expenses: <?php echo $debugInfo['expenseCount']; ?> | 
+      Categories: <?php echo $debugInfo['categoryCount']; ?> | 
+      Kitchens: <?php echo $debugInfo['kitchenDataCount']; ?>
+      <?php if (!empty($expensesByCategory)): ?>
+        | Expense Categories: <?php echo implode(', ', array_keys($expensesByCategory)); ?>
+      <?php endif; ?>
+      <br>
+      <small>
+        User ID: <?php echo $debugInfo['userId'] ?? 'N/A'; ?> | 
+        Has Checkuser: <?php echo $debugInfo['checkuserExists'] ? 'Yes' : 'No'; ?> | 
+        Open Date: <?php echo $debugInfo['openDate'] ?? 'N/A'; ?> |
+        Date Range: <?php echo ($debugInfo['reportStartDate'] ?? 'N/A') . ' to ' . ($debugInfo['reportEndDate'] ?? 'N/A'); ?>
+      </small>
+    </div>
+  <?php endif; ?>
+
+  <!-- SQL Queries Debug (Remove in production) -->
+  <?php if (isset($queryLog) && !empty($queryLog)): ?>
+    <div class="alert alert-warning no-print" style="margin-bottom: 10px;">
+      <strong>SQL Queries Executed:</strong>
+      <div style="max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 11px; background: #f8f8f8; padding: 10px; margin-top: 10px; border: 1px solid #ddd;">
+        <?php foreach ($queryLog as $query): ?>
+          <div style="margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px solid #eee;">
+            <?php echo htmlspecialchars($query); ?>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  <?php endif; ?>
 
   <!-- Error Check -->
   <?php if (isset($error)): ?>
@@ -331,8 +480,7 @@
     <div class="report-header">
       <h3 class="m-b-0">Daily Comprehensive Report</h3>
       <p class="report-meta m-b-0">
-        Date: <?php echo isset($reportDate) ? $reportDate : date('Y-m-d'); ?>
-        | Time: <?php echo isset($reportTime) ? $reportTime : date('H:i:s'); ?>
+        Generated: <?php echo date('Y-m-d H:i:s'); ?>
         | User: <?php 
         if (isset($userinfo) && $userinfo) {
           echo htmlspecialchars($userinfo->firstname . ' ' . $userinfo->lastname); 
@@ -340,11 +488,27 @@
           echo 'N/A';
         }
         ?>
-        | Register: <?php 
-        if (isset($registerinfo) && $registerinfo) {
-          echo date('d M, Y H:i', strtotime($registerinfo->opendate)); 
-        } else {
-          echo 'N/A';
+      </p>
+      <p class="report-meta m-b-0" style="color: #337ab7; font-weight: bold;">
+        <strong>Report Period:</strong> 
+        <?php 
+        if (!isset($filterType) || $filterType == 'current') {
+          echo 'Current Open Register';
+          if (isset($registerinfo) && $registerinfo) {
+            echo ' (Started: ' . date('M d, Y H:i', strtotime($registerinfo->opendate)) . ')';
+          }
+        } elseif ($filterType == 'date_range') {
+          echo 'Date Range: ' . date('M d, Y', strtotime($reportStartDate)) . ' to ' . date('M d, Y', strtotime($reportEndDate));
+        } elseif ($filterType == 'cash_register') {
+          echo 'Cash Register';
+          if (isset($selectedRegister) && $selectedRegister) {
+            echo ' #' . $selectedRegister->counter_no . ' (' . date('M d, Y H:i', strtotime($selectedRegister->opendate)) . ' - ' . date('M d, Y H:i', strtotime($selectedRegister->closedate)) . ')';
+          }
+        } elseif ($filterType == 'all_dates') {
+          echo 'All Time Data';
+          if (isset($reportStartDate) && isset($reportEndDate)) {
+            echo ' (' . date('M d, Y', strtotime($reportStartDate)) . ' to ' . date('M d, Y', strtotime($reportEndDate)) . ')';
+          }
         }
         ?>
       </p>
@@ -606,14 +770,30 @@
             <div class="panel panel-info">
               <div class="panel-body" style="padding: 10px;">
                 <?php 
-                // Calculate totals for performance
+                // Calculate totals for performance - handle both object and numeric values
                 $totalSalesAmount = 0;
                 if (!empty($totalamount)) {
                   foreach ($totalamount as $amount) {
-                    $totalSalesAmount += $amount->totalamount;
+                    if (is_object($amount) && isset($amount->totalamount)) {
+                      $totalSalesAmount += floatval($amount->totalamount);
+                    } elseif (is_numeric($amount)) {
+                      $totalSalesAmount += floatval($amount);
+                    }
                   }
                 }
-                $totalExpenseAmount = $totalexpenses ?? 0;
+                
+                // Handle totalexpenses - could be object, array, or numeric
+                $totalExpenseAmount = 0;
+                if (is_numeric($totalexpenses)) {
+                  $totalExpenseAmount = floatval($totalexpenses);
+                } elseif (is_object($totalexpenses) && isset($totalexpenses->total_expenses)) {
+                  $totalExpenseAmount = floatval($totalexpenses->total_expenses);
+                } elseif (is_object($totalexpenses) && isset($totalexpenses->totalexpenses)) {
+                  $totalExpenseAmount = floatval($totalexpenses->totalexpenses);
+                } elseif (is_array($totalexpenses) && !empty($totalexpenses)) {
+                  $totalExpenseAmount = floatval($totalexpenses[0]->total_expenses ?? $totalexpenses[0]->totalexpenses ?? 0);
+                }
+                
                 $netProfitAmount = $totalSalesAmount - $totalExpenseAmount;
                 $profitMargin = $totalSalesAmount > 0 ? ($netProfitAmount / $totalSalesAmount * 100) : 0;
                 ?>
@@ -800,7 +980,40 @@
         }
       }
       ?>
-      <?php if (!empty($expensesByCategory)): ?>
+      <?php if (!empty($groupedExpenses)): ?>
+        <?php foreach ($groupedExpenses as $categoryName => $categoryData): ?>
+          <div class="category-block">
+            <h4 class="category-title" style="font-size: 10px; margin-bottom: 1px; margin-top: 3px; padding: 4px 6px; background-color: #f8f9fa; border-left: 3px solid #007bff; color: #495057; line-height: 1.2;"><?php echo htmlspecialchars($categoryName); ?></h4>
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped expenses-table" style="margin-bottom: 6px; font-size: 11px;">
+                <thead>
+                  <tr>
+                    <th class="text-right" style="padding: 3px 4px; line-height: 1.2;">Item Name</th>
+                    <th class="text-right" style="width: 50px; padding: 3px 2px; line-height: 1.2;">Qty</th>
+                    <th class="text-right" style="width: 80px; padding: 3px 2px; line-height: 1.2;">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($categoryData['items'] as $itemName => $itemData): ?>
+                  <tr style="font-size: 10px;">
+                    <td style="padding: 2px 4px; line-height: 1.1;"><?php echo htmlspecialchars($itemName); ?></td>
+                    <td class="text-right" style="padding: 2px; line-height: 1.1;"><?php echo number_format($itemData['quantity'], 2); ?></td>
+                    <td class="text-right" style="padding: 2px; line-height: 1.1;"><strong><?php echo number_format($itemData['total'], 2); ?></strong></td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+                <tfoot>
+                  <tr style="background-color: #f8f9fa; font-weight: bold; font-size: 10px;">
+                    <th colspan="2" class="text-right" style="padding: 3px 4px; border: 1px solid #ddd; line-height: 1.1;">Category Total:</th>
+                    <th class="text-right" style="padding: 3px 2px; border: 1px solid #ddd; line-height: 1.1;"><?php echo number_format($categoryData['total'], 2); ?></th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      <?php elseif (!empty($expensesByCategory)): ?>
+        <!-- Fallback to old display if groupedExpenses is not available -->
         <?php foreach ($expensesByCategory as $categoryName => $categoryTotal): ?>
           <?php 
           // Get expenses for this category
@@ -831,12 +1044,16 @@
                 <?php foreach ($categoryExpenses as $expense): ?>
                   <tr style="font-size: 10px;">
                     <td style="padding: 2px 4px; line-height: 1.1;"><?php 
-                      // Try different possible fields for item/product name
+                      // Use the display_name field that shows proper names based on category
                       $itemName = '';
-                      if (isset($expense->item_name) && !empty($expense->item_name)) {
-                        $itemName = $expense->item_name;
+                      if (isset($expense->display_name) && !empty($expense->display_name)) {
+                        $itemName = $expense->display_name;
                       } elseif (isset($expense->product_name) && !empty($expense->product_name)) {
                         $itemName = $expense->product_name;
+                      } elseif (isset($expense->entity_name) && !empty($expense->entity_name)) {
+                        $itemName = $expense->entity_name;
+                      } elseif (isset($expense->item_name) && !empty($expense->item_name)) {
+                        $itemName = $expense->item_name;
                       } elseif (isset($expense->expense_item) && !empty($expense->expense_item)) {
                         $itemName = $expense->expense_item;
                       } elseif (isset($expense->description) && !empty($expense->description)) {
@@ -844,7 +1061,7 @@
                       } elseif (isset($expense->expense_name) && !empty($expense->expense_name)) {
                         $itemName = $expense->expense_name;
                       } else {
-                        $itemName = $expense->entity_name ?? 'N/A';
+                        $itemName = 'N/A';
                       }
                       echo htmlspecialchars($itemName);
                     ?></td>
@@ -964,7 +1181,11 @@
                   $totalSalesAmount = 0;
                   if (!empty($totalamount)) {
                     foreach ($totalamount as $amount) {
-                      $totalSalesAmount += $amount->totalamount;
+                      if (is_object($amount) && isset($amount->totalamount)) {
+                        $totalSalesAmount += floatval($amount->totalamount);
+                      } elseif (is_numeric($amount)) {
+                        $totalSalesAmount += floatval($amount);
+                      }
                     }
                   }
                   echo number_format($totalSalesAmount, 2);
@@ -1002,7 +1223,9 @@
                   $totalExpensesAmount = 0;
                   if (!empty($expensesByCategory)) {
                     foreach ($expensesByCategory as $categoryName => $categoryTotal) {
-                      $totalExpensesAmount += $categoryTotal;
+                      if (is_numeric($categoryTotal)) {
+                        $totalExpensesAmount += floatval($categoryTotal);
+                      }
                     }
                   }
                   echo number_format($totalExpensesAmount, 2);

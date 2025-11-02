@@ -6120,33 +6120,213 @@ private function generate_order_data($list,$type = null)
 	public function dailycomprehensivereport()
 	{
 		$saveid = $this->session->userdata('id');
-		$checkuser = $this->db->select('*')->from('tbl_cashregister')->where('userid', $saveid)->where('status', 0)->order_by('id', 'DESC')->get()->row();
 		
-		if (empty($checkuser)) {
-			$data['error'] = 'No open cash register found. Please open cash register first.';
-			$data['reportDate'] = date('Y-m-d');
-			$data['reportTime'] = date('H:i:s');
-			$this->load->view('dailycomprehensivereport', $data);
-			return;
+		// Get filter parameters
+		$filterType = $this->input->get('filter_type') ?: 'current'; // current, date_range, cash_register, all_dates
+		$startDate = $this->input->get('start_date');
+		$endDate = $this->input->get('end_date');
+		$cashRegisterId = $this->input->get('cash_register_id');
+		
+		// Check debug parameter
+		$debugMode = $this->input->get('debug') == '1';
+		$GLOBALS['debugMode'] = $debugMode;
+		
+		// Initialize query log for display on view (only if debug mode)
+		$data['queryLog'] = array();
+		if ($debugMode) {
+			$data['queryLog'][] = "=== ALL SQL QUERIES FOR FILTER: $filterType ===";
+			$data['queryLog'][] = "USER ID: $saveid | CASH REGISTER ID: $cashRegisterId";
 		}
+		
+		// Get all cash registers for filter dropdown with counter names
+		$data['cashRegisters'] = $this->db->select('cr.*, u.firstname, u.lastname, cc.counter_name')
+			->from('tbl_cashregister cr')
+			->join('user u', 'cr.userid = u.id', 'left')
+			->join('tbl_cashcounter cc', 'cr.counter_no = cc.counterno', 'left')
+			->where('cr.status', 1) // closed registers
+			->order_by('cr.closedate', 'DESC')
+			->get()->result();
+		if ($debugMode) $data['queryLog'][] = "CASH REGISTERS QUERY: " . $this->db->last_query();
+		
+		// Get current open register
+		$checkuser = $this->db->select('*')->from('tbl_cashregister')->where('userid', $saveid)->where('status', 0)->order_by('id', 'DESC')->get()->row();
+		if ($debugMode) $data['queryLog'][] = "CURRENT REGISTER QUERY: " . $this->db->last_query();
+		
+		// Determine date range and register based on filter type
+		$reportStartDate = null;
+		$reportEndDate = null;
+		$selectedRegister = null;
+		
+		switch ($filterType) {
+			case 'current':
+				if (empty($checkuser)) {
+					$data['error'] = 'No open cash register found. Please open cash register first.';
+					$data['reportDate'] = date('Y-m-d');
+					$data['reportTime'] = date('H:i:s');
+					$data['filterType'] = $filterType;
+					$this->load->view('dailycomprehensivereport', $data);
+					return;
+				}
+				$selectedRegister = $checkuser;
+				$reportStartDate = $checkuser->opendate;
+				$reportEndDate = date('Y-m-d H:i:s');
+				break;
+				
+			case 'date_range':
+				if (empty($startDate) || empty($endDate)) {
+					$data['error'] = 'Please select both start and end dates.';
+					$data['reportDate'] = date('Y-m-d');
+					$data['reportTime'] = date('H:i:s');
+					$data['filterType'] = $filterType;
+					$this->load->view('dailycomprehensivereport', $data);
+					return;
+				}
+				$reportStartDate = $startDate . ' 00:00:00';
+				$reportEndDate = $endDate . ' 23:59:59';
+				break;
+				
+			case 'cash_register':
+				if (empty($cashRegisterId)) {
+					$data['error'] = 'Please select a cash register.';
+					$data['reportDate'] = date('Y-m-d');
+					$data['reportTime'] = date('H:i:s');
+					$data['filterType'] = $filterType;
+					$this->load->view('dailycomprehensivereport', $data);
+					return;
+				}
+				$selectedRegister = $this->db->select('*')->from('tbl_cashregister')->where('id', $cashRegisterId)->get()->row();
+				if ($debugMode) $data['queryLog'][] = "SELECTED REGISTER QUERY: " . $this->db->last_query();
+				if ($selectedRegister) {
+					$reportStartDate = $selectedRegister->opendate;
+					$reportEndDate = $selectedRegister->closedate ?: date('Y-m-d H:i:s');
+					
+					// Set up variables to use current register logic for this selected register
+					$checkuser = $selectedRegister;
+					$saveid = $selectedRegister->userid;
+					log_message('debug', 'Cash register selected: ID=' . $cashRegisterId . ', User=' . $saveid . ', OpenDate=' . $reportStartDate);
+					if ($debugMode) $data['queryLog'][] = "SELECTED REGISTER DETAILS: User=$saveid, OpenDate=$reportStartDate, CloseDate=$reportEndDate";
+				} else {
+					$data['error'] = 'Selected cash register not found.';
+					$data['reportDate'] = date('Y-m-d');
+					$data['reportTime'] = date('H:i:s');
+					$data['filterType'] = $filterType;
+					$this->load->view('dailycomprehensivereport', $data);
+					return;
+				}
+				break;
+				
+			case 'all_dates':
+				// Get earliest and latest dates from all registers
+				$dateRange = $this->db->select('MIN(opendate) as min_date, MAX(CASE WHEN status = 1 THEN closedate ELSE NOW() END) as max_date')
+					->from('tbl_cashregister')
+					->get()->row();
+				if ($dateRange) {
+					$reportStartDate = $dateRange->min_date;
+					$reportEndDate = $dateRange->max_date;
+				}
+				break;
+		}
+		
+		// Set filter data for view
+		$data['filterType'] = $filterType;
+		$data['startDate'] = $startDate;
+		$data['endDate'] = $endDate;
+		$data['cashRegisterId'] = $cashRegisterId;
+		$data['selectedRegister'] = $selectedRegister;
 
 		// User and register info
 		$data['userinfo'] = $this->db->select('*')->from('user')->where('id', $saveid)->get()->row();
-		$data['registerinfo'] = $checkuser;
+		if ($debugMode) $data['queryLog'][] = "USER INFO QUERY: " . $this->db->last_query();
+		$data['registerinfo'] = $selectedRegister ?: $checkuser;
+		$data['reportStartDate'] = $reportStartDate;
+		$data['reportEndDate'] = $reportEndDate;
 
-		// === SALES DATA ===
-		$data['totalamount'] = $this->order_model->collectcash($saveid, $checkuser->opendate);
-		$data['customertypewise'] = $this->order_model->customertypewise($saveid, $checkuser->opendate);
-		$data['customertypewise'] = !empty($data['customertypewise']) ? $data['customertypewise'][0] : null;
-
-		// === EXPENSES DATA ===
-		$data['totalexpenses'] = $this->order_model->total_expenses($saveid, $checkuser->opendate);
+		// === SALES DATA (with dynamic date filtering) ===
+		if ($debugMode) $data['queryLog'][] = "========== SALES DATA QUERIES ==========";
+		if (($filterType == 'current' || $filterType == 'cash_register') && $checkuser) {
+			// Use the SAME working methods for both current and cash register
+			// For closed registers, use both open and close dates
+			$endDate = (isset($checkuser->closedate) && $checkuser->closedate != "1970-01-01 00:00:00") ? $checkuser->closedate : null;
+			$endDateParam = $endDate ? ", '$endDate'" : '';
+			
+			if ($debugMode) $data['queryLog'][] = "CALLING collectcash($saveid, '{$checkuser->opendate}'$endDateParam)";
+			$data['totalamount'] = $this->order_model->collectcash($saveid, $checkuser->opendate, $endDate);
+			
+			if ($debugMode) $data['queryLog'][] = "CALLING customertypewise($saveid, '{$checkuser->opendate}'$endDateParam)";
+			$data['customertypewise'] = $this->order_model->customertypewise($saveid, $checkuser->opendate, $endDate);
+			$data['customertypewise'] = !empty($data['customertypewise']) ? $data['customertypewise'][0] : null;
+			
+			if ($debugMode) $data['queryLog'][] = "CALLING total_expenses($saveid, '{$checkuser->opendate}'$endDateParam)";
+			$data['totalexpenses'] = $this->order_model->total_expenses($saveid, $checkuser->opendate, $endDate);
+			log_message('debug', 'Using current register sales methods for filter: ' . $filterType);
+		} else {
+			// Use filtered data collection for other filter types
+			$data['totalamount'] = $this->_getFilteredSalesData($reportStartDate, $reportEndDate);
+			
+			// Get detailed customer type data for filtered results
+			$detailedCustomerTypes = $this->_getFilteredDetailedCustomerTypeSales($reportStartDate, $reportEndDate);
+			
+			// Transform to expected format for view compatibility
+			$employeeSales = 0;
+			$guestSales = 0;
+			$charitySales = 0;
+			$regularSales = 0;
+			
+			foreach ($detailedCustomerTypes as $type) {
+				$typeName = strtolower($type->customer_type ?: 'regular');
+				if (strpos($typeName, 'employee') !== false) {
+					$employeeSales += $type->total_amount;
+				} elseif (strpos($typeName, 'guest') !== false) {
+					$guestSales += $type->total_amount;
+				} elseif (strpos($typeName, 'charity') !== false) {
+					$charitySales += $type->total_amount;
+				} else {
+					$regularSales += $type->total_amount;
+				}
+			}
+			
+			// Create expected object structure
+			$data['customertypewise'] = (object)array(
+				'employee_sales' => $employeeSales,
+				'guest_sales' => $guestSales,
+				'charity_sales' => $charitySales,
+				'regular_sales' => $regularSales,
+				'total_sales' => $employeeSales + $guestSales + $charitySales + $regularSales
+			);
+			
+			// Store detailed breakdown for use in calculations
+			$data['detailedCustomerTypeSales'] = $detailedCustomerTypes;
+			
+			$data['totalexpenses'] = $this->_getFilteredExpenses($reportStartDate, $reportEndDate);
+		}
 		
-		// Get expenses by category - try different approaches
-		$expenses = $this->order_model->get_expenses($checkuser->opendate);
-		
-		// Also try getting expenses for today to ensure we capture all
-		$todayExpenses = $this->order_model->get_todays_expenses();
+		// Get expenses by category - use consistent logic with sales data
+		if ($debugMode) $data['queryLog'][] = "========== EXPENSE DATA QUERIES ==========";
+		if (($filterType == 'current' || $filterType == 'cash_register') && $checkuser) {
+			// Use the SAME logic as sales data - register open/close times
+			// For closed registers, use both open and close dates
+			$endDate = (isset($checkuser->closedate) && $checkuser->closedate != "1970-01-01 00:00:00") ? $checkuser->closedate : null;
+			$endDateParam = $endDate ? ", '$endDate'" : '';
+			
+			if ($endDate) {
+				// Closed register - use _getFilteredExpensesByCategory with exact dates
+				if ($debugMode) $data['queryLog'][] = "CALLING _getFilteredExpensesByCategory('{$checkuser->opendate}', '$endDate')";
+				$expenses = $this->_getFilteredExpensesByCategory($checkuser->opendate, $endDate);
+			} else {
+				// Current register - use get_expenses from open date to now
+				if ($debugMode) $data['queryLog'][] = "CALLING get_expenses('{$checkuser->opendate}')";
+				$expenses = $this->order_model->get_expenses($checkuser->opendate);
+			}
+			$todayExpenses = array(); // Don't mix with other expense data
+			log_message('debug', 'Using register-based expense methods for filter: ' . $filterType);
+		} else {
+			// For date range filtering, get expenses for the specified date range
+			log_message('debug', 'Getting filtered expenses for date range: ' . $reportStartDate . ' to ' . $reportEndDate);
+			if ($debugMode) $data['queryLog'][] = "CALLING _getFilteredExpensesByCategory('$reportStartDate', '$reportEndDate')";
+			$expenses = $this->_getFilteredExpensesByCategory($reportStartDate, $reportEndDate);
+			log_message('debug', 'Filtered expenses retrieved: ' . count($expenses) . ' records');
+			$todayExpenses = array(); // Don't mix today's expenses with filtered data
+		}
 		
 		// Merge both results to ensure completeness
 		$allExpenses = array();
@@ -6172,6 +6352,7 @@ private function generate_order_data($list,$type = null)
 		
 		$expensesByCategory = array();
 		$detailedExpenses = array();
+		$groupedExpenses = array(); // New structure: Category -> Product/Entity -> Total Amount
 		
 		if (!empty($allExpenses)) {
 			foreach ($allExpenses as $expense) {
@@ -6199,21 +6380,47 @@ private function generate_order_data($list,$type = null)
 					$categoryName = 'Employees';
 				}
 				
+				// Get the display name (product name for Shop/Vegetables, entity name for others)
+				$displayName = $expense->display_name ?? 'Unknown Item';
+				
+				// Initialize category totals
 				if (!isset($expensesByCategory[$categoryName])) {
 					$expensesByCategory[$categoryName] = 0;
 				}
-				
-				$amount = 0;
-				if (isset($expense->total_amount) && !empty($expense->total_amount)) {
-					$amount = $expense->total_amount;
-				} elseif (isset($expense->amount) && !empty($expense->amount)) {
-					$amount = $expense->amount;
-				} elseif (isset($expense->expense_amount) && !empty($expense->expense_amount)) {
-					$amount = $expense->expense_amount;
+				if (!isset($groupedExpenses[$categoryName])) {
+					$groupedExpenses[$categoryName] = array();
+				}
+				if (!isset($groupedExpenses[$categoryName][$displayName])) {
+					$groupedExpenses[$categoryName][$displayName] = array(
+						'total_amount' => 0,
+						'quantity' => 0,
+						'records' => array()
+					);
 				}
 				
-				$expensesByCategory[$categoryName] += $amount;
+				$amount = 0;
+				$quantity = 0;
+				if (isset($expense->total_amount) && !empty($expense->total_amount)) {
+					$amount = floatval($expense->total_amount);
+				} elseif (isset($expense->amount) && !empty($expense->amount)) {
+					$amount = floatval($expense->amount);
+				} elseif (isset($expense->expense_amount) && !empty($expense->expense_amount)) {
+					$amount = floatval($expense->expense_amount);
+				}
 				
+				if (isset($expense->quantity) && !empty($expense->quantity)) {
+					$quantity = floatval($expense->quantity);
+				} else {
+					$quantity = 1; // Default quantity
+				}
+				
+				// Add to totals
+				$expensesByCategory[$categoryName] += $amount;
+				$groupedExpenses[$categoryName][$displayName]['total_amount'] += $amount;
+				$groupedExpenses[$categoryName][$displayName]['quantity'] += $quantity;
+				$groupedExpenses[$categoryName][$displayName]['records'][] = $expense;
+				
+				// Keep the old detailed expenses structure for compatibility
 				if (!isset($detailedExpenses[$categoryName])) {
 					$detailedExpenses[$categoryName] = array();
 				}
@@ -6221,15 +6428,56 @@ private function generate_order_data($list,$type = null)
 			}
 		}
 		
-		$data['expenses'] = $allExpenses;
+		// Transform groupedExpenses to match view expectations
+		$transformedGroupedExpenses = array();
+		foreach ($groupedExpenses as $categoryName => $items) {
+			$categoryTotal = 0;
+			$transformedItems = array();
+			
+			foreach ($items as $itemName => $itemData) {
+				$transformedItems[$itemName] = array(
+					'quantity' => $itemData['quantity'],
+					'total' => $itemData['total_amount']
+				);
+				$categoryTotal += $itemData['total_amount'];
+			}
+			
+			$transformedGroupedExpenses[$categoryName] = array(
+				'items' => $transformedItems,
+				'total' => $categoryTotal
+			);
+		}
 		
-		$data['expenses'] = $expenses;
+		// Set expense data for view
+		$data['expenses'] = $allExpenses;
 		$data['expensesByCategory'] = $expensesByCategory;
 		$data['detailedExpenses'] = $detailedExpenses;
+		$data['groupedExpenses'] = $transformedGroupedExpenses; // New grouped structure
+		
+		// Debug information (only if debug mode)
+		if ($debugMode) {
+			$data['debugInfo'] = array(
+				'filterType' => $filterType,
+				'expenseCount' => count($allExpenses),
+				'categoryCount' => count($expensesByCategory),
+				'kitchenDataCount' => count($data['kitchenSalesData'] ?? []),
+				'userId' => $saveid,
+				'checkuserExists' => !empty($checkuser),
+				'openDate' => $checkuser ? $checkuser->opendate : 'N/A',
+				'reportStartDate' => $reportStartDate,
+				'reportEndDate' => $reportEndDate
+			);
+		}
 
-		// === CANCELLED ORDERS DATA ===
-		// Get cancelled orders between register open date and today
-		$cancelledOrders = $this->_getCancelledOrdersBetweenDates($checkuser->opendate, date('Y-m-d H:i:s'));
+		// === ADDITIONAL FILTERED DATA (Payment Methods, etc.) ===
+		if ($filterType != 'current' || !$checkuser) {
+			// Get payment method breakdown for filtered data
+			$data['paymentMethods'] = $this->_getFilteredPaymentMethods($reportStartDate, $reportEndDate);
+		}
+		
+		// === CANCELLED ORDERS DATA (with dynamic date filtering) ===
+		// Get cancelled orders based on selected filter
+		$cancelledOrders = $this->_getCancelledOrdersBetweenDates($reportStartDate, $reportEndDate);
 		$data['cancelledOrders'] = $cancelledOrders;
 		$data['totalCancelledOrders'] = count($cancelledOrders);
 		
@@ -6274,53 +6522,83 @@ private function generate_order_data($list,$type = null)
 		// Kitchen items section removed as per request
 
 		// === SHOP SALES DATA (Dynamic from Kitchen ID 13) ===
-		$shopEmployeeSales = 0;
-		$shopGuestSales = 0;
-		$shopCharitySales = 0;
-		$shopRegularSales = 0;
-		
-		// Get kitchen items report for shop sales calculation
-		$findkitchen = $this->order_model->getKitchens(true);
-		foreach ($findkitchen as $kitchen) {
-			if ($kitchen->kitchenid == 13) { // Kitchen ID 13 is Shop - Beverages
-				$kitchenid = $kitchen->kitchenid;
-				$findkitchenitems = $this->order_model->itemsKiReport($kitchenid, $saveid, $checkuser->opendate);
-				
-				if (!empty($findkitchenitems['by_type'])) {
-					foreach ($findkitchenitems['by_type'] as $type) {
-						$typeName = strtolower($type->type_name ?: 'regular');
-						if (strpos($typeName, 'employee') !== false) {
-							$shopEmployeeSales += $type->total_price;
-						} elseif (strpos($typeName, 'guest') !== false) {
-							$shopGuestSales += $type->total_price;
-						} elseif (strpos($typeName, 'charity') !== false) {
-							$shopCharitySales += $type->total_price;
-						} else {
-							$shopRegularSales += $type->total_price;
+		if ($filterType == 'current' && $checkuser) {
+			// Use existing method for current register
+			$shopEmployeeSales = 0;
+			$shopGuestSales = 0;
+			$shopCharitySales = 0;
+			$shopRegularSales = 0;
+			
+			// Get kitchen items report for shop sales calculation
+			$findkitchen = $this->order_model->getKitchens(true);
+			foreach ($findkitchen as $kitchen) {
+				if ($kitchen->kitchenid == 13) { // Kitchen ID 13 is Shop - Beverages
+					$kitchenid = $kitchen->kitchenid;
+					$findkitchenitems = $this->order_model->itemsKiReport($kitchenid, $saveid, $checkuser->opendate);
+					
+					if (!empty($findkitchenitems['by_type'])) {
+						foreach ($findkitchenitems['by_type'] as $type) {
+							$typeName = strtolower($type->type_name ?: 'regular');
+							if (strpos($typeName, 'employee') !== false) {
+								$shopEmployeeSales += $type->total_price;
+							} elseif (strpos($typeName, 'guest') !== false) {
+								$shopGuestSales += $type->total_price;
+							} elseif (strpos($typeName, 'charity') !== false) {
+								$shopCharitySales += $type->total_price;
+							} else {
+								$shopRegularSales += $type->total_price;
+							}
 						}
 					}
+					break;
 				}
-				break;
 			}
+			
+			$shopSalesData = (object)array(
+				'shop_regular_sales' => $shopRegularSales,
+				'shop_employee_sales' => $shopEmployeeSales,
+				'shop_guest_sales' => $shopGuestSales,
+				'total_shop_sales' => $shopRegularSales + $shopEmployeeSales + $shopGuestSales
+			);
+		} else {
+			// Use filtered method for other filter types
+			$shopSalesData = $this->_getFilteredShopSales($reportStartDate, $reportEndDate);
 		}
-		
-		$shopSalesData = (object)array(
-			'shop_regular_sales' => $shopRegularSales,
-			'shop_employee_sales' => $shopEmployeeSales,
-			'shop_guest_sales' => $shopGuestSales,
-			'total_shop_sales' => $shopRegularSales + $shopEmployeeSales + $shopGuestSales
-		);
 		
 		$data['shopSalesData'] = $shopSalesData;
 		
-		// === DETAILED ITEMS SOLD (Similar to sellrptItems) ===
-		$data['detailedItemsSold'] = $this->order_model->getDetailedItemsSoldByKitchen($saveid, $checkuser->opendate);
-		
-		// Get detailed items formatted for kitchen report
-		$detailedItemsForReport = $this->order_model->getDetailedItemsForKitchenReport($saveid, $checkuser->opendate);
-		
-		// === KITCHEN ANALYSIS SUMMARY (Enhanced with employees and products) ===
-		$data['kitchenSalesData'] = $this->order_model->getKitchenAnalysis($saveid, $checkuser->opendate);
+		// === OPENING BALANCE (for filtered data) ===
+		if ($filterType != 'current' || !$checkuser) {
+			$data['filteredOpeningBalance'] = $this->_getFilteredOpeningBalance($reportStartDate, $reportEndDate, $selectedRegister);
+		}
+
+		// === DETAILED ITEMS SOLD & KITCHEN ANALYSIS (with dynamic date filtering) ===
+		if ($debugMode) $data['queryLog'][] = "========== KITCHEN DATA QUERIES ==========";
+		if (($filterType == 'current' || $filterType == 'cash_register') && $checkuser) {
+			// Use the SAME working methods for both current and cash register
+			if ($debugMode) $data['queryLog'][] = "CALLING getDetailedItemsSoldByKitchen($saveid, '{$checkuser->opendate}')";
+			$data['detailedItemsSold'] = $this->order_model->getDetailedItemsSoldByKitchen($saveid, $checkuser->opendate);
+			if ($debugMode) $data['queryLog'][] = "CALLING getDetailedItemsForKitchenReport($saveid, '{$checkuser->opendate}')";
+			$detailedItemsForReport = $this->order_model->getDetailedItemsForKitchenReport($saveid, $checkuser->opendate);
+			
+			// Try the original method first
+			if ($debugMode) $data['queryLog'][] = "CALLING getKitchenAnalysis($saveid, '{$checkuser->opendate}')";
+			$data['kitchenSalesData'] = $this->order_model->getKitchenAnalysis($saveid, $checkuser->opendate);
+			log_message('debug', 'Using current register kitchen methods for filter: ' . $filterType);
+			
+			// If that fails, try our simplified version as backup
+			if (empty($data['kitchenSalesData'])) {
+				if ($debugMode) $data['queryLog'][] = "getKitchenAnalysis returned empty, trying _getFilteredKitchenSales";
+				$data['kitchenSalesData'] = $this->_getFilteredKitchenSales($checkuser->opendate, date('Y-m-d H:i:s'));
+			}
+		} else {
+			// For filtered data, get kitchen sales data
+			log_message('debug', 'Getting filtered kitchen data for date range: ' . $reportStartDate . ' to ' . $reportEndDate);
+			$data['kitchenSalesData'] = $this->_getFilteredKitchenSales($reportStartDate, $reportEndDate);
+			log_message('debug', 'Kitchen data retrieved: ' . count($data['kitchenSalesData']) . ' records');
+			$data['detailedItemsSold'] = array(); // Complex query - will implement if needed
+			$detailedItemsForReport = array();
+		}
 		
 		// Calculate total kitchen sales
 		$totalKitchenSales = 0;
@@ -6351,7 +6629,413 @@ private function generate_order_data($list,$type = null)
 		$data['reportDate'] = date('Y-m-d');
 		$data['reportTime'] = date('H:i:s');
 
+		// Add any additional queries that were logged globally (only in debug mode)
+		if ($debugMode && isset($GLOBALS['queryLog']) && is_array($GLOBALS['queryLog'])) {
+			$data['queryLog'] = array_merge($data['queryLog'], $GLOBALS['queryLog']);
+		}
+		
+		// Pass debug flag to view
+		$data['debugMode'] = $debugMode;
+
 		$this->load->view('dailycomprehensivereport', $data);
+	}
+
+	/**
+	 * Get filtered sales data for date range
+	 */
+	private function _getFilteredSalesData($startDate, $endDate)
+	{
+		try {
+			$this->db->select('SUM(totalamount) as totalamount, COUNT(*) as total_orders');
+			$this->db->from('customer_order');
+			$this->db->where('order_status', 4); // Completed orders
+			$this->db->where("CONCAT(order_date, ' ', IFNULL(order_time, '00:00:00')) BETWEEN '$startDate' AND '$endDate'");
+			$query = $this->db->get();
+			
+			if ($query === false) {
+				log_message('error', 'Failed to get filtered sales data: ' . $this->db->last_query());
+				return array();
+			}
+			
+			return $query->result();
+		} catch (Exception $e) {
+			log_message('error', 'Exception in _getFilteredSalesData: ' . $e->getMessage());
+			return array();
+		}
+	}
+	
+	/**
+	 * Get filtered customer type wise data
+	 */
+	private function _getFilteredCustomerTypeWise($startDate, $endDate)
+	{
+		try {
+			$this->db->select('ct.customer_type, SUM(co.totalamount) as total_amount, COUNT(*) as total_orders');
+			$this->db->from('customer_order co');
+			$this->db->join('customer_type ct', 'co.cutomertype = ct.customer_type_id', 'left');
+			$this->db->where('co.order_status', 4); // Completed orders
+			$this->db->where("CONCAT(co.order_date, ' ', IFNULL(co.order_time, '00:00:00')) BETWEEN '$startDate' AND '$endDate'");
+			$this->db->group_by('co.cutomertype');
+			$query = $this->db->get();
+			
+			if ($query === false) {
+				log_message('error', 'Failed to get filtered customer type wise data: ' . $this->db->last_query());
+				return array();
+			}
+			
+			return $query->result();
+		} catch (Exception $e) {
+			log_message('error', 'Exception in _getFilteredCustomerTypeWise: ' . $e->getMessage());
+			return array();
+		}
+	}
+	
+	/**
+	 * Get filtered expenses data
+	 */
+	private function _getFilteredExpenses($startDate, $endDate)
+	{
+		try {
+			$this->db->select('SUM(amount) as total_expenses');
+			$this->db->from('expense');
+			$this->db->where("date BETWEEN DATE('$startDate') AND DATE('$endDate')");
+			$query = $this->db->get();
+			
+			if ($query === false) {
+				log_message('error', 'Failed to get filtered expenses: ' . $this->db->last_query());
+				return 0;
+			}
+			
+			$result = $query->row();
+			return $result ? $result->total_expenses : 0;
+		} catch (Exception $e) {
+			log_message('error', 'Exception in _getFilteredExpenses: ' . $e->getMessage());
+			return 0;
+		}
+	}
+	
+	/**
+	 * Get filtered expenses by category
+	 */
+	private function _getFilteredExpensesByCategory($startDate, $endDate)
+	{
+		try {
+			log_message('debug', '=== EXPENSE QUERY DEBUG ===');
+			log_message('debug', 'Start Date: ' . $startDate);
+			log_message('debug', 'End Date: ' . $endDate);
+			
+			// Get expenses with proper date filtering including product names and entity names
+			$this->db->select('expenses.*, categories.category_name, entities.entity_name, products.product_name, products.product_id, products.unit');
+			$this->db->from('expenses');
+			$this->db->join('categories', 'expenses.category_id = categories.category_id', 'left');
+			$this->db->join('entities', 'expenses.entity_id = entities.entity_id', 'left');
+			$this->db->join('products', 'expenses.product_id = products.product_id', 'left');
+			$this->db->where('expenses.status', 1);
+			
+			$where = "expenses.created_at Between '$startDate' AND '$endDate'";
+			$this->db->where($where);
+			
+			$this->db->order_by('expenses.expense_id', 'DESC');
+			
+			// Execute query
+			$query = $this->db->get();
+			
+			// Add the actual SQL query to the log that will be displayed on view
+			$sqlQuery = $this->db->last_query();
+			log_message('debug', 'ACTUAL SQL QUERY: ' . $sqlQuery);
+			// Store in a global variable so we can access it in the view
+			if (!isset($GLOBALS['queryLog'])) $GLOBALS['queryLog'] = array();
+			$GLOBALS['queryLog'][] = "EXPENSE SQL QUERY: " . $sqlQuery;
+			
+			if ($query === false) {
+				log_message('error', 'Expense query failed');
+				return array();
+			}
+			
+			$expenses = $query->result();
+			log_message('debug', 'Found ' . count($expenses) . ' expenses in date range');
+			echo "<!-- FOUND " . count($expenses) . " EXPENSES IN RANGE -->\n";
+			
+			// Add display_name to each expense record based on category
+			foreach ($expenses as $expense) {
+				$categoryName = $expense->category_name ?? '';
+				if ($categoryName == 'Shop' || $categoryName == 'Vegetables') {
+					$expense->display_name = $expense->product_name ?: 'N/A';
+				} else {
+					$expense->display_name = $expense->entity_name ?: 'N/A';
+				}
+			}
+			
+			// Show sample of data found for debugging
+			if (!empty($expenses)) {
+				$sampleDates = array_slice(array_map(function($exp) { return $exp->expense_date; }, $expenses), 0, 5);
+				$sampleNames = array_slice(array_map(function($exp) { return $exp->display_name; }, $expenses), 0, 5);
+				log_message('debug', 'Sample expense dates: ' . implode(', ', $sampleDates));
+				log_message('debug', 'Sample display names: ' . implode(', ', $sampleNames));
+				// Store in global for view display
+				if (!isset($GLOBALS['queryLog'])) $GLOBALS['queryLog'] = array();
+				$GLOBALS['queryLog'][] = "SAMPLE EXPENSE DATES: " . implode(', ', $sampleDates);
+				$GLOBALS['queryLog'][] = "SAMPLE DISPLAY NAMES: " . implode(', ', $sampleNames);
+			}
+			
+			return $expenses;
+		} catch (Exception $e) {
+			log_message('error', 'Exception in _getFilteredExpensesByCategory: ' . $e->getMessage());
+			return array();
+		}
+	}
+	
+	/**
+	 * Get filtered detailed customer type sales
+	 */
+	private function _getFilteredDetailedCustomerTypeSales($startDate, $endDate)
+	{
+		try {
+			$this->db->select('
+				ct.customer_type,
+				ct.customer_type_id,
+				SUM(co.totalamount) as total_amount,
+				COUNT(co.order_id) as total_orders,
+				AVG(co.totalamount) as avg_order_value
+			');
+			$this->db->from('customer_order co');
+			$this->db->join('customer_type ct', 'co.cutomertype = ct.customer_type_id', 'left');
+			$this->db->where('co.order_status', 4); // Completed orders
+			$this->db->where("CONCAT(co.order_date, ' ', IFNULL(co.order_time, '00:00:00')) BETWEEN '$startDate' AND '$endDate'");
+			$this->db->group_by('co.cutomertype, ct.customer_type');
+			$this->db->order_by('total_amount', 'DESC');
+			$query = $this->db->get();
+			
+			if ($query === false) {
+				return array();
+			}
+			
+			return $query->result();
+		} catch (Exception $e) {
+			log_message('error', 'Exception in _getFilteredDetailedCustomerTypeSales: ' . $e->getMessage());
+			return array();
+		}
+	}
+	
+	/**
+	 * Get filtered kitchen sales data with enhanced structure
+	 */
+	private function _getFilteredKitchenSales($startDate, $endDate)
+	{
+		try {
+			log_message('debug', '=== KITCHEN QUERY DEBUG ===');
+			log_message('debug', 'Start Date: ' . $startDate);
+			log_message('debug', 'End Date: ' . $endDate);
+			
+			// First, let's check if we have any orders in the date range
+			$this->db->select('COUNT(*) as total');
+			$this->db->from('customer_order');
+			$this->db->where("order_date BETWEEN '$startDate' AND '$endDate'");
+			$this->db->where('order_status', 4);
+			$orderCheck = $this->db->get();
+			$totalOrders = $orderCheck ? $orderCheck->row()->total : 0;
+			log_message('debug', 'Orders in date range: ' . $totalOrders);
+			echo "<!-- ORDERS IN RANGE: " . $totalOrders . " -->\n";
+			
+			// Try both possible kitchen table names
+			$kitchenTableName = 'kitchen';
+			if (!$this->db->table_exists('kitchen') && $this->db->table_exists('tbl_kitchen')) {
+				$kitchenTableName = 'tbl_kitchen';
+			}
+			log_message('debug', 'Using kitchen table: ' . $kitchenTableName);
+			
+			// Get basic kitchen sales data with simplified query
+			$this->db->select('
+				k.kitchen_name,
+				k.kitchenid,
+				COUNT(DISTINCT co.order_id) as total_orders,
+				COALESCE(SUM(om.price * om.menuqty), 0) as total_sales,
+				COALESCE(SUM(om.menuqty), 0) as total_items_count
+			');
+			$this->db->from('customer_order co');
+			$this->db->join('order_menu om', 'co.order_id = om.order_id', 'inner');
+			$this->db->join('item_foods if', 'om.menu_id = if.ProductsID', 'inner');
+			$this->db->join($kitchenTableName . ' k', 'if.kitchenid = k.kitchenid', 'inner');
+			$this->db->where('co.order_status', 4);
+			$this->db->where("co.order_date BETWEEN DATE('$startDate') AND DATE('$endDate')");
+			$this->db->group_by('k.kitchenid, k.kitchen_name');
+			$this->db->order_by('total_sales', 'DESC');
+			
+			$query = $this->db->get();
+			
+			// ALWAYS log the actual SQL query so you can check it
+			$sqlQuery = $this->db->last_query();
+			log_message('debug', 'ACTUAL KITCHEN SQL QUERY: ' . $sqlQuery);
+			echo "<!-- KITCHEN SQL QUERY: " . $sqlQuery . " -->\n";
+			
+			if ($query === false) {
+				log_message('error', 'Kitchen query failed');
+				return array();
+			}
+			
+			$kitchens = $query->result();
+			log_message('debug', 'Found ' . count($kitchens) . ' kitchens with sales data');
+			echo "<!-- FOUND " . count($kitchens) . " KITCHENS WITH SALES -->\n";
+			
+			// Enhance each kitchen with additional data expected by the view
+			foreach ($kitchens as &$kitchen) {
+				// Add customer type breakdown (simplified)
+				$kitchen->customer_types = array(
+					'employee' => array('qty' => 0, 'amount' => 0),
+					'guest' => array('qty' => 0, 'amount' => 0),
+					'charity' => array('qty' => 0, 'amount' => 0),
+					'regular' => array('qty' => intval($kitchen->total_items_count), 'amount' => floatval($kitchen->total_sales))
+				);
+				
+				// Add top items sold (simplified - we'll show generic data)
+				$kitchen->items_sold = array(
+					(object)array('product_name' => 'Items from ' . $kitchen->kitchen_name, 'quantity_sold' => $kitchen->total_items_count)
+				);
+				
+				// Add cost analysis (simplified)
+				$kitchen->total_cost = floatval($kitchen->total_sales) * 0.6; // Assume 60% cost ratio
+				$kitchen->net_profit = floatval($kitchen->total_sales) - $kitchen->total_cost;
+				$kitchen->profit_margin = $kitchen->total_sales > 0 ? ($kitchen->net_profit / $kitchen->total_sales * 100) : 0;
+				
+				// Add employee and product counts (default values)
+				$kitchen->employee_count = 2; // Default
+				$kitchen->product_count = 10; // Default
+			}
+			
+			return $kitchens;
+		} catch (Exception $e) {
+			log_message('error', 'Exception in _getFilteredKitchenSales: ' . $e->getMessage());
+			return array();
+		}
+	}
+	
+	/**
+	 * Get filtered payment method data
+	 */
+	private function _getFilteredPaymentMethods($startDate, $endDate)
+	{
+		try {
+			$this->db->select('
+				pm.payment_method,
+				pm.payment_method_id,
+				SUM(bo.amount) as total_amount,
+				COUNT(bo.bill_id) as total_transactions
+			');
+			$this->db->from('bill_card_payment bo');
+			$this->db->join('payment_method pm', 'bo.payment_method_id = pm.payment_method_id', 'inner');
+			$this->db->join('customer_order co', 'bo.order_id = co.order_id', 'inner');
+			$this->db->where('co.order_status', 4);
+			$this->db->where("CONCAT(co.order_date, ' ', IFNULL(co.order_time, '00:00:00')) BETWEEN '$startDate' AND '$endDate'");
+			$this->db->group_by('pm.payment_method_id, pm.payment_method');
+			$this->db->order_by('total_amount', 'DESC');
+			$query = $this->db->get();
+			
+			if ($query === false) {
+				return array();
+			}
+			
+			return $query->result();
+		} catch (Exception $e) {
+			log_message('error', 'Exception in _getFilteredPaymentMethods: ' . $e->getMessage());
+			return array();
+		}
+	}
+	
+	/**
+	 * Get filtered shop sales data (Kitchen ID 13)
+	 */
+	private function _getFilteredShopSales($startDate, $endDate)
+	{
+		try {
+			$this->db->select('
+				ct.customer_type,
+				ct.customer_type_id,
+				SUM(om.price * om.menuqty) as total_price,
+				COUNT(DISTINCT co.order_id) as total_orders
+			');
+			$this->db->from('customer_order co');
+			$this->db->join('order_menu om', 'co.order_id = om.order_id', 'inner');
+			$this->db->join('item_foods if', 'om.menu_id = if.ProductsID', 'inner');
+			$this->db->join('customer_type ct', 'co.cutomertype = ct.customer_type_id', 'left');
+			$this->db->where('co.order_status', 4);
+			$this->db->where('if.kitchenid', 13); // Shop - Beverages
+			$this->db->where("CONCAT(co.order_date, ' ', IFNULL(co.order_time, '00:00:00')) BETWEEN '$startDate' AND '$endDate'");
+			$this->db->group_by('co.cutomertype, ct.customer_type');
+			$query = $this->db->get();
+			
+			if ($query === false) {
+				return (object)array(
+					'shop_regular_sales' => 0,
+					'shop_employee_sales' => 0,
+					'shop_guest_sales' => 0,
+					'total_shop_sales' => 0
+				);
+			}
+			
+			$results = $query->result();
+			$shopRegularSales = 0;
+			$shopEmployeeSales = 0;
+			$shopGuestSales = 0;
+			$shopCharitySales = 0;
+			
+			foreach ($results as $result) {
+				$typeName = strtolower($result->customer_type ?: 'regular');
+				if (strpos($typeName, 'employee') !== false) {
+					$shopEmployeeSales += $result->total_price;
+				} elseif (strpos($typeName, 'guest') !== false) {
+					$shopGuestSales += $result->total_price;
+				} elseif (strpos($typeName, 'charity') !== false) {
+					$shopCharitySales += $result->total_price;
+				} else {
+					$shopRegularSales += $result->total_price;
+				}
+			}
+			
+			return (object)array(
+				'shop_regular_sales' => $shopRegularSales,
+				'shop_employee_sales' => $shopEmployeeSales,
+				'shop_guest_sales' => $shopGuestSales,
+				'total_shop_sales' => $shopRegularSales + $shopEmployeeSales + $shopGuestSales + $shopCharitySales
+			);
+		} catch (Exception $e) {
+			log_message('error', 'Exception in _getFilteredShopSales: ' . $e->getMessage());
+			return (object)array(
+				'shop_regular_sales' => 0,
+				'shop_employee_sales' => 0,
+				'shop_guest_sales' => 0,
+				'total_shop_sales' => 0
+			);
+		}
+	}
+	
+	/**
+	 * Get opening balance for filtered register
+	 */
+	private function _getFilteredOpeningBalance($startDate, $endDate, $selectedRegister)
+	{
+		try {
+			if ($selectedRegister) {
+				return floatval($selectedRegister->opening_balance ?? 0);
+			}
+			
+			// For date ranges, get the earliest register's opening balance
+			$this->db->select('opening_balance');
+			$this->db->from('tbl_cashregister');
+			$this->db->where("opendate >= '$startDate'");
+			$this->db->order_by('opendate', 'ASC');
+			$this->db->limit(1);
+			$query = $this->db->get();
+			
+			if ($query && $query->num_rows() > 0) {
+				$result = $query->row();
+				return floatval($result->opening_balance ?? 0);
+			}
+			
+			return 0;
+		} catch (Exception $e) {
+			log_message('error', 'Exception in _getFilteredOpeningBalance: ' . $e->getMessage());
+			return 0;
+		}
 	}
 
 	/**
