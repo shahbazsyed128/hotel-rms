@@ -2308,7 +2308,7 @@ class Order_model extends CI_Model
 	 */
 	public function itemsKiReport($kid, $userid, $start_date)
 	{
-		// Get total for all customer types
+		// Get total for Regular customers only (for profit calculations)
 		$this->db->select("
 			SUM(order_menu.menuqty) as total_qty,
 			SUM(order_menu.price * order_menu.menuqty) as total_price
@@ -2321,9 +2321,10 @@ class Order_model extends CI_Model
 		$this->db->where('customer_order.order_status', 4);
 		$this->db->where('bill.create_by', $userid);
 		$this->db->where('bill.create_at >=', $start_date);
+		$this->db->where_not_in('customer_order.cutomertype', array(5, 6, 7)); // Regular customers only
 		$total = $this->db->get()->row();
 
-		// Get totals grouped by customer type, including type name
+		// Get totals for ALL customer types (for display)
 		$this->db->select("
 			customer_order.cutomertype,
 			customer_type.customer_type as type_name,
@@ -2342,9 +2343,31 @@ class Order_model extends CI_Model
 		$this->db->group_by('customer_order.cutomertype');
 		$by_type = $this->db->get()->result();
 
+		// Separate customer types for easier access
+		$customer_types = array(
+			'employee' => array('qty' => 0, 'amount' => 0),
+			'guest' => array('qty' => 0, 'amount' => 0),
+			'charity' => array('qty' => 0, 'amount' => 0),
+			'regular' => array('qty' => 0, 'amount' => 0)
+		);
+
+		foreach ($by_type as $type) {
+			if ($type->cutomertype == 5) { // Employee
+				$customer_types['employee'] = array('qty' => $type->total_qty, 'amount' => $type->total_price);
+			} elseif ($type->cutomertype == 6) { // Guest
+				$customer_types['guest'] = array('qty' => $type->total_qty, 'amount' => $type->total_price);
+			} elseif ($type->cutomertype == 7) { // Charity
+				$customer_types['charity'] = array('qty' => $type->total_qty, 'amount' => $type->total_price);
+			} else { // Regular (any other type)
+				$customer_types['regular']['qty'] += $type->total_qty;
+				$customer_types['regular']['amount'] += $type->total_price;
+			}
+		}
+
 		return [
-			'total' => $total,
-			'by_type' => $by_type
+			'total' => $total, // Regular customers only (for profit calculations)
+			'by_type' => $by_type, // All customer types
+			'customer_types' => $customer_types // Organized by type for easy access
 		];
 	}
 
@@ -2787,5 +2810,622 @@ class Order_model extends CI_Model
         return false; // Return failure if no current price is found
     }
 
+	/**
+	 * Get detailed items sold during cash register period
+	 * Similar to sellrptItems functionality but for cash register timeframe
+	 */
+	public function getDetailedItemsSold($userid, $start_date)
+	{
+		$crdate = date('Y-m-d H:i:s');
+		$where = "bill.create_at Between '$start_date' AND '$crdate'";
+		
+		// First get all completed orders in the timeframe (Regular customers only)
+		$this->db->select('customer_order.order_id, customer_type.customer_type');
+		$this->db->from('customer_order');
+		$this->db->join('customer_type', 'customer_order.cutomertype = customer_type.customer_type_id', 'left');
+		$this->db->join('bill', 'bill.order_id = customer_order.order_id', 'left');
+		$this->db->where('customer_order.order_status', 4); // Completed orders
+		$this->db->where('bill.create_by', $userid);
+		$this->db->where($where);
+		$this->db->where_not_in('customer_order.cutomertype', array(5, 6, 7)); // Exclude Employee, Guest, Charity
+		$this->db->order_by('customer_order.order_date', 'desc');
+		$orders = $this->db->get()->result();
+		
+		if (empty($orders)) {
+			return array();
+		}
+		
+		// Extract order IDs
+		$order_ids = array();
+		foreach ($orders as $order) {
+			$order_ids[] = $order->order_id;
+		}
+		
+		// Get detailed items for these orders
+		$newids = "'" . implode("','", $order_ids) . "'";
+		$condition = "order_menu.order_id IN($newids)";
+		
+		$sql = "SELECT 
+					SUM(order_menu.menuqty) as totalqty,
+					order_menu.order_id,
+					order_menu.groupmid,
+					order_menu.groupvarient,
+					order_menu.isgroup,
+					order_menu.price,
+					item_foods.ProductName,
+					item_foods.OffersRate,
+					variant.price as mprice,
+					variant.variantName,
+					tbl_kitchen.kitchen_name,
+					customer_type.customer_type,
+					customer_order.cutomertype
+				FROM order_menu 
+				LEFT JOIN item_foods ON order_menu.menu_id=item_foods.ProductsID 
+				LEFT JOIN variant ON order_menu.varientid=variant.variantid 
+				LEFT JOIN tbl_kitchen ON item_foods.kitchenid=tbl_kitchen.kitchenid
+				LEFT JOIN customer_order ON order_menu.order_id=customer_order.order_id
+				LEFT JOIN customer_type ON customer_order.cutomertype=customer_type.customer_type_id
+				WHERE {$condition} AND order_menu.isgroup=0 
+				GROUP BY order_menu.price,order_menu.menu_id,order_menu.varientid 
+				
+				UNION 
+				
+				SELECT 
+					order_menu.qroupqty as totalqty,
+					order_menu.order_id,
+					order_menu.groupmid,
+					order_menu.groupvarient,
+					order_menu.isgroup,
+					order_menu.price,
+					item_foods.ProductName,
+					item_foods.OffersRate,
+					variant.price as mprice,
+					variant.variantName,
+					tbl_kitchen.kitchen_name,
+					customer_type.customer_type,
+					customer_order.cutomertype
+				FROM order_menu 
+				LEFT JOIN item_foods ON order_menu.groupmid=item_foods.ProductsID 
+				LEFT JOIN variant ON order_menu.groupvarient=variant.variantid 
+				LEFT JOIN tbl_kitchen ON item_foods.kitchenid=tbl_kitchen.kitchenid
+				LEFT JOIN customer_order ON order_menu.order_id=customer_order.order_id
+				LEFT JOIN customer_type ON customer_order.cutomertype=customer_type.customer_type_id
+				WHERE {$condition} AND order_menu.isgroup=1 
+				GROUP BY order_menu.price,order_menu.groupmid,order_menu.groupvarient
+				
+				ORDER BY kitchen_name, ProductName";
+		
+		$query = $this->db->query($sql);
+		$orderinfo = $query->result();
+		
+		return $orderinfo;
+	}
+
+	/**
+	 * Get detailed items sold organized by kitchen and customer type
+	 */
+	public function getDetailedItemsSoldByKitchen($userid, $start_date)
+	{
+		$detailedItems = $this->getDetailedItemsSold($userid, $start_date);
+		
+		if (empty($detailedItems)) {
+			return array();
+		}
+		
+		// Organize by kitchen and customer type
+		$organizedItems = array();
+		
+		foreach ($detailedItems as $item) {
+			$kitchenName = $item->kitchen_name ?: 'Unknown Kitchen';
+			$customerType = $item->customer_type ?: 'Regular';
+			
+			if (!isset($organizedItems[$kitchenName])) {
+				$organizedItems[$kitchenName] = array();
+			}
+			
+			if (!isset($organizedItems[$kitchenName][$customerType])) {
+				$organizedItems[$kitchenName][$customerType] = array();
+			}
+			
+			$organizedItems[$kitchenName][$customerType][] = $item;
+		}
+		
+		return $organizedItems;
+	}
+
+	/**
+	 * Get detailed items sold formatted for the comprehensive report
+	 * Returns items in the format expected by the view
+	 */
+	public function getDetailedItemsForKitchenReport($userid, $start_date)
+	{
+		$detailedItems = $this->getDetailedItemsSold($userid, $start_date);
+		
+		if (empty($detailedItems)) {
+			return array();
+		}
+		
+		// Organize by kitchen name and format for report view
+		$organizedItems = array();
+		
+		foreach ($detailedItems as $item) {
+			$kitchenName = $item->kitchen_name ?: 'Unknown Kitchen';
+			
+			if (!isset($organizedItems[$kitchenName])) {
+				$organizedItems[$kitchenName] = array();
+			}
+			
+			// Format item to match expected view structure
+			$formattedItem = (object)array(
+				'product_name' => $item->ProductName . (!empty($item->variantName) ? ' - ' . $item->variantName : ''),
+				'quantity_sold' => (int)$item->totalqty,
+				'unit_price' => (float)$item->price,
+				'customer_type' => $item->customer_type ?: 'Regular',
+				'total_amount' => (float)($item->totalqty * $item->price)
+			);
+			
+			$organizedItems[$kitchenName][] = $formattedItem;
+		}
+		
+		// Sort items by quantity sold (descending) within each kitchen
+		foreach ($organizedItems as $kitchenName => $items) {
+			usort($organizedItems[$kitchenName], function($a, $b) {
+				return $b->quantity_sold <=> $a->quantity_sold;
+			});
+		}
+		
+		return $organizedItems;
+	}
+
+	/**
+	 * Get employees assigned to a specific kitchen
+	 */
+	public function getKitchenEmployees($kitchen_id)
+	{
+		$this->db->select('entities.*, categories.category_name');
+		$this->db->from('entities');
+		$this->db->join('categories', 'entities.category_id = categories.category_id', 'left');
+		$this->db->where('entities.kitchen_id', $kitchen_id);
+		$this->db->where('entities.category_id', 2); // Category ID 2 is for employees
+		$this->db->order_by('entities.entity_name', 'ASC');
+		$query = $this->db->get();
+		
+		return $query ? $query->result() : array();
+	}
+
+	/**
+	 * Get products assigned to a specific kitchen
+	 */
+	public function getKitchenProducts($kitchen_id)
+	{
+		$this->db->select('products.*, entities.entity_name, categories.category_name');
+		$this->db->from('products');
+		$this->db->join('entities', 'products.entity_id = entities.entity_id', 'left');
+		$this->db->join('categories', 'entities.category_id = categories.category_id', 'left');
+		$this->db->where('products.kitchen_id', $kitchen_id);
+		$this->db->order_by('products.product_name', 'ASC');
+		$query = $this->db->get();
+		
+		return $query ? $query->result() : array();
+	}
+
+	/**
+	 * Get kitchen analysis with employees and products
+	 */
+	public function getKitchenAnalysis($userid, $start_date)
+	{
+		$analysis = array();
+		
+		// Get all kitchens
+		$kitchens = $this->getKitchens(true);
+		
+		foreach ($kitchens as $kitchen) {
+			$kitchen_id = $kitchen->kitchenid;
+			$kitchen_name = $kitchen->kitchen_name;
+			
+			// Get kitchen items report
+			$itemsReport = $this->itemsKiReport($kitchen_id, $userid, $start_date);
+			
+			// Get detailed items sold for this kitchen
+			$detailedItems = $this->getDetailedItemsForKitchenReport($userid, $start_date);
+			$kitchenDetailedItems = isset($detailedItems[$kitchen_name]) ? $detailedItems[$kitchen_name] : array();
+			
+			// Get employees assigned to this kitchen
+			$employees = $this->getKitchenEmployees($kitchen_id);
+			
+			// Get products assigned to this kitchen
+			$products = $this->getKitchenProducts($kitchen_id);
+			
+			// Get purchased items for this kitchen
+			$purchases = $this->getKitchenPurchases($kitchen_id, $start_date);
+			
+			// Get labor charges for kitchen employees
+			$laborCharges = $this->getKitchenLaborCharges($kitchen_id, $start_date);
+			
+			// Get all expenses related to this kitchen during cash register period
+			$kitchenExpenses = $this->getKitchenExpenses($kitchen_id, $start_date);
+			
+			// Calculate totals
+			$totalSales = 0;
+			$totalItems = 0;
+			$orderCount = 0;
+			
+			if (!empty($itemsReport['total'])) {
+				$totalSales = $itemsReport['total']->total_price ?? 0;
+				$totalItems = $itemsReport['total']->total_qty ?? 0;
+			}
+			
+			// Get order count for this kitchen within the date range
+			$orderCount = $this->getKitchenOrderCount($kitchen_id, $userid, $start_date);
+			
+			// Calculate average order value
+			$avgOrderValue = ($orderCount > 0) ? ($totalSales / $orderCount) : 0;
+			
+			// Calculate total purchase amount and labor costs
+			$totalPurchaseAmount = 0;
+			$totalLaborCost = 0;
+			
+			foreach ($purchases as $purchase) {
+				$totalPurchaseAmount += ($purchase->quantity ?? 0) * ($purchase->price ?? 0);
+			}
+			
+			foreach ($laborCharges as $labor) {
+				$totalLaborCost += $labor->total_labor_cost ?? 0;
+			}
+			
+			// Check for any activity (including all customer types)
+			$hasActivity = $totalSales > 0 || 
+						   $itemsReport['customer_types']['employee']['qty'] > 0 ||
+						   $itemsReport['customer_types']['guest']['qty'] > 0 ||
+						   $itemsReport['customer_types']['charity']['qty'] > 0 ||
+						   !empty($employees) || !empty($products) || !empty($kitchenDetailedItems) || 
+						   !empty($purchases) || !empty($laborCharges) || $kitchenExpenses['total_expenses'] > 0;
+
+			if ($hasActivity) {
+				$analysis[] = (object)array(
+					'kitchen_id' => $kitchen_id,
+					'kitchen_name' => $kitchen_name,
+					'total_sales' => $totalSales, // Regular customers only (for profit calculations)
+					'total_items_count' => $totalItems, // Regular customers only
+					'order_count' => $orderCount, // Regular customers only
+					'item_count' => $totalItems,
+					'avg_order_value' => $avgOrderValue,
+					'items_sold' => $kitchenDetailedItems,
+					'by_type_data' => $itemsReport['by_type'] ?? array(),
+					'customer_types' => $itemsReport['customer_types'], // All customer type data
+					'employees' => $employees,
+					'products' => $products,
+					'purchases' => $purchases,
+					'labor_charges' => $laborCharges,
+					'kitchen_expenses' => $kitchenExpenses,
+					'employee_count' => count($employees),
+					'product_count' => count($products),
+					'purchase_count' => count($purchases),
+					'total_purchase_amount' => $totalPurchaseAmount,
+					'total_labor_cost' => $totalLaborCost,
+					'total_kitchen_expenses' => $kitchenExpenses['total_expenses']
+				);
+			}
+		}
+		
+		// Sort by total sales (highest first)
+		usort($analysis, function($a, $b) {
+			return $b->total_sales <=> $a->total_sales;
+		});
+		
+		return $analysis;
+	}
+
+	/**
+	 * Get order count for a specific kitchen within a date range
+	 * @param int $kitchen_id
+	 * @param int $userid
+	 * @param string $start_date
+	 * @return int
+	 */
+	public function getKitchenOrderCount($kitchen_id, $userid, $start_date)
+	{
+		$end_date = date('Y-m-d H:i:s');
+		
+		$this->db->select('COUNT(DISTINCT co.order_id) as order_count')
+				 ->from('customer_order co')
+				 ->join('order_menu om', 'co.order_id = om.order_id')
+				 ->join('item_foods if', 'om.menu_id = if.ProductsID')
+				 ->where('if.kitchenid', $kitchen_id)
+				 ->where('co.order_date >=', $start_date)
+				 ->where('co.order_date <=', $end_date)
+				 ->where('co.order_status', 4) // Completed orders
+				 ->where_not_in('co.cutomertype', array(5, 6, 7)); // Exclude Employee, Guest, Charity
+		
+		$result = $this->db->get()->row();
+		return $result ? (int)$result->order_count : 0;
+	}
+
+	/**
+	 * Get purchased items for a specific kitchen within a date range
+	 * @param int $kitchen_id
+	 * @param string $start_date
+	 * @return array
+	 */
+	public function getKitchenPurchases($kitchen_id, $start_date)
+	{
+		$end_date = date('Y-m-d H:i:s');
+		
+		$this->db->select('pd.*, p.product_name, p.unit, e.entity_name, c.category_name')
+				 ->from('purchase_details pd')
+				 ->join('products p', 'pd.productid = p.product_id', 'left')
+				 ->join('entities e', 'pd.entity_id = e.entity_id', 'left')
+				 ->join('categories c', 'e.category_id = c.category_id', 'left')
+				 ->where('p.kitchen_id', $kitchen_id)
+				 ->where('pd.purchasedate >=', date('Y-m-d', strtotime($start_date)))
+				 ->where('pd.purchasedate <=', date('Y-m-d', strtotime($end_date)))
+				 ->order_by('pd.purchasedate', 'DESC');
+		
+		$result = $this->db->get();
+		return $result ? $result->result() : array();
+	}
+
+	/**
+	 * Get labor charges for kitchen employees within a date range
+	 * @param int $kitchen_id
+	 * @param string $start_date
+	 * @return array
+	 */
+	public function getKitchenLaborCharges($kitchen_id, $start_date)
+	{
+		$end_date = date('Y-m-d H:i:s');
+		
+		$this->db->select('e.*, en.entity_name, en.entity_id, c.category_name, 
+						   SUM(e.total_amount) as total_labor_cost')
+				 ->from('expenses e')
+				 ->join('entities en', 'e.entity_id = en.entity_id', 'left')
+				 ->join('categories c', 'en.category_id = c.category_id', 'left')
+				 ->where('en.kitchen_id', $kitchen_id)
+				 ->where('en.category_id', 2) // Employee category
+				 ->where('e.created_at >=', $start_date)
+				 ->where('e.created_at <=', $end_date)
+				 ->where('e.status', 1)
+				 ->group_by('en.entity_id')
+				 ->order_by('total_labor_cost', 'DESC');
+		
+		$result = $this->db->get();
+		return $result ? $result->result() : array();
+	}
+
+	/**
+	 * Get all expenses related to a specific kitchen during cash register period
+	 * @param int $kitchen_id
+	 * @param string $start_date
+	 * @return array
+	 */
+	public function getKitchenExpenses($kitchen_id, $start_date)
+	{
+		$end_date = date('Y-m-d H:i:s');
+		
+		$expenses = array(
+			'employee_expenses' => array(),
+			'product_expenses' => array(),
+			'entity_expenses' => array(),
+			'other_expenses' => array(),
+			'total_expenses' => 0,
+			'total_milk_quantity' => 0,
+			'total_milk_amount' => 0,
+			'product_quantities' => array(),
+			'entity_quantities' => array()
+		);
+		
+		// Get all expenses during the period with quantity information
+		$this->db->select('e.*, c.category_name, en.entity_name, en.kitchen_id as entity_kitchen_id, 
+						   p.product_name, p.kitchen_id as product_kitchen_id, p.unit,
+						   e.quantity, e.price, e.total_amount')
+				 ->from('expenses e')
+				 ->join('categories c', 'e.category_id = c.category_id', 'left')
+				 ->join('entities en', 'e.entity_id = en.entity_id', 'left')
+				 ->join('products p', 'e.product_id = p.product_id', 'left')
+				 ->where('e.created_at >=', $start_date)
+				 ->where('e.created_at <=', $end_date)
+				 ->where('e.status', 1)
+				 ->order_by('e.created_at', 'DESC');
+		
+		$result = $this->db->get();
+		$allExpenses = $result ? $result->result() : array();
+		
+		foreach ($allExpenses as $expense) {
+			$isRelatedToKitchen = false;
+			
+			// Check if expense is related to this kitchen
+			if (!empty($expense->entity_kitchen_id) && $expense->entity_kitchen_id == $kitchen_id) {
+				$isRelatedToKitchen = true;
+				
+				// Categorize by entity category
+				if (!empty($expense->entity_name)) {
+					// Get entity category to determine if it's employee, supplier, etc.
+					$entityCategory = $this->getEntityCategory($expense->entity_id);
+					
+					if ($entityCategory && $entityCategory->category_id == 2) {
+						// Employee expense - group by employee name
+						$employeeName = $expense->entity_name;
+						$employeeKey = strtolower(trim($employeeName));
+						
+						// Check if we already have this employee in expenses
+						$foundExisting = false;
+						foreach ($expenses['employee_expenses'] as &$existingExpense) {
+							$existingEmployeeKey = strtolower(trim($existingExpense->entity_name));
+							if ($existingEmployeeKey === $employeeKey) {
+								// Merge amounts (employees typically don't have quantities)
+								$existingExpense->total_amount += $expense->total_amount;
+								$foundExisting = true;
+								break;
+							}
+						}
+						
+						// If not found, add as new entry
+						if (!$foundExisting) {
+							$expenses['employee_expenses'][] = $expense;
+						}
+					} else {
+						// Other entity expense - group by entity name
+						$entityName = $expense->entity_name;
+						$entityKey = strtolower(trim($entityName));
+						
+						// Check if we already have this entity in expenses
+						$foundExisting = false;
+						foreach ($expenses['entity_expenses'] as &$existingExpense) {
+							$existingEntityKey = strtolower(trim($existingExpense->entity_name));
+							if ($existingEntityKey === $entityKey) {
+								// Merge quantities and amounts
+								$existingExpense->quantity = ($existingExpense->quantity ?: 0) + ($expense->quantity ?: 0);
+								$existingExpense->total_amount += $expense->total_amount;
+								// Preserve unit information if not already set
+								if (empty($existingExpense->unit) && !empty($expense->unit)) {
+									$existingExpense->unit = $expense->unit;
+								}
+								$foundExisting = true;
+								break;
+							}
+						}
+						
+						// If not found, add as new entry
+						if (!$foundExisting) {
+							$expenses['entity_expenses'][] = $expense;
+						}
+						
+						// Track entity quantities (already grouped)
+						if (!isset($expenses['entity_quantities'][$entityName])) {
+							$expenses['entity_quantities'][$entityName] = array(
+								'quantity' => 0,
+								'unit' => $expense->unit ?: 'items',
+								'total_amount' => 0
+							);
+						}
+						$expenses['entity_quantities'][$entityName]['quantity'] += ($expense->quantity ?: 0);
+						$expenses['entity_quantities'][$entityName]['total_amount'] += $expense->total_amount;
+					}
+				}
+			}
+			
+			// Check if expense is related to a product in this kitchen
+			if (!empty($expense->product_kitchen_id) && $expense->product_kitchen_id == $kitchen_id) {
+				$isRelatedToKitchen = true;
+				
+				// Group expenses by product name to avoid duplicates
+				$productName = $expense->product_name ?: 'Unknown Product';
+				$productKey = strtolower(trim($productName)); // Use lowercase key for grouping
+				
+				// Check if we already have this product in expenses
+				$foundExisting = false;
+				foreach ($expenses['product_expenses'] as &$existingExpense) {
+					$existingProductKey = strtolower(trim($existingExpense->product_name ?: 'Unknown Product'));
+					if ($existingProductKey === $productKey) {
+						// Merge quantities and amounts
+						$existingExpense->quantity = ($existingExpense->quantity ?: 0) + ($expense->quantity ?: 0);
+						$existingExpense->total_amount += $expense->total_amount;
+						$foundExisting = true;
+						break;
+					}
+				}
+				
+				// If not found, add as new entry
+				if (!$foundExisting) {
+					$expenses['product_expenses'][] = $expense;
+				}
+				
+				// Track product quantities (already grouped)
+				if (!isset($expenses['product_quantities'][$productName])) {
+					$expenses['product_quantities'][$productName] = array(
+						'quantity' => 0,
+						'unit' => $expense->unit ?: 'items',
+						'total_amount' => 0
+					);
+				}
+				$expenses['product_quantities'][$productName]['quantity'] += ($expense->quantity ?: 0);
+				$expenses['product_quantities'][$productName]['total_amount'] += $expense->total_amount;
+				
+				// Check if this is milk
+				if (stripos($productName, 'milk') !== false) {
+					$expenses['total_milk_quantity'] += ($expense->quantity ?: 0);
+					$expenses['total_milk_amount'] += $expense->total_amount;
+				}
+			}
+			
+			// If related to kitchen, add to total
+			if ($isRelatedToKitchen) {
+				$expenses['total_expenses'] += $expense->total_amount;
+			}
+		}
+		
+		// Also check purchase_details for additional milk quantities
+		$this->db->select('pd.quantity, pd.price, pd.total_amount, p.product_name, p.unit')
+				 ->from('purchase_details pd')
+				 ->join('products p', 'pd.productid = p.product_id', 'left')
+				 ->where('p.kitchen_id', $kitchen_id)
+				 ->where('pd.purchasedate >=', date('Y-m-d', strtotime($start_date)))
+				 ->where('pd.purchasedate <=', date('Y-m-d', strtotime($end_date)));
+		
+		$purchaseResult = $this->db->get();
+		$purchases = $purchaseResult ? $purchaseResult->result() : array();
+		
+		// Group purchases by product name to avoid duplicates
+		$groupedPurchases = array();
+		foreach ($purchases as $purchase) {
+			$productName = $purchase->product_name ?: 'Unknown Product';
+			$productKey = strtolower(trim($productName));
+			
+			if (!isset($groupedPurchases[$productKey])) {
+				$groupedPurchases[$productKey] = array(
+					'product_name' => $productName,
+					'unit' => $purchase->unit ?: 'items',
+					'quantity' => 0,
+					'total_amount' => 0
+				);
+			}
+			
+			$groupedPurchases[$productKey]['quantity'] += ($purchase->quantity ?: 0);
+			$groupedPurchases[$productKey]['total_amount'] += ($purchase->total_amount ?: 0);
+		}
+		
+		// Add grouped purchases to product quantities
+		foreach ($groupedPurchases as $grouped) {
+			$productName = $grouped['product_name'];
+			
+			// Add to product quantities
+			if (!isset($expenses['product_quantities'][$productName])) {
+				$expenses['product_quantities'][$productName] = array(
+					'quantity' => 0,
+					'unit' => $grouped['unit'],
+					'total_amount' => 0
+				);
+			}
+			$expenses['product_quantities'][$productName]['quantity'] += $grouped['quantity'];
+			$expenses['product_quantities'][$productName]['total_amount'] += $grouped['total_amount'];
+			
+			// Check if this is milk
+			if (stripos($productName, 'milk') !== false) {
+				$expenses['total_milk_quantity'] += $grouped['quantity'];
+				$expenses['total_milk_amount'] += $grouped['total_amount'];
+			}
+		}
+		
+		return $expenses;
+	}
+
+	/**
+	 * Get entity category information
+	 * @param int $entity_id
+	 * @return object|null
+	 */
+	private function getEntityCategory($entity_id)
+	{
+		if (empty($entity_id)) return null;
+		
+		$this->db->select('c.*')
+				 ->from('entities e')
+				 ->join('categories c', 'e.category_id = c.category_id', 'left')
+				 ->where('e.entity_id', $entity_id)
+				 ->limit(1);
+		
+		$result = $this->db->get();
+		return $result ? $result->row() : null;
+	}
 
 }

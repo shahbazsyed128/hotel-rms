@@ -352,7 +352,7 @@
 
     <!-- Sales & Financial Overview (Cash Register Style) -->
     <div class="row">
-      <div class="col-md-7" style="float: left; width: 58%; margin-right: 2%;">
+      <div class="col-md-6" style="float: left; width: 50%;">
         <div class="panel panel-default">
           <div class="panel-heading">💰 Financial Overview</div>
           <div class="panel-body">
@@ -554,6 +554,14 @@
                 <td align="right" colspan="2">Total <?php echo ($finalTotalProfitLoss >= 0) ? 'Profit' : 'Loss'; ?></td>
                 <td align="right"><?php echo ($finalTotalProfitLoss >= 0 ? '+' : '') . ' ' . number_format($finalTotalProfitLoss, 2); ?></td>
               </tr>
+              
+              <!-- Cancelled Orders Impact -->
+              <?php if (isset($totalCancelledValue) && $totalCancelledValue > 0): ?>
+              <tr style="background-color: #fff3cd; color: #856404;">
+                <td align="right" colspan="2">Cancelled Orders Impact (<?php echo $totalCancelledOrders ?? 0; ?> orders)</td>
+                <td align="right">- <?php echo number_format($totalCancelledValue, 2); ?></td>
+              </tr>
+              <?php endif; ?>
             </tfoot>
           </table>
         </div>
@@ -561,57 +569,11 @@
         </div>
       </div>
           
-      <!-- Category Sales Column -->
-      <div class="col-md-5" style="float: left; width: 38%;">
+      <!-- Payment Methods Column -->
+      <div class="col-md-6" style="float: left; width: 50%;">
         <div class="panel panel-default">
-          <div class="panel-heading">📊 Sales by Category</div>
+          <div class="panel-heading">💳 Payment Methods & Performance</div>
           <div class="panel-body">
-            <div class="table-responsive">
-              <table class="table table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th>Category</th>
-                    <th class="text-right">Sales Amount</th>
-                    <th class="text-right">Percentage</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php 
-                  // Calculate category sales (this would need to be added to controller)
-                  $categorySales = array();
-                  $totalCategorySales = 0;
-                  
-                  // For now, let's use example data - you can later connect to real category data
-                  $categorySales = array(
-                    'Main Dishes' => 1200.00,
-                    'Beverages' => 450.00,
-                    'Appetizers' => 320.00,
-                    'Desserts' => 180.00,
-                    'Shop Items' => ($shopSalesData->total_shop_sales ?? 0)
-                  );
-                  
-                  $totalCategorySales = array_sum($categorySales);
-                  
-                  foreach ($categorySales as $categoryName => $amount):
-                    $percentage = $totalCategorySales > 0 ? ($amount / $totalCategorySales * 100) : 0;
-                  ?>
-                    <tr>
-                      <td><?php echo htmlspecialchars($categoryName); ?></td>
-                      <td class="text-right"><?php echo number_format($amount, 2); ?></td>
-                      <td class="text-right"><?php echo number_format($percentage, 1); ?>%</td>
-                    </tr>
-                  <?php endforeach; ?>
-                </tbody>
-                <tfoot>
-                  <tr style="background-color: #f0f0f0; font-weight: bold;">
-                    <th>Total Category Sales</th>
-                    <th class="text-right"><?php echo number_format($totalCategorySales, 2); ?></th>
-                    <th class="text-right">100.0%</th>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-            
             <!-- Payment Methods Breakdown -->
             <h5 style="margin-top: 20px; color: #337ab7;">💳 Payment Methods</h5>
             <div class="table-responsive">
@@ -682,6 +644,51 @@
                 </div>
               </div>
             </div>
+            
+            <!-- Cancelled Orders Summary -->
+            <h5 style="margin-top: 20px; color: #d9534f;">❌ Cancelled Orders</h5>
+            <div class="panel panel-danger">
+              <div class="panel-body" style="padding: 10px;">
+                <?php 
+                $totalCancelledOrdersCount = $totalCancelledOrders ?? 0;
+                $totalCancelledOrdersValue = $totalCancelledValue ?? 0;
+                ?>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <strong>Total Cancelled Orders:</strong><br>
+                    <span class="text-danger" style="font-size: 18px;"><?php echo number_format($totalCancelledOrdersCount); ?></span>
+                  </div>
+                  <div class="col-sm-6">
+                    <strong>Total Cancelled Value:</strong><br>
+                    <span class="text-danger" style="font-size: 18px;"><?php echo number_format($totalCancelledOrdersValue, 2); ?></span>
+                  </div>
+                </div>
+                
+                <?php if (!empty($cancelledOrdersByType)): ?>
+                <hr style="margin: 10px 0;">
+                <div class="table-responsive">
+                  <table class="table table-condensed table-bordered" style="margin-bottom: 0;">
+                    <thead>
+                      <tr>
+                        <th>Customer Type</th>
+                        <th class="text-center">Count</th>
+                        <th class="text-right">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php foreach ($cancelledOrdersByType as $customerType => $data): ?>
+                        <tr>
+                          <td><?php echo htmlspecialchars($customerType); ?></td>
+                          <td class="text-center"><?php echo number_format($data['count']); ?></td>
+                          <td class="text-right"><?php echo number_format($data['total_value'], 2); ?></td>
+                        </tr>
+                      <?php endforeach; ?>
+                    </tbody>
+                  </table>
+                </div>
+                <?php endif; ?>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -690,10 +697,86 @@
   </div>
   <!-- /printArea -->
   
+  <!-- ========================= Cancelled Orders Details ========================= -->
+  <div class="row" style="margin-top: 20px;">
+    <div class="col-md-12">
+      <div class="printable-section" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0;">
+        <div class="report-header">
+          <h4 class="m-b-0" style="color: #d9534f;">❌ Cancelled Orders Details</h4>
+          <p class="report-meta m-b-0">
+            <small>Detailed List of Cancelled Orders</small>
+          </p>
+        </div>
+        <div class="panel panel-danger">
+          <div class="panel-body">
+            <?php if (!empty($cancelledOrders) && $totalCancelledOrders > 0): ?>
+              <div class="table-responsive">
+                <table class="table table-bordered table-condensed">
+                  <thead>
+                    <tr>
+                      <th style="width: 12%;">Order ID</th>
+                      <th style="width: 20%;">Customer</th>
+                      <th style="width: 15%;">Customer Type</th>
+                      <th class="text-right" style="width: 12%;">Value</th>
+                      <th style="width: 31%;">Reason</th>
+                      <th class="text-center" style="width: 10%;">Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php foreach ($cancelledOrders as $order): ?>
+                    <tr>
+                      <td>
+                        <a href="<?php echo base_url("ordermanage/order/orderdetails/$order->order_id") ?>" class="btn btn-link btn-sm" style="padding: 0; color: #337ab7;">
+                          <strong><?php echo htmlspecialchars($order->order_id); ?></strong>
+                        </a>
+                      </td>
+                      <td>
+                        <?php echo htmlspecialchars($order->customer_name ?: 'Walk-in Customer'); ?>
+                      </td>
+                      <td>
+                        <span class="label label-default"><?php echo htmlspecialchars($order->customer_type ?: 'Regular'); ?></span>
+                      </td>
+                      <td class="text-right">
+                        <span class="text-danger"><strong><?php echo number_format($order->totalamount, 2); ?></strong></span>
+                      </td>
+                      <td>
+                        <span class="text-muted" style="font-style: italic;">
+                          <?php echo htmlspecialchars($order->cancel_reason ?: 'No reason provided'); ?>
+                        </span>
+                      </td>
+                      <td class="text-center">
+                        <small><?php echo !empty($order->order_time) ? date('H:i', strtotime($order->order_time)) : 'N/A'; ?></small>
+                      </td>
+                    </tr>
+                    <?php endforeach; ?>
+                  </tbody>
+                  <tfoot>
+                    <tr style="background-color: #f9f9f9; font-weight: bold;">
+                      <td colspan="3"><strong>Total Cancelled Orders</strong></td>
+                      <td class="text-right text-danger"><strong><?php echo number_format($totalCancelledValue, 2); ?></strong></td>
+                      <td colspan="2" class="text-center"><strong><?php echo $totalCancelledOrders; ?> orders</strong></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            <?php else: ?>
+              <div class="text-center text-success">
+                <h4>✅ No Cancelled Orders Today!</h4>
+                <p>Excellent customer satisfaction performance.</p>
+              </div>
+            <?php endif; ?>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  
   <!-- ========================= Two Column Layout for Reports ========================= -->
   <div class="row">
     <!-- Left Column: Expenses Report -->
-    <div class="col-md-6" style="float: left; width: 48%; margin-right: 2%;">
+    <div class="col-md-6" style="float: left; width: 50%;">
       <div id="expensesPrintArea" class="printable-section" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0; max-width:100%; overflow:hidden; min-height:auto;" class="dense">
     <div class="report-header">
       <h3 class="m-b-0">Expenses Report</h3>
@@ -860,33 +943,648 @@
       </div>
     </div>
     
-    <!-- Right Column: Additional Report Section -->
-    <div class="col-md-6" style="float: left; width: 48%;">
-      <div id="additionalReportArea" class="printable-section" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0; max-width:100%; overflow:hidden; min-height:auto;">
+    <!-- Right Column: Summary Report Section -->
+    <div class="col-md-6" style="float: left; width: 50%;">
+      <div id="summaryReportArea" class="printable-section" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0; max-width:100%; overflow:hidden; min-height:auto;">
         <div class="report-header">
-          <h3 class="m-b-0">Additional Report</h3>
+          <h3 class="m-b-0">Summary Report</h3>
           <p class="report-meta m-b-0">
             Date: <span><?php echo date('Y-m-d'); ?></span>
-            <span style="margin-left:10px;">Summary Information</span>
+            <span style="margin-left:10px;">Quick Overview</span>
           </p>
         </div>
-        <div class="panel panel-default">
-          <div class="panel-heading">Report Summary</div>
+        <div class="panel panel-info">
+          <div class="panel-heading">📋 Daily Summary</div>
           <div class="panel-body">
-            <p>This section can be used for additional reporting content such as:</p>
-            <ul>
-              <li>Top selling items</li>
-              <li>Performance metrics</li>
-              <li>Daily targets vs achievements</li>
-              <li>Staff performance</li>
-              <li>Customer feedback summary</li>
-            </ul>
-            <p class="text-muted">Content can be customized based on business requirements.</p>
+            <div class="row">
+              <div class="col-sm-6">
+                <strong>Total Sales:</strong><br>
+                <span class="text-success" style="font-size: 16px;">
+                  <?php 
+                  $totalSalesAmount = 0;
+                  if (!empty($totalamount)) {
+                    foreach ($totalamount as $amount) {
+                      $totalSalesAmount += $amount->totalamount;
+                    }
+                  }
+                  echo number_format($totalSalesAmount, 2);
+                  ?>
+                </span>
+              </div>
+              <div class="col-sm-6">
+                <strong>Total Orders:</strong><br>
+                <span class="text-info" style="font-size: 16px;">
+                  <?php echo count($totalamount ?? []); ?>
+                </span>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-6">
+                <strong>Cancelled Orders:</strong><br>
+                <span class="text-danger" style="font-size: 16px;">
+                  <?php echo $totalCancelledOrders ?? 0; ?>
+                </span>
+              </div>
+              <div class="col-sm-6">
+                <strong>Lost Revenue:</strong><br>
+                <span class="text-danger" style="font-size: 16px;">
+                  <?php echo number_format($totalCancelledValue ?? 0, 2); ?>
+                </span>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-6">
+                <strong>Total Expenses:</strong><br>
+                <span class="text-warning" style="font-size: 16px;">
+                  <?php 
+                  $totalExpensesAmount = 0;
+                  if (!empty($expensesByCategory)) {
+                    foreach ($expensesByCategory as $categoryName => $categoryTotal) {
+                      $totalExpensesAmount += $categoryTotal;
+                    }
+                  }
+                  echo number_format($totalExpensesAmount, 2);
+                  ?>
+                </span>
+              </div>
+              <div class="col-sm-6">
+                <strong>Net Income:</strong><br>
+                <span class="<?php echo ($totalSalesAmount - $totalExpensesAmount >= 0) ? 'text-success' : 'text-danger'; ?>" style="font-size: 16px;">
+                  <?php echo number_format($totalSalesAmount - $totalExpensesAmount, 2); ?>
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div class="clearfix"></div>
+  </div>
+  
+  <!-- ========================= Kitchen Sales Report ========================= -->
+  <div class="row" style="margin-top: 20px;">
+    <div class="col-md-12">
+      <div id="kitchenSalesArea" class="printable-section" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0; max-width:100%; overflow:hidden; min-height:auto;">
+        <div class="report-header">
+          <h3 class="m-b-0">🍴 Kitchen Sales Report</h3>
+          <p class="report-meta m-b-0">
+            Date: <span><?php echo date('Y-m-d'); ?></span>
+            <span style="margin-left:10px;">Sales by Kitchen (Employee • Guest • Charity • Regular)</span>
+          </p>
+        </div>
+        <div class="panel panel-success">
+          <div class="panel-heading">
+            Kitchen Performance Analysis
+            <small style="margin-left: 15px; font-weight: normal; opacity: 0.8;">
+              (Regular Customers Only - Excludes Employee, Guest & Charity)
+            </small>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th>Kitchen</th>
+                    <th class="text-center">Top Items Sold</th>
+                    <th class="text-center">Regular<br><small>(Items)</small></th>
+                    <th class="text-center">Employee<br><small>(Qty)</small></th>
+                    <th class="text-center">Guest<br><small>(Qty)</small></th>
+                    <th class="text-center">Charity<br><small>(Qty)</small></th>
+                    <th class="text-right">Sales*<br><small>(Regular Only)</small></th>
+                    <th class="text-center">Labor Cost</th>
+                    <th class="text-center">Ingredients Cost</th>
+                    <th class="text-right">Total Costs</th>
+                    <th class="text-right">Net Profit*</th>
+                    <th class="text-center">Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php 
+                  $totalKitchenSalesAmount = $totalKitchenSales ?? 0;
+                  $grandTotalCosts = 0;
+                  $grandNetProfit = 0;
+                  
+                  if (!empty($kitchenSalesData)):
+                    foreach ($kitchenSalesData as $kitchen):
+                      
+                      // Get top 3 items sold
+                      $topItems = array();
+                      if (!empty($kitchen->items_sold)) {
+                        $topItems = array_slice($kitchen->items_sold, 0, 3);
+                      }
+                  ?>
+                    <tr>
+                      <td><strong><?php echo htmlspecialchars($kitchen->kitchen_name); ?></strong></td>
+                      <td style="font-size: 11px;">
+                        <?php if (!empty($topItems)): ?>
+                          <?php foreach ($topItems as $item): ?>
+                            <div><?php echo htmlspecialchars($item->product_name); ?> (<?php echo $item->quantity_sold; ?>)</div>
+                          <?php endforeach; ?>
+                        <?php else: ?>
+                          <span class="text-muted">No items sold</span>
+                        <?php endif; ?>
+                      </td>
+                      <td class="text-center">
+                        <strong><?php echo number_format($kitchen->total_items_count ?? 0); ?></strong>
+                        <br><small class="text-muted">Regular</small>
+                      </td>
+                      <td class="text-center">
+                        <strong style="color: #f0ad4e;"><?php echo number_format($kitchen->customer_types['employee']['qty'] ?? 0); ?></strong>
+                        <br><small class="text-muted">Employee</small>
+                      </td>
+                      <td class="text-center">
+                        <strong style="color: #5bc0de;"><?php echo number_format($kitchen->customer_types['guest']['qty'] ?? 0); ?></strong>
+                        <br><small class="text-muted">Guest</small>
+                      </td>
+                      <td class="text-center">
+                        <strong style="color: #d9534f;"><?php echo number_format($kitchen->customer_types['charity']['qty'] ?? 0); ?></strong>
+                        <br><small class="text-muted">Charity</small>
+                      </td>
+                      <td class="text-right">
+                        <strong style="color: #5cb85c;"><?php echo number_format($kitchen->total_sales, 2); ?></strong>
+                        <br><small class="text-muted">Regular Only</small>
+                      </td>
+                      <td class="text-center">
+                        <?php 
+                        // Calculate Labor Costs (Employee expenses)
+                        $laborTotal = 0;
+                        $employeeCount = 0;
+                        if (!empty($kitchen->kitchen_expenses['employee_expenses'])) {
+                          foreach ($kitchen->kitchen_expenses['employee_expenses'] as $expense) {
+                            $laborTotal += $expense->total_amount;
+                          }
+                          $employeeCount = count($kitchen->kitchen_expenses['employee_expenses']);
+                        }
+                        ?>
+                        <span style="color: #d9534f;"><?php echo number_format($laborTotal, 2); ?></span>
+                        <br><small>(<?php echo $employeeCount; ?> staff)</small>
+                      </td>
+                      <td class="text-center">
+                        <?php 
+                        // Calculate Ingredients Costs (Product + Entity expenses)
+                        $ingredientsTotal = 0;
+                        $ingredientCount = 0;
+                        if (!empty($kitchen->kitchen_expenses['product_expenses'])) {
+                          foreach ($kitchen->kitchen_expenses['product_expenses'] as $expense) {
+                            $ingredientsTotal += $expense->total_amount;
+                          }
+                          $ingredientCount += count($kitchen->kitchen_expenses['product_expenses']);
+                        }
+                        if (!empty($kitchen->kitchen_expenses['entity_expenses'])) {
+                          foreach ($kitchen->kitchen_expenses['entity_expenses'] as $expense) {
+                            $ingredientsTotal += $expense->total_amount;
+                          }
+                          $ingredientCount += count($kitchen->kitchen_expenses['entity_expenses']);
+                        }
+                        ?>
+                        <span style="color: #5cb85c;"><?php echo number_format($ingredientsTotal, 2); ?></span>
+                        <br><small>(<?php echo $ingredientCount; ?> items)</small>
+                      </td>
+                      <td class="text-right" style="color: #d9534f;">
+                        <?php $totalCosts = $laborTotal + $ingredientsTotal; ?>
+                        <strong><?php echo number_format($totalCosts, 2); ?></strong>
+                      </td>
+                      <td class="text-right <?php $netProfit = ($kitchen->total_sales ?? 0) - $totalCosts; echo ($netProfit >= 0) ? 'text-success' : 'text-danger'; ?>">
+                        <strong><?php echo number_format($netProfit, 2); ?></strong>
+                      </td>
+                      <td class="text-center">
+                        <button type="button" class="btn btn-xs btn-info" data-toggle="modal" data-target="#kitchenDetail<?php echo $kitchen->kitchen_id; ?>">
+                          <i class="fa fa-eye"></i> View
+                        </button>
+                      </td>
+                    </tr>
+                  <?php 
+                    // Add to grand totals
+                    $grandTotalCosts += $totalCosts;
+                    $grandNetProfit += $netProfit;
+                    
+                    endforeach;
+                  else:
+                  ?>
+                    <tr>
+                      <td colspan="12" class="text-center text-muted">No kitchen data available</td>
+                    </tr>
+                  <?php endif; ?>
+                </tbody>
+                <tfoot>
+                  <tr style="background-color: #dff0d8; font-weight: bold;">
+                    <th>Totals</th>
+                    <th class="text-center">All Items</th>
+                    <th class="text-center">
+                      <?php 
+                      $totalItemsCount = 0;
+                      if (!empty($kitchenSalesData)) {
+                        foreach ($kitchenSalesData as $kitchen) {
+                          $totalItemsCount += $kitchen->total_items_count ?? 0;
+                        }
+                      }
+                      echo number_format($totalItemsCount);
+                      ?>
+                    </th>
+                    <th class="text-center" style="color: #f0ad4e;">
+                      <?php 
+                      $totalEmployeeQty = 0;
+                      if (!empty($kitchenSalesData)) {
+                        foreach ($kitchenSalesData as $kitchen) {
+                          $totalEmployeeQty += $kitchen->customer_types['employee']['qty'] ?? 0;
+                        }
+                      }
+                      echo number_format($totalEmployeeQty);
+                      ?>
+                    </th>
+                    <th class="text-center" style="color: #5bc0de;">
+                      <?php 
+                      $totalGuestQty = 0;
+                      if (!empty($kitchenSalesData)) {
+                        foreach ($kitchenSalesData as $kitchen) {
+                          $totalGuestQty += $kitchen->customer_types['guest']['qty'] ?? 0;
+                        }
+                      }
+                      echo number_format($totalGuestQty);
+                      ?>
+                    </th>
+                    <th class="text-center" style="color: #d9534f;">
+                      <?php 
+                      $totalCharityQty = 0;
+                      if (!empty($kitchenSalesData)) {
+                        foreach ($kitchenSalesData as $kitchen) {
+                          $totalCharityQty += $kitchen->customer_types['charity']['qty'] ?? 0;
+                        }
+                      }
+                      echo number_format($totalCharityQty);
+                      ?>
+                    </th>
+                    <th class="text-right" style="color: #5cb85c;"><?php echo number_format($totalKitchenSalesAmount, 2); ?></th>
+                    <th class="text-center" style="color: #d9534f;">
+                      <?php 
+                      $totalLaborCosts = 0;
+                      if (!empty($kitchenSalesData)) {
+                        foreach ($kitchenSalesData as $kitchen) {
+                          // Calculate Labor Costs (Employee expenses)
+                          if (!empty($kitchen->kitchen_expenses['employee_expenses'])) {
+                            foreach ($kitchen->kitchen_expenses['employee_expenses'] as $expense) {
+                              $totalLaborCosts += $expense->total_amount;
+                            }
+                          }
+                        }
+                      }
+                      echo number_format($totalLaborCosts, 2);
+                      ?>
+                    </th>
+                    <th class="text-center" style="color: #5cb85c;">
+                      <?php 
+                      $totalIngredientCosts = 0;
+                      if (!empty($kitchenSalesData)) {
+                        foreach ($kitchenSalesData as $kitchen) {
+                          // Calculate Ingredients Costs (Product + Entity expenses)
+                          if (!empty($kitchen->kitchen_expenses['product_expenses'])) {
+                            foreach ($kitchen->kitchen_expenses['product_expenses'] as $expense) {
+                              $totalIngredientCosts += $expense->total_amount;
+                            }
+                          }
+                          if (!empty($kitchen->kitchen_expenses['entity_expenses'])) {
+                            foreach ($kitchen->kitchen_expenses['entity_expenses'] as $expense) {
+                              $totalIngredientCosts += $expense->total_amount;
+                            }
+                          }
+                        }
+                      }
+                      echo number_format($totalIngredientCosts, 2);
+                      ?>
+                    </th>
+                    <th class="text-right" style="color: #d9534f;"><?php echo number_format($grandTotalCosts, 2); ?></th>
+                    <th class="text-right <?php echo ($grandNetProfit >= 0) ? 'text-success' : 'text-danger'; ?>"><?php echo number_format($grandNetProfit, 2); ?></th>
+                    <th class="text-center">📊</th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            
+            <!-- Kitchen Performance Summary -->
+            <div class="row" style="margin-top: 15px;">
+              <div class="col-md-2">
+                <div class="text-center">
+                  <strong>Total Sales</strong><br>
+                  <small style="color: #666;">(Regular Only)</small><br>
+                  <span class="text-success" style="font-size: 14px;"><?php echo number_format($totalKitchenSalesAmount, 2); ?></span>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="text-center">
+                  <strong>Total Costs</strong><br>
+                  <span class="text-danger" style="font-size: 14px;"><?php echo number_format($grandTotalCosts, 2); ?></span>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="text-center">
+                  <strong>Net Profit</strong><br>
+                  <span class="<?php echo ($grandNetProfit >= 0) ? 'text-success' : 'text-danger'; ?>" style="font-size: 14px;">
+                    <?php echo number_format($grandNetProfit, 2); ?>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="text-center">
+                  <strong>Employee Sales</strong><br>
+                  <span class="text-info" style="font-size: 14px;">
+                    <?php 
+                    $totalEmployeeSales = 0;
+                    if (!empty($kitchenSalesData)) {
+                      foreach ($kitchenSalesData as $kitchen) {
+                        $totalEmployeeSales += $kitchen->customer_types['employee']['amount'] ?? 0;
+                      }
+                    }
+                    echo number_format($totalEmployeeSales, 2); 
+                    ?>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="text-center">
+                  <strong>Guest Sales</strong><br>
+                  <span class="text-warning" style="font-size: 14px;">
+                    <?php 
+                    $totalGuestSales = 0;
+                    if (!empty($kitchenSalesData)) {
+                      foreach ($kitchenSalesData as $kitchen) {
+                        $totalGuestSales += $kitchen->customer_types['guest']['amount'] ?? 0;
+                      }
+                    }
+                    echo number_format($totalGuestSales, 2); 
+                    ?>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="text-center">
+                  <strong>Charity Sales</strong><br>
+                  <span class="text-primary" style="font-size: 14px;">
+                    <?php 
+                    $totalCharitySales = 0;
+                    if (!empty($kitchenSalesData)) {
+                      foreach ($kitchenSalesData as $kitchen) {
+                        $totalCharitySales += $kitchen->customer_types['charity']['amount'] ?? 0;
+                      }
+                    }
+                    echo number_format($totalCharitySales, 2); 
+                    ?>
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Explanation Note -->
+            <div class="alert alert-info" style="margin-top: 15px; margin-bottom: 0;">
+              <small>
+                <strong>Note:</strong> 
+                * Sales and Net Profit calculations include <strong>Regular customers only</strong>. 
+                Employee, Guest, and Charity quantities are shown for reference but <strong>excluded from profit calculations</strong> 
+                as they typically represent complimentary, discounted, or donated meals.
+              </small>
+            </div>
+            
+            <!-- Kitchen Detail Modals -->
+            <?php if (!empty($kitchenSalesData)): ?>
+              <?php foreach ($kitchenSalesData as $kitchen): ?>
+                <!-- Modal for Kitchen <?php echo $kitchen->kitchen_id; ?> -->
+                <div class="modal fade" id="kitchenDetail<?php echo $kitchen->kitchen_id; ?>" tabindex="-1" role="dialog">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">🍴 <?php echo htmlspecialchars($kitchen->kitchen_name); ?> - Detailed Analysis</h4>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                          <!-- Items Sold Details -->
+                          <div class="col-md-12">
+                            <h5>🍽️ Items Sold Today</h5>
+                            <?php if (!empty($kitchen->items_sold)): ?>
+                            <table class="table table-condensed table-striped">
+                              <thead>
+                                <tr>
+                                  <th>Item Name</th>
+                                  <th class="text-center">Quantity Sold</th>
+                                  <th class="text-right">Unit Price</th>
+                                  <th class="text-center">Customer Type</th>
+                                  <th class="text-right">Total Amount</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <?php foreach ($kitchen->items_sold as $item): ?>
+                                <tr>
+                                  <td><strong><?php echo htmlspecialchars($item->product_name); ?></strong></td>
+                                  <td class="text-center"><span class="badge"><?php echo $item->quantity_sold; ?></span></td>
+                                  <td class="text-right"><?php echo number_format($item->unit_price, 2); ?></td>
+                                  <td class="text-center"><small><?php echo htmlspecialchars($item->customer_type); ?></small></td>
+                                  <td class="text-right"><strong><?php echo number_format($item->total_amount, 2); ?></strong></td>
+                                </tr>
+                                <?php endforeach; ?>
+                              </tbody>
+                              <tfoot>
+                                <tr style="background-color: #dff0d8; font-weight: bold;">
+                                  <td>Total</td>
+                                  <td class="text-center"><?php echo $kitchen->total_items_count; ?></td>
+                                  <td colspan="2"></td>
+                                  <td class="text-right"><?php echo number_format($kitchen->total_sales, 2); ?></td>
+                                </tr>
+                              </tfoot>
+                            </table>
+                            <?php else: ?>
+                            <div class="alert alert-info">No items sold from this kitchen today.</div>
+                            <?php endif; ?>
+                          </div>
+                        </div>
+                        
+                        <hr>
+                      
+                        <?php if (!empty($kitchen->direct_expenses['expenses'])): ?>
+                        <hr>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <h5>� Direct Expenses</h5>
+                            <table class="table table-condensed table-striped">
+                              <thead><tr><th>Expense Category</th><th class="text-center">Transactions</th><th class="text-right">Amount</th></tr></thead>
+                              <tbody>
+                                <?php foreach ($kitchen->direct_expenses['expenses'] as $expense): ?>
+                                <tr>
+                                  <td><?php echo htmlspecialchars($expense->expense_category); ?></td>
+                                  <td class="text-center"><?php echo $expense->transaction_count; ?></td>
+                                  <td class="text-right"><?php echo number_format($expense->amount, 2); ?></td>
+                                </tr>
+                                <?php endforeach; ?>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <!-- Kitchen Expenses During Cash Register Period -->
+                        <?php if (!empty($kitchen->kitchen_expenses) && $kitchen->total_kitchen_expenses > 0): ?>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <h5>💸 Expenses During Cash Register Period</h5>
+                            <p class="text-muted">
+                              <small>Expenses added between <strong><?php echo date('M d, Y H:i', strtotime($registerinfo->opendate)); ?></strong> and <strong><?php echo date('M d, Y H:i'); ?></strong></small>
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div class="row">
+                          <!-- Labor Costs -->
+                          <div class="col-md-6">
+                            <h6>� Labor Costs</h6>
+                            <?php if (!empty($kitchen->kitchen_expenses['employee_expenses'])): ?>
+                            <table class="table table-condensed table-striped table-sm">
+                              <thead>
+                                <tr>
+                                  <th>Employee</th>
+                                  <th class="text-right">Amount</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <?php 
+                                $employeeTotal = 0;
+                                foreach ($kitchen->kitchen_expenses['employee_expenses'] as $expense): 
+                                  $employeeTotal += $expense->total_amount;
+                                ?>
+                                <tr>
+                                  <td>
+                                    <strong><?php echo htmlspecialchars($expense->entity_name ?: 'Unknown'); ?></strong>
+                                    <br><small class="text-muted"><?php echo htmlspecialchars($expense->category_name ?: ''); ?></small>
+                                  </td>
+                                  <td class="text-right">
+                                    <strong><?php echo number_format($expense->total_amount, 2); ?></strong>
+                                  </td>
+                                </tr>
+                                <?php endforeach; ?>
+                              </tbody>
+                              <tfoot>
+                                <tr style="background-color: #d9534f; color: white;">
+                                  <td><strong>Total</strong></td>
+                                  <td class="text-right"><strong><?php echo number_format($employeeTotal, 2); ?></strong></td>
+                                </tr>
+                              </tfoot>
+                            </table>
+                            <?php else: ?>
+                            <div class="alert alert-info alert-sm">
+                              <small>No employee expenses recorded.</small>
+                            </div>
+                            <?php endif; ?>
+                          </div>
+                          
+                          <!-- Ingredients Cost -->
+                          <div class="col-md-6">
+                            <h6>🥘 Ingredients Cost</h6>
+                            <?php if (!empty($kitchen->kitchen_expenses['product_expenses']) || !empty($kitchen->kitchen_expenses['entity_expenses'])): ?>
+                            <table class="table table-condensed table-striped table-sm">
+                              <thead>
+                                <tr>
+                                  <th>Item</th>
+                                  <th class="text-center">Type</th>
+                                  <th class="text-center">Qty</th>
+                                  <th class="text-right">Amount</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <?php 
+                                $ingredientsTotal = 0;
+                                
+                                // Display Product Expenses
+                                if (!empty($kitchen->kitchen_expenses['product_expenses'])):
+                                  foreach ($kitchen->kitchen_expenses['product_expenses'] as $expense): 
+                                    $ingredientsTotal += $expense->total_amount;
+                                ?>
+                                <tr>
+                                  <td>
+                                    <strong><?php echo htmlspecialchars($expense->product_name ?: 'Unknown Product'); ?></strong>
+                                  </td>
+                                  <td class="text-center">
+                                    <span class="label label-info">Product</span>
+                                  </td>
+                                  <td class="text-center">
+                                    <strong><?php echo number_format($expense->quantity ?: 0, 2); ?></strong>
+                                    <br><small><?php echo htmlspecialchars($expense->unit ?: ''); ?></small>
+                                  </td>
+                                  <td class="text-right">
+                                    <strong><?php echo number_format($expense->total_amount, 2); ?></strong>
+                                  </td>
+                                </tr>
+                                <?php endforeach; endif;
+                                
+                                // Display Entity Expenses
+                                if (!empty($kitchen->kitchen_expenses['entity_expenses'])):
+                                  foreach ($kitchen->kitchen_expenses['entity_expenses'] as $expense): 
+                                    $ingredientsTotal += $expense->total_amount;
+                                ?>
+                                <tr>
+                                  <td>
+                                    <strong><?php echo htmlspecialchars($expense->entity_name ?: 'Unknown Entity'); ?></strong>
+                                    <br><small class="text-muted"><?php echo htmlspecialchars($expense->category_name ?: ''); ?></small>
+                                  </td>
+                                  <td class="text-center">
+                                    <span class="label label-warning">Entity</span>
+                                  </td>
+                                  <td class="text-center">
+                                    <strong><?php echo number_format($expense->quantity ?: 0, 2); ?></strong>
+                                    <br><small><?php echo htmlspecialchars($expense->unit ?: 'items'); ?></small>
+                                  </td>
+                                  <td class="text-right">
+                                    <strong><?php echo number_format($expense->total_amount, 2); ?></strong>
+                                  </td>
+                                </tr>
+                                <?php endforeach; endif; ?>
+                              </tbody>
+                              <tfoot>
+                                <tr style="background-color: #5cb85c; color: white;">
+                                  <td><strong>Total Ingredients</strong></td>
+                                  <td class="text-center"><strong>-</strong></td>
+                                  <td class="text-center"><strong>-</strong></td>
+                                  <td class="text-right"><strong><?php echo number_format($ingredientsTotal, 2); ?></strong></td>
+                                </tr>
+                              </tfoot>
+                            </table>
+                            <?php else: ?>
+                            <div class="alert alert-info alert-sm">
+                              <small>No ingredients expenses recorded.</small>
+                            </div>
+                            <?php endif; ?>
+                          </div>
+                        </div>
+                          
+                        <!-- Total Kitchen Expenses Summary -->
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="alert alert-warning">
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <strong>Total Kitchen Expenses During Cash Register Period:</strong>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                  <h4 class="margin-0"><strong><?php echo number_format($kitchen->total_kitchen_expenses, 2); ?></strong></h4>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <?php endif; ?>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            <?php endif; ?>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div><!-- /container -->

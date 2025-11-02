@@ -6106,6 +6106,9 @@ private function generate_order_data($list,$type = null)
 			);
 		}
 		$data['kitchenItemsReport'] = $kitchenItemsReport;
+		
+		// Get detailed items sold information (similar to sellrptItems)
+		$data['detailedItemsSold'] = $this->order_model->getDetailedItemsSoldByKitchen($saveid, $checkuser->opendate);
 		if (!empty($checkuser)) {
 			$this->load->view('cashregisterclose', $data);
 		} else {
@@ -6224,6 +6227,50 @@ private function generate_order_data($list,$type = null)
 		$data['expensesByCategory'] = $expensesByCategory;
 		$data['detailedExpenses'] = $detailedExpenses;
 
+		// === CANCELLED ORDERS DATA ===
+		// Get cancelled orders between register open date and today
+		$cancelledOrders = $this->_getCancelledOrdersBetweenDates($checkuser->opendate, date('Y-m-d H:i:s'));
+		$data['cancelledOrders'] = $cancelledOrders;
+		$data['totalCancelledOrders'] = count($cancelledOrders);
+		
+		// Calculate cancelled orders value
+		$totalCancelledValue = 0;
+		$cancelledOrdersByType = array();
+		$cancelledOrdersWithValues = array();
+		
+		if (!empty($cancelledOrders)) {
+			foreach ($cancelledOrders as $cancelledOrder) {
+				// Get order total value
+				$orderValue = $this->_getCancelledOrderValue($cancelledOrder->order_id);
+				$totalCancelledValue += $orderValue;
+				
+				// Add order value to the order object for display
+				$cancelledOrder->order_value = $orderValue;
+				$cancelledOrdersWithValues[] = $cancelledOrder;
+				
+				// Group by customer type
+				$customerType = $cancelledOrder->customer_type ?? 'Regular';
+				if (!isset($cancelledOrdersByType[$customerType])) {
+					$cancelledOrdersByType[$customerType] = array(
+						'count' => 0,
+						'total_value' => 0
+					);
+				}
+				$cancelledOrdersByType[$customerType]['count']++;
+				$cancelledOrdersByType[$customerType]['total_value'] += $orderValue;
+			}
+		}
+		
+		// Update the data array with calculated values
+		$data['cancelledOrders'] = $cancelledOrdersWithValues;
+		$data['totalCancelledValue'] = $totalCancelledValue;
+		$data['cancelledOrdersByType'] = $cancelledOrdersByType;
+		
+		// Set default values to prevent undefined variable errors
+		if (!isset($data['totalCancelledOrders'])) {
+			$data['totalCancelledOrders'] = count($cancelledOrdersWithValues);
+		}
+
 		// Kitchen items section removed as per request
 
 		// === SHOP SALES DATA (Dynamic from Kitchen ID 13) ===
@@ -6266,6 +6313,22 @@ private function generate_order_data($list,$type = null)
 		
 		$data['shopSalesData'] = $shopSalesData;
 		
+		// === DETAILED ITEMS SOLD (Similar to sellrptItems) ===
+		$data['detailedItemsSold'] = $this->order_model->getDetailedItemsSoldByKitchen($saveid, $checkuser->opendate);
+		
+		// Get detailed items formatted for kitchen report
+		$detailedItemsForReport = $this->order_model->getDetailedItemsForKitchenReport($saveid, $checkuser->opendate);
+		
+		// === KITCHEN ANALYSIS SUMMARY (Enhanced with employees and products) ===
+		$data['kitchenSalesData'] = $this->order_model->getKitchenAnalysis($saveid, $checkuser->opendate);
+		
+		// Calculate total kitchen sales
+		$totalKitchenSales = 0;
+		foreach ($data['kitchenSalesData'] as $kitchen) {
+			$totalKitchenSales += $kitchen->total_sales;
+		}
+		$data['totalKitchenSales'] = $totalKitchenSales;
+		
 		// === SHOP EXPENSES (Dynamic from expensesByCategory) ===
 		$shopExpenses = 0;
 		if (!empty($expensesByCategory)) {
@@ -6290,6 +6353,97 @@ private function generate_order_data($list,$type = null)
 
 		$this->load->view('dailycomprehensivereport', $data);
 	}
+
+	/**
+	 * Get cancelled orders between two dates
+	 * @param string $startDate
+	 * @param string $endDate
+	 * @return array
+	 */
+	private function _getCancelledOrdersBetweenDates($startDate, $endDate)
+	{
+		try {
+			// Validate input dates
+			if (empty($startDate) || empty($endDate)) {
+				log_message('error', 'Invalid date parameters in _getCancelledOrdersBetweenDates');
+				return array();
+			}
+			
+			// Use full datetime for comparison to check between cash register opened time and current time
+			$startDateTime = date('Y-m-d H:i:s', strtotime($startDate));
+			$endDateTime = date('Y-m-d H:i:s', strtotime($endDate));
+			
+			// Validate converted dates
+			if ($startDateTime === false || $endDateTime === false) {
+				log_message('error', 'Failed to convert dates in _getCancelledOrdersBetweenDates: ' . $startDate . ' - ' . $endDate);
+				return array();
+			}
+			
+			// Query for cancelled orders (order_status = 5) between the datetime range
+			$this->db->select('customer_order.*, customer_info.customer_name, customer_type.customer_type, employee_history.first_name, employee_history.last_name, rest_table.tablename, customer_order.anyreason as cancel_reason');
+			$this->db->from('customer_order');
+			$this->db->join('customer_info', 'customer_order.customer_id = customer_info.customer_id', 'left');
+			$this->db->join('customer_type', 'customer_order.cutomertype = customer_type.customer_type_id', 'left');
+			$this->db->join('employee_history', 'customer_order.waiter_id = employee_history.emp_his_id', 'left');
+			$this->db->join('rest_table', 'customer_order.table_no = rest_table.tableid', 'left');
+			$this->db->where('customer_order.order_status', 5); // Cancelled status
+			// Check orders created within the cash register time period using CONCAT for datetime comparison
+			$this->db->where("CONCAT(customer_order.order_date, ' ', IFNULL(customer_order.order_time, '00:00:00')) BETWEEN '$startDateTime' AND '$endDateTime'");
+			$this->db->order_by('customer_order.order_date', 'DESC');
+			$this->db->order_by('customer_order.order_time', 'DESC');
+			
+			$query = $this->db->get();
+			
+			// Check if query was successful
+			if ($query === false) {
+				// Log database error for debugging
+				log_message('error', 'Failed to get cancelled orders between dates: ' . $startDateTime . ' - ' . $endDateTime);
+				return array();
+			}
+			
+			return $query->result();
+		} catch (Exception $e) {
+			// Log exception for debugging
+			log_message('error', 'Exception in _getCancelledOrdersBetweenDates: ' . $e->getMessage());
+			return array();
+		}
+	}
+
+	/**
+	 * Get the total value of a cancelled order
+	 * @param int $orderId
+	 * @return float
+	 */
+	private function _getCancelledOrderValue($orderId)
+	{
+		try {
+			// Get order menu items to calculate total value
+			$this->db->select('SUM(order_menu.price * order_menu.menuqty) as total_value');
+			$this->db->from('order_menu');
+			$this->db->where('order_menu.order_id', $orderId);
+			$query = $this->db->get();
+			
+			// Check if query was successful
+			if ($query === false) {
+				// Log database error for debugging
+				log_message('error', 'Failed to get cancelled order value for order ID: ' . $orderId);
+				return 0;
+			}
+			
+			if ($query->num_rows() > 0) {
+				$result = $query->row();
+				return $result->total_value ?: 0;
+			}
+			
+			return 0;
+		} catch (Exception $e) {
+			// Log exception for debugging
+			log_message('error', 'Exception in _getCancelledOrderValue: ' . $e->getMessage());
+			return 0;
+		}
+	}
+
+
 
 
 	public function closecashregister()
