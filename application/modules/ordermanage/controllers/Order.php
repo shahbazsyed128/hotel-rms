@@ -6380,8 +6380,23 @@ private function generate_order_data($list,$type = null)
 					$categoryName = 'Employees';
 				}
 				
-				// Get the display name (product name for Shop/Vegetables, entity name for others)
-				$displayName = $expense->display_name ?? 'Unknown Item';
+				// Get the display name based on available fields
+				$displayName = 'Unknown Item';
+				
+				// Priority: product_name > entity_name > description > reason
+				if (!empty($expense->product_name)) {
+					$displayName = $expense->product_name;
+				} elseif (!empty($expense->entity_name)) {
+					$displayName = $expense->entity_name;
+				} elseif (!empty($expense->description)) {
+					$displayName = $expense->description;
+				} elseif (!empty($expense->reason)) {
+					$displayName = $expense->reason;
+				} elseif (!empty($expense->expense_item)) {
+					$displayName = $expense->expense_item;
+				} elseif (!empty($expense->expense_name)) {
+					$displayName = $expense->expense_name;
+				}
 				
 				// Initialize category totals
 				if (!isset($expensesByCategory[$categoryName])) {
@@ -6435,9 +6450,48 @@ private function generate_order_data($list,$type = null)
 			$transformedItems = array();
 			
 			foreach ($items as $itemName => $itemData) {
+				// Get actual rate/price from database instead of calculating
+				$actualRate = 0;
+				$totalRate = 0;
+				$rateCount = 0;
+				
+				// Find matching expenses and get their actual price
+				if (!empty($expenses)) {
+					foreach ($expenses as $expense) {
+						$expenseItemName = '';
+						
+						// Determine item name based on category
+						if (!empty($expense->product_name)) {
+							$expenseItemName = $expense->product_name;
+						} elseif (!empty($expense->entity_name)) {
+							$expenseItemName = $expense->entity_name;
+						} elseif (!empty($expense->description)) {
+							$expenseItemName = $expense->description;
+						}
+						
+						// Check if this expense matches current item
+						if ($expenseItemName == $itemName && 
+							($expense->category_name ?? 'Uncategorized') == $categoryName) {
+							if (isset($expense->price) && $expense->price > 0) {
+								$totalRate += $expense->price;
+								$rateCount++;
+							}
+						}
+					}
+				}
+				
+				// Calculate average of actual rates, or fallback to calculated rate
+				if ($rateCount > 0) {
+					$actualRate = $totalRate / $rateCount;
+				} else {
+					// Fallback to calculated rate if no price found in database
+					$actualRate = ($itemData['quantity'] > 0) ? ($itemData['total_amount'] / $itemData['quantity']) : 0;
+				}
+				
 				$transformedItems[$itemName] = array(
 					'quantity' => $itemData['quantity'],
-					'total' => $itemData['total_amount']
+					'total' => $itemData['total_amount'],
+					'rate' => $actualRate
 				);
 				$categoryTotal += $itemData['total_amount'];
 			}
@@ -6518,6 +6572,43 @@ private function generate_order_data($list,$type = null)
 		if (!isset($data['totalCancelledOrders'])) {
 			$data['totalCancelledOrders'] = count($cancelledOrdersWithValues);
 		}
+
+		// === DETAILED ORDERS BY CUSTOMER TYPE ===
+		// Get detailed employee orders
+		$employeeOrders = $this->_getOrdersByCustomerType('Employee', $reportStartDate, $reportEndDate);
+		$data['employeeOrders'] = $employeeOrders;
+		$data['totalEmployeeOrders'] = count($employeeOrders);
+		
+		// Calculate employee orders value
+		$totalEmployeeOrdersValue = 0;
+		foreach ($employeeOrders as $order) {
+			$totalEmployeeOrdersValue += $order->totalamount ?? 0;
+		}
+		$data['totalEmployeeOrdersValue'] = $totalEmployeeOrdersValue;
+		
+		// Get detailed guest orders
+		$guestOrders = $this->_getOrdersByCustomerType('Guest', $reportStartDate, $reportEndDate);
+		$data['guestOrders'] = $guestOrders;
+		$data['totalGuestOrders'] = count($guestOrders);
+		
+		// Calculate guest orders value
+		$totalGuestOrdersValue = 0;
+		foreach ($guestOrders as $order) {
+			$totalGuestOrdersValue += $order->totalamount ?? 0;
+		}
+		$data['totalGuestOrdersValue'] = $totalGuestOrdersValue;
+		
+		// Get detailed charity orders
+		$charityOrders = $this->_getOrdersByCustomerType('Charity', $reportStartDate, $reportEndDate);
+		$data['charityOrders'] = $charityOrders;
+		$data['totalCharityOrders'] = count($charityOrders);
+		
+		// Calculate charity orders value
+		$totalCharityOrdersValue = 0;
+		foreach ($charityOrders as $order) {
+			$totalCharityOrdersValue += $order->totalamount ?? 0;
+		}
+		$data['totalCharityOrdersValue'] = $totalCharityOrdersValue;
 
 		// Kitchen items section removed as per request
 
@@ -6629,6 +6720,19 @@ private function generate_order_data($list,$type = null)
 		$data['reportDate'] = date('Y-m-d');
 		$data['reportTime'] = date('H:i:s');
 
+		// === ITEM SALES DATA ===
+		if ($debugMode) $data['queryLog'][] = "========== ITEM SALES DATA QUERIES ==========";
+		if (($filterType == 'current' || $filterType == 'cash_register') && $checkuser) {
+			// Use the SAME logic as sales data - register open/close times
+			$endDate = (isset($checkuser->closedate) && $checkuser->closedate != "1970-01-01 00:00:00") ? $checkuser->closedate : null;
+			if ($debugMode) $data['queryLog'][] = "CALLING _getItemSalesData('{$checkuser->opendate}', " . ($endDate ?: 'NULL') . ")";
+			$data['itemSalesData'] = $this->_getItemSalesData($checkuser->opendate, $endDate);
+		} else {
+			// Use filtered data collection for other filter types
+			if ($debugMode) $data['queryLog'][] = "CALLING _getItemSalesData('$reportStartDate', '$reportEndDate')";
+			$data['itemSalesData'] = $this->_getItemSalesData($reportStartDate, $reportEndDate);
+		}
+
 		// Add any additional queries that were logged globally (only in debug mode)
 		if ($debugMode && isset($GLOBALS['queryLog']) && is_array($GLOBALS['queryLog'])) {
 			$data['queryLog'] = array_merge($data['queryLog'], $GLOBALS['queryLog']);
@@ -6686,6 +6790,67 @@ private function generate_order_data($list,$type = null)
 			return $query->result();
 		} catch (Exception $e) {
 			log_message('error', 'Exception in _getFilteredCustomerTypeWise: ' . $e->getMessage());
+			return array();
+		}
+	}
+
+	/**
+	 * Get detailed orders by customer type
+	 */
+	private function _getOrdersByCustomerType($customerType, $startDate, $endDate)
+	{
+		try {
+			$this->db->select('co.*, c.customer_name, c.customer_phone, c.customer_email, ct.customer_type');
+			$this->db->from('customer_order co');
+			$this->db->join('customer_info c', 'co.customer_id = c.customer_id', 'left');
+			$this->db->join('customer_type ct', 'co.cutomertype = ct.customer_type_id', 'left');
+			$this->db->where('co.order_status', 4); // Completed orders
+			$this->db->where('ct.customer_type', $customerType);
+			$this->db->where("CONCAT(co.order_date, ' ', IFNULL(co.order_time, '00:00:00')) BETWEEN '$startDate' AND '$endDate'");
+			$this->db->order_by('co.order_time', 'DESC');
+			$query = $this->db->get();
+			
+			if ($query === false) {
+				log_message('error', 'Failed to get orders by customer type: ' . $this->db->last_query());
+				return array();
+			}
+			
+			$orders = $query->result();
+			
+			// Get order items for each order
+			foreach ($orders as $order) {
+				$order->order_items = $this->_getOrderItems($order->order_id);
+			}
+			
+			return $orders;
+		} catch (Exception $e) {
+			log_message('error', 'Exception in _getOrdersByCustomerType: ' . $e->getMessage());
+			return array();
+		}
+	}
+
+	/**
+	 * Get order items for a specific order
+	 */
+	private function _getOrderItems($orderId)
+	{
+		try {
+			$this->db->select('oi.*, f.ProductName, f.productvat, v.variantName, v.price as variant_price');
+			$this->db->from('order_menu oi');
+			$this->db->join('item_foods f', 'oi.menu_id = f.ProductsID', 'left');
+			$this->db->join('variant v', 'oi.varientid = v.variantid', 'left');
+			$this->db->where('oi.order_id', $orderId);
+			$this->db->order_by('oi.row_id', 'ASC');
+			$query = $this->db->get();
+			
+			if ($query === false) {
+				log_message('error', 'Failed to get order items: ' . $this->db->last_query());
+				return array();
+			}
+			
+			return $query->result();
+		} catch (Exception $e) {
+			log_message('error', 'Exception in _getOrderItems: ' . $e->getMessage());
 			return array();
 		}
 	}
@@ -7259,6 +7424,125 @@ private function generate_order_data($list,$type = null)
 		$data['itemsummery'] = $this->order_model->closingiteminfo($order_ids);
 		$this->load->view('cashclosingsummery', $data);
 	}
+
+	/**
+	 * Get item sales data with customer type breakdown
+	 */
+	private function _getItemSalesData($startDate, $endDate = null)
+	{
+		try {
+			// If no end date provided, use current time (for active cash counter)
+			$endDate = $endDate ?: date('Y-m-d H:i:s');
+			
+			$this->db->select("
+				item_foods.ProductName as item_name,
+				variant.variantName as variant_name,
+				item_foods.ProductsID as product_id,
+				variant.variantid as variant_id,
+				variant.price as item_price,
+				
+				-- Regular customers (cutomertype NOT IN (5,6,7) or NULL)
+				SUM(CASE 
+					WHEN (customer_order.cutomertype NOT IN (5,6,7) OR customer_order.cutomertype IS NULL) 
+					THEN order_menu.menuqty 
+					ELSE 0 
+				END) as regular_qty,
+				SUM(CASE 
+					WHEN (customer_order.cutomertype NOT IN (5,6,7) OR customer_order.cutomertype IS NULL) 
+					THEN (order_menu.menuqty * order_menu.price) 
+					ELSE 0 
+				END) as regular_revenue,
+				
+				-- Employee customers (cutomertype = 5)
+				SUM(CASE 
+					WHEN customer_order.cutomertype = 5 
+					THEN order_menu.menuqty 
+					ELSE 0 
+				END) as employee_qty,
+				SUM(CASE 
+					WHEN customer_order.cutomertype = 5 
+					THEN (order_menu.menuqty * order_menu.price) 
+					ELSE 0 
+				END) as employee_revenue,
+				
+				-- Guest customers (cutomertype = 6)
+				SUM(CASE 
+					WHEN customer_order.cutomertype = 6 
+					THEN order_menu.menuqty 
+					ELSE 0 
+				END) as guest_qty,
+				SUM(CASE 
+					WHEN customer_order.cutomertype = 6 
+					THEN (order_menu.menuqty * order_menu.price) 
+					ELSE 0 
+				END) as guest_revenue,
+				
+				-- Charity customers (cutomertype = 7)
+				SUM(CASE 
+					WHEN customer_order.cutomertype = 7 
+					THEN order_menu.menuqty 
+					ELSE 0 
+				END) as charity_qty,
+				SUM(CASE 
+					WHEN customer_order.cutomertype = 7 
+					THEN (order_menu.menuqty * order_menu.price) 
+					ELSE 0 
+				END) as charity_revenue,
+				
+				-- Total quantities and revenue
+				SUM(order_menu.menuqty) as total_qty,
+				SUM(order_menu.menuqty * order_menu.price) as total_revenue
+			");
+			
+			$this->db->from('order_menu');
+			$this->db->join('customer_order', 'customer_order.order_id = order_menu.order_id', 'inner');
+			$this->db->join('item_foods', 'item_foods.ProductsID = order_menu.menu_id', 'left');
+			$this->db->join('variant', 'variant.variantid = order_menu.varientid', 'left');
+			
+			// Date filtering
+			$this->db->where("CONCAT(customer_order.order_date, ' ', IFNULL(customer_order.order_time, '00:00:00')) BETWEEN '$startDate' AND '$endDate'");
+			
+			// Only completed orders
+			$this->db->where('customer_order.order_status', 4);
+			
+			// Group by item and variant
+			$this->db->group_by('order_menu.menu_id, order_menu.varientid');
+			
+			// Order by total quantity sold (highest first)
+			$this->db->order_by('total_qty', 'DESC');
+			
+			$query = $this->db->get();
+			
+			// Store query for display in view (only if debug mode)
+			if (isset($GLOBALS['debugMode']) && $GLOBALS['debugMode']) {
+				if (!isset($GLOBALS['queryLog'])) $GLOBALS['queryLog'] = array();
+				$GLOBALS['queryLog'][] = "ITEM SALES QUERY: " . $this->db->last_query();
+			}
+			
+			if ($query === false) {
+				log_message('error', 'Failed to get item sales data: ' . $this->db->last_query());
+				return array();
+			}
+			
+			$results = $query->result();
+			
+			// Debug log the results count
+			if (isset($GLOBALS['debugMode']) && $GLOBALS['debugMode']) {
+				$GLOBALS['queryLog'][] = "ITEM SALES RESULTS: Found " . count($results) . " different items";
+			}
+			
+			return $results;
+			
+		} catch (Exception $e) {
+			log_message('error', 'Exception in _getItemSalesData: ' . $e->getMessage());
+			if (isset($GLOBALS['debugMode']) && $GLOBALS['debugMode']) {
+				if (!isset($GLOBALS['queryLog'])) $GLOBALS['queryLog'] = array();
+				$GLOBALS['queryLog'][] = "ITEM SALES ERROR: " . $e->getMessage();
+			}
+			return array();
+		}
+	}
+
 	private function taxchecking()
 	{
 		$taxinfos = '';

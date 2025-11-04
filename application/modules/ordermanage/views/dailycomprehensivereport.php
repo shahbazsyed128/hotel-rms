@@ -476,7 +476,7 @@
   <?php endif; ?>
 
   <!-- Printable Area -->
-  <div id="printArea" class="printable-section" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0; max-width:100%; overflow:hidden; min-height:auto;">
+  <div id="printArea" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0; max-width:100%; overflow:hidden; min-height:auto;">
     <div class="report-header">
       <h3 class="m-b-0">Daily Comprehensive Report</h3>
       <p class="report-meta m-b-0">
@@ -729,150 +729,371 @@
             </tfoot>
           </table>
         </div>
+        
           </div>
         </div>
       </div>
           
       <!-- Payment Methods Column -->
       <div class="col-md-6" style="float: left; width: 50%;">
-        <div class="panel panel-default">
-          <div class="panel-heading">💳 Payment Methods & Performance</div>
-          <div class="panel-body">
-            <!-- Payment Methods Breakdown -->
-            <h5 style="margin-top: 20px; color: #337ab7;">💳 Payment Methods</h5>
-            <div class="table-responsive">
-              <table class="table table-bordered table-condensed">
-                <thead>
-                  <tr>
-                    <th>Payment Method</th>
-                    <th class="text-right">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php if (!empty($totalamount)): ?>
-                    <?php foreach ($totalamount as $payment): ?>
-                      <tr>
-                        <td><?php echo htmlspecialchars($payment->payment_method ?? 'Unknown'); ?></td>
-                        <td class="text-right"><?php echo number_format($payment->totalamount ?? 0, 2); ?></td>
-                      </tr>
-                    <?php endforeach; ?>
-                  <?php else: ?>
-                    <tr>
-                      <td colspan="2" class="text-center text-muted">No payment data available</td>
-                    </tr>
-                  <?php endif; ?>
-                </tbody>
-              </table>
-            </div>
-            
-            <!-- Today's Performance Summary -->
-            <h5 style="margin-top: 20px; color: #337ab7;">📈 Performance Summary</h5>
-            <div class="panel panel-info">
-              <div class="panel-body" style="padding: 10px;">
-                <?php 
-                // Calculate totals for performance - handle both object and numeric values
-                $totalSalesAmount = 0;
-                if (!empty($totalamount)) {
-                  foreach ($totalamount as $amount) {
-                    if (is_object($amount) && isset($amount->totalamount)) {
-                      $totalSalesAmount += floatval($amount->totalamount);
-                    } elseif (is_numeric($amount)) {
-                      $totalSalesAmount += floatval($amount);
-                    }
-                  }
-                }
-                
-                // Handle totalexpenses - could be object, array, or numeric
-                $totalExpenseAmount = 0;
-                if (is_numeric($totalexpenses)) {
-                  $totalExpenseAmount = floatval($totalexpenses);
-                } elseif (is_object($totalexpenses) && isset($totalexpenses->total_expenses)) {
-                  $totalExpenseAmount = floatval($totalexpenses->total_expenses);
-                } elseif (is_object($totalexpenses) && isset($totalexpenses->totalexpenses)) {
-                  $totalExpenseAmount = floatval($totalexpenses->totalexpenses);
-                } elseif (is_array($totalexpenses) && !empty($totalexpenses)) {
-                  $totalExpenseAmount = floatval($totalexpenses[0]->total_expenses ?? $totalexpenses[0]->totalexpenses ?? 0);
-                }
-                
-                $netProfitAmount = $totalSalesAmount - $totalExpenseAmount;
-                $profitMargin = $totalSalesAmount > 0 ? ($netProfitAmount / $totalSalesAmount * 100) : 0;
-                ?>
-                <div class="row">
-                  <div class="col-sm-6">
-                    <strong>Total Sales:</strong><br>
-                    <span class="text-success" style="font-size: 18px;"><?php echo number_format($totalSalesAmount, 2); ?></span>
-                  </div>
-                  <div class="col-sm-6">
-                    <strong>Total Expenses:</strong><br>
-                    <span class="text-danger" style="font-size: 18px;"><?php echo number_format($totalExpenseAmount, 2); ?></span>
-                  </div>
-                </div>
-                <hr style="margin: 10px 0;">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <strong>Net Profit:</strong><br>
-                    <span class="<?php echo ($netProfitAmount >= 0) ? 'text-success' : 'text-danger'; ?>" style="font-size: 18px;">
-                      <?php echo number_format($netProfitAmount, 2); ?>
-                    </span>
-                  </div>
-                  <div class="col-sm-6">
-                    <strong>Profit Margin:</strong><br>
-                    <span class="<?php echo ($profitMargin >= 0) ? 'text-success' : 'text-danger'; ?>" style="font-size: 18px;">
-                      <?php echo number_format($profitMargin, 1); ?>%
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Cancelled Orders Summary -->
-            <h5 style="margin-top: 20px; color: #d9534f;">❌ Cancelled Orders</h5>
-            <div class="panel panel-danger">
-              <div class="panel-body" style="padding: 10px;">
-                <?php 
-                $totalCancelledOrdersCount = $totalCancelledOrders ?? 0;
-                $totalCancelledOrdersValue = $totalCancelledValue ?? 0;
-                ?>
-                <div class="row">
-                  <div class="col-sm-6">
-                    <strong>Total Cancelled Orders:</strong><br>
-                    <span class="text-danger" style="font-size: 18px;"><?php echo number_format($totalCancelledOrdersCount); ?></span>
-                  </div>
-                  <div class="col-sm-6">
-                    <strong>Total Cancelled Value:</strong><br>
-                    <span class="text-danger" style="font-size: 18px;"><?php echo number_format($totalCancelledOrdersValue, 2); ?></span>
-                  </div>
-                </div>
-                
-                <?php if (!empty($cancelledOrdersByType)): ?>
-                <hr style="margin: 10px 0;">
-                <div class="table-responsive">
-                  <table class="table table-condensed table-bordered" style="margin-bottom: 0;">
-                    <thead>
-                      <tr>
-                        <th>Customer Type</th>
-                        <th class="text-center">Count</th>
-                        <th class="text-right">Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php foreach ($cancelledOrdersByType as $customerType => $data): ?>
+        <div id="expensesPrintArea" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; max-width:100%; overflow:hidden; min-height:auto;" class="dense">
+          <div class="report-header">
+            <h3 class="m-b-0" style="margin-top:0px;">Expenses Report</h3>
+            <p class="report-meta m-b-0">
+              Date: <span id="reportDate"><?php echo date('Y-m-d'); ?></span>
+              <span id="reportFilters" style="margin-left:10px;">Grouped by Category</span>
+            </p>
+          </div>
+          <div id="reportBody">
+            <?php 
+            // Debug information (can be removed in production)
+            if (empty($expensesByCategory)) {
+              echo "<!-- DEBUG: expensesByCategory is empty -->";
+              if (isset($expenses)) {
+                echo "<!-- DEBUG: Total raw expenses count: " . count($expenses) . " -->";
+              }
+            } else {
+              echo "<!-- DEBUG: Found " . count($expensesByCategory) . " expense categories -->";
+              foreach ($expensesByCategory as $cat => $total) {
+                echo "<!-- DEBUG: Category '$cat' = $total -->";
+              }
+            }
+            ?>
+            <?php if (!empty($groupedExpenses)): ?>
+              <?php foreach ($groupedExpenses as $categoryName => $categoryData): ?>
+                <div class="category-block">
+                  <h4 class="category-title" style="font-size: 10px; margin-bottom: 1px; margin-top: 3px; padding: 4px 6px; background-color: #f8f9fa; border-left: 3px solid #007bff; color: #495057; line-height: 1.2;"><?php echo htmlspecialchars($categoryName); ?></h4>
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-striped expenses-table" style="margin-bottom: 6px; font-size: 11px;">
+                      <thead>
                         <tr>
-                          <td><?php echo htmlspecialchars($customerType); ?></td>
-                          <td class="text-center"><?php echo number_format($data['count']); ?></td>
-                          <td class="text-right"><?php echo number_format($data['total_value'], 2); ?></td>
+                          <th class="text-right" style="padding: 3px 4px; line-height: 1.2;">Item Name</th>
+                          <th class="text-right" style="width: 70px; padding: 3px 2px; line-height: 1.2;">Rate</th>
+                          <th class="text-right" style="width: 50px; padding: 3px 2px; line-height: 1.2;">Qty</th>
+                          <th class="text-right" style="width: 80px; padding: 3px 2px; line-height: 1.2;">Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <?php foreach ($categoryData['items'] as $itemName => $itemData): ?>
+                        <tr style="font-size: 10px;">
+                          <td style="padding: 2px 4px; line-height: 1.1;"><?php echo htmlspecialchars($itemName); ?></td>
+                          <td class="text-right" style="padding: 2px; line-height: 1.1;"><?php echo number_format($itemData['rate'], 2); ?></td>
+                          <td class="text-right" style="padding: 2px; line-height: 1.1;"><?php echo number_format($itemData['quantity'], 2); ?></td>
+                          <td class="text-right" style="padding: 2px; line-height: 1.1;"><strong><?php echo number_format($itemData['total'], 2); ?></strong></td>
                         </tr>
                       <?php endforeach; ?>
                     </tbody>
-                  </table>
+                      <tfoot>
+                        <tr style="background-color: #f8f9fa; font-weight: bold; font-size: 10px;">
+                          <th colspan="3" class="text-right" style="padding: 3px 4px; border: 1px solid #ddd; line-height: 1.1;">Category Total:</th>
+                          <th class="text-right" style="padding: 3px 2px; border: 1px solid #ddd; line-height: 1.1;"><?php echo number_format($categoryData['total'], 2); ?></th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            <?php elseif (!empty($expensesByCategory)): ?>
+              <!-- Fallback to old display if groupedExpenses is not available -->
+              <?php foreach ($expensesByCategory as $categoryName => $categoryTotal): ?>
+                <?php 
+                // Get expenses for this category
+                $categoryExpenses = array();
+                if (!empty($expenses)) {
+                  foreach ($expenses as $expense) {
+                    if (($expense->category_name ?? 'Uncategorized') == $categoryName) {
+                      $categoryExpenses[] = $expense;
+                    }
+                  }
+                }
+                ?>
+                
+                <?php if (!empty($categoryExpenses)): ?>
+                <div class="category-block">
+                  <h4 class="category-title" style="font-size: 10px; margin-bottom: 1px; margin-top: 3px; padding: 4px 6px; background-color: #f8f9fa; border-left: 3px solid #007bff; color: #495057; line-height: 1.2;"><?php echo htmlspecialchars($categoryName); ?></h4>
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-striped expenses-table" style="margin-bottom: 6px; font-size: 11px;">
+                      <thead>
+                        <tr>
+                          <th class="text-right" style="padding: 3px 4px; line-height: 1.2;">Item Name</th>
+                          <th class="text-right" style="width: 70px; padding: 3px 2px; line-height: 1.2;">Rate</th>
+                          <th class="text-right" style="width: 50px; padding: 3px 2px; line-height: 1.2;">Qty</th>
+                          <th class="text-right" style="width: 80px; padding: 3px 2px; line-height: 1.2;">Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <?php foreach ($categoryExpenses as $expense): ?>
+                        <tr style="font-size: 10px;">
+                          <td style="padding: 2px 4px; line-height: 1.1;"><?php 
+                            // Use the display_name field that shows proper names based on category
+                            $itemName = '';
+                            if (isset($expense->display_name) && !empty($expense->display_name)) {
+                              $itemName = $expense->display_name;
+                            } elseif (isset($expense->product_name) && !empty($expense->product_name)) {
+                              $itemName = $expense->product_name;
+                            } elseif (isset($expense->entity_name) && !empty($expense->entity_name)) {
+                              $itemName = $expense->entity_name;
+                            } elseif (isset($expense->item_name) && !empty($expense->item_name)) {
+                              $itemName = $expense->item_name;
+                            } elseif (isset($expense->expense_item) && !empty($expense->expense_item)) {
+                              $itemName = $expense->expense_item;
+                            } elseif (isset($expense->description) && !empty($expense->description)) {
+                              $itemName = $expense->description;
+                            } elseif (isset($expense->expense_name) && !empty($expense->expense_name)) {
+                              $itemName = $expense->expense_name;
+                            } else {
+                              $itemName = 'N/A';
+                            }
+                            echo htmlspecialchars($itemName);
+                          ?></td>
+                          <td class="text-right" style="padding: 2px; line-height: 1.1;"><?php 
+                            // Try different possible fields for rate/price
+                            $itemRate = 0;
+                            if (isset($expense->rate) && !empty($expense->rate)) {
+                              $itemRate = $expense->rate;
+                            } elseif (isset($expense->price) && !empty($expense->price)) {
+                              $itemRate = $expense->price;
+                            } elseif (isset($expense->unit_price) && !empty($expense->unit_price)) {
+                              $itemRate = $expense->unit_price;
+                            } elseif (isset($expense->item_rate) && !empty($expense->item_rate)) {
+                              $itemRate = $expense->item_rate;
+                            } elseif (isset($expense->product_price) && !empty($expense->product_price)) {
+                              $itemRate = $expense->product_price;
+                            } elseif (isset($expense->amount) && isset($expense->quantity) && $expense->quantity > 0) {
+                              $itemRate = $expense->amount / $expense->quantity;
+                            }
+                            echo number_format($itemRate, 2);
+                          ?></td>
+                          <td class="text-right" style="padding: 2px; line-height: 1.1;"><?php echo number_format($expense->quantity ?? 1, 2); ?></td>
+                          <td class="text-right" style="padding: 2px; line-height: 1.1;"><strong><?php echo number_format($expense->total_amount ?? 0, 2); ?></strong></td>
+                        </tr>
+                      <?php endforeach; ?>
+                    </tbody>
+                      <tfoot>
+                        <tr style="background-color: #f8f9fa; font-weight: bold; font-size: 10px;">
+                          <th colspan="3" class="text-right" style="padding: 3px 4px; border: 1px solid #ddd; line-height: 1.1;">Category Total:</th>
+                          <th class="text-right" style="padding: 3px 2px; border: 1px solid #ddd; line-height: 1.1;"><?php echo number_format($categoryTotal, 2); ?></th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
                 </div>
                 <?php endif; ?>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <div class="no-data">
+                No categorized expenses to display.
+                <?php if (!empty($expenses)): ?>
+                  <br><small>DEBUG: Found <?php echo count($expenses); ?> raw expense records</small>
+                  
+                  <!-- Show raw expenses for debugging -->
+                  <div style="margin-top: 15px; background: #f8f9fa; padding: 10px; border-radius: 4px;">
+                    <strong>Raw Expense Data (Debug):</strong>
+                    <table class="table table-bordered" style="font-size: 10px; margin-top: 10px;">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Category</th>
+                          <th>Entity</th>
+                          <th>Amount</th>
+                          <th>Created</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php foreach (array_slice($expenses, 0, 10) as $exp): ?>
+                          <tr>
+                            <td><?php echo $exp->expense_id ?? 'N/A'; ?></td>
+                            <td><?php echo $exp->category_name ?? ($exp->category ?? 'N/A'); ?></td>
+                            <td><?php echo $exp->entity_name ?? 'N/A'; ?></td>
+                            <td><?php echo $exp->total_amount ?? ($exp->amount ?? 'N/A'); ?></td>
+                            <td><?php echo isset($exp->created_at) ? date('Y-m-d H:i', strtotime($exp->created_at)) : 'N/A'; ?></td>
+                          </tr>
+                        <?php endforeach; ?>
+                        <?php if (count($expenses) > 10): ?>
+                          <tr><td colspan="5">... and <?php echo count($expenses) - 10; ?> more records</td></tr>
+                        <?php endif; ?>
+                      </tbody>
+                    </table>
+                  </div>
+                <?php endif; ?>
               </div>
-            </div>
+            <?php endif; ?>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-bordered" style="margin-top: 10px; font-size: 11px;">
+              <tbody>
+                <tr style="background-color: #d1ecf1; font-weight: bold; font-size: 11px;">
+                  <td class="text-right" style="padding: 4px 6px; line-height: 1.1;">Grand Total Expenses:</td>
+                  <td class="text-right" style="width: 100px; padding: 4px 6px; line-height: 1.1;"><span id="reportGrandTotal"><?php 
+                    // Calculate grand total by summing all category totals
+                    $calculatedGrandTotal = 0;
+                    if (!empty($expensesByCategory)) {
+                      foreach ($expensesByCategory as $categoryName => $categoryTotal) {
+                        $calculatedGrandTotal += $categoryTotal;
+                      }
+                    }
+                    echo number_format($calculatedGrandTotal, 2);
+                  ?></span></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
       <div class="clearfix"></div>
+    </div>
+    
+    <!-- ========================= Sales by Items Report (Two Column Layout) ========================= -->
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-12">
+        <div class="printable-section" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0;">
+          <div class="report-header">
+            <h4 class="m-b-0" style="color: #337ab7;">🍽️ Sales by Items - All Customer Types</h4>
+            <p class="report-meta m-b-0">
+              <small>Detailed breakdown of items sold across all customer types</small>
+            </p>
+          </div>
+          
+          <div class="row">
+            <!-- Left Column: Item Sales Table -->
+            <div class="col-md-12" style="float: left; width: 100%;">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h5 style="margin: 0;">Item Sales Analysis</h5>
+                  <small>Shows quantity sold and revenue for each item by customer type</small>
+                </div>
+                <div class="panel-body" style="padding: 10px;">
+                  <?php if (!empty($itemSalesData)): ?>
+                    <div class="table-responsive">
+                      <table class="table table-bordered table-striped table-condensed" style="font-size: 14px;">
+                        <thead style="background-color: #f5f5f5;">
+                          <tr>
+                            <th rowspan="2" style="vertical-align: middle; width: 30%; font-size: 14px; padding: 8px; color: #000;">Item Name</th>
+                            <th rowspan="2" class="text-center" style="vertical-align: middle; width: 10%; font-size: 14px; padding: 8px; color: #000;">Total Qty</th>
+                            <th rowspan="2" class="text-right" style="vertical-align: middle; width: 12%; font-size: 14px; padding: 8px; color: #000;">Total Revenue</th>
+                            <th colspan="4" class="text-center" style="border-bottom: 2px solid #000; font-size: 14px; padding: 8px; color: #000;">Customer Types</th>
+                          </tr>
+                          <tr style="background-color: #e8f4fd;">
+                            <th class="text-center" style="width: 12%; color: #000; font-size: 12px; padding: 6px;">Regular<br><small style="color: #000;">(Qty/Rev)</small></th>
+                            <th class="text-center" style="width: 12%; color: #b8860b; font-size: 12px; padding: 6px;">Employee<br><small style="color: #b8860b;">(Qty/Rev)</small></th>
+                            <th class="text-center" style="width: 12%; color: #2e5d94; font-size: 12px; padding: 6px;">Guest<br><small style="color: #2e5d94;">(Qty/Rev)</small></th>
+                            <th class="text-center" style="width: 12%; color: #2d5a2d; font-size: 12px; padding: 6px;">Charity<br><small style="color: #2d5a2d;">(Qty/Rev)</small></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <?php 
+                          $grandTotalQty = 0;
+                          $grandTotalRevenue = 0;
+                          $grandRegularQty = 0; $grandRegularRevenue = 0;
+                          $grandEmployeeQty = 0; $grandEmployeeRevenue = 0;
+                          $grandGuestQty = 0; $grandGuestRevenue = 0;
+                          $grandCharityQty = 0; $grandCharityRevenue = 0;
+                          
+                          foreach ($itemSalesData as $item): 
+                            $totalItemQty = ($item->regular_qty ?? 0) + ($item->employee_qty ?? 0) + ($item->guest_qty ?? 0) + ($item->charity_qty ?? 0);
+                            $totalItemRevenue = ($item->regular_revenue ?? 0) + ($item->employee_revenue ?? 0) + ($item->guest_revenue ?? 0) + ($item->charity_revenue ?? 0);
+                            
+                            $grandTotalQty += $totalItemQty;
+                            $grandTotalRevenue += $totalItemRevenue;
+                            $grandRegularQty += ($item->regular_qty ?? 0);
+                            $grandRegularRevenue += ($item->regular_revenue ?? 0);
+                            $grandEmployeeQty += ($item->employee_qty ?? 0);
+                            $grandEmployeeRevenue += ($item->employee_revenue ?? 0);
+                            $grandGuestQty += ($item->guest_qty ?? 0);
+                            $grandGuestRevenue += ($item->guest_revenue ?? 0);
+                            $grandCharityQty += ($item->charity_qty ?? 0);
+                            $grandCharityRevenue += ($item->charity_revenue ?? 0);
+                          ?>
+                          <tr style="font-size: 13px;">
+                            <td style="padding: 7px;">
+                              <strong style="color: #000; font-size: 13px;"><?php echo htmlspecialchars($item->item_name ?? 'Unknown Item'); ?></strong>
+                              <?php if (!empty($item->variant_name)): ?>
+                                <br><small style="color: #333; font-size: 11px;"><?php echo htmlspecialchars($item->variant_name); ?></small>
+                              <?php endif; ?>
+                            </td>
+                            <td class="text-center" style="padding: 7px;">
+                              <span class="badge badge-primary" style="font-size: 12px; background-color: #2c3e50; color: #fff; border: 1px solid #000;"><?php echo number_format($totalItemQty); ?></span>
+                            </td>
+                            <td class="text-right" style="padding: 7px;">
+                              <strong style="color: #000; font-size: 13px;"><?php echo number_format($totalItemRevenue, 2); ?></strong>
+                            </td>
+                            <td class="text-center" style="padding: 6px;">
+                              <div style="color: #000; font-size: 12px;">
+                                <strong><?php echo number_format($item->regular_qty ?? 0); ?></strong><br>
+                                <small style="font-size: 10px; color: #333;"><?php echo number_format($item->regular_revenue ?? 0, 2); ?></small>
+                              </div>
+                            </td>
+                            <td class="text-center" style="padding: 6px;">
+                              <div style="color: #b8860b; font-size: 12px;">
+                                <strong><?php echo number_format($item->employee_qty ?? 0); ?></strong><br>
+                                <small style="font-size: 10px; color: #b8860b;"><?php echo number_format($item->employee_revenue ?? 0, 2); ?></small>
+                              </div>
+                            </td>
+                            <td class="text-center" style="padding: 6px;">
+                              <div style="color: #2e5d94; font-size: 12px;">
+                                <strong><?php echo number_format($item->guest_qty ?? 0); ?></strong><br>
+                                <small style="font-size: 10px; color: #2e5d94;"><?php echo number_format($item->guest_revenue ?? 0, 2); ?></small>
+                              </div>
+                            </td>
+                            <td class="text-center" style="padding: 6px;">
+                              <div style="color: #2d5a2d; font-size: 12px;">
+                                <strong><?php echo number_format($item->charity_qty ?? 0); ?></strong><br>
+                                <small style="font-size: 10px; color: #2d5a2d;"><?php echo number_format($item->charity_revenue ?? 0, 2); ?></small>
+                              </div>
+                            </td>
+                          </tr>
+                          <?php endforeach; ?>
+                        </tbody>
+                        <tfoot style="background-color: #f0f0f0; font-weight: bold; border-top: 2px solid #000;">
+                          <tr style="font-size: 13px;">
+                            <th style="padding: 8px; font-size: 14px; color: #000;">Grand Totals</th>
+                            <th class="text-center" style="padding: 8px;">
+                              <span class="badge badge-primary" style="font-size: 13px; background-color: #000; color: #fff; border: 1px solid #000;"><?php echo number_format($grandTotalQty); ?></span>
+                            </th>
+                            <th class="text-right" style="font-size: 14px; color: #000; padding: 8px;">
+                              <?php echo number_format($grandTotalRevenue, 2); ?>
+                            </th>
+                            <th class="text-center" style="padding: 7px;">
+                              <div style="color: #000; font-size: 12px;">
+                                <strong><?php echo number_format($grandRegularQty); ?></strong><br>
+                                <small style="font-size: 10px; color: #333;"><?php echo number_format($grandRegularRevenue, 2); ?></small>
+                              </div>
+                            </th>
+                            <th class="text-center" style="padding: 7px;">
+                              <div style="color: #b8860b; font-size: 12px;">
+                                <strong><?php echo number_format($grandEmployeeQty); ?></strong><br>
+                                <small style="font-size: 10px; color: #b8860b;"><?php echo number_format($grandEmployeeRevenue, 2); ?></small>
+                              </div>
+                            </th>
+                            <th class="text-center" style="padding: 7px;">
+                              <div style="color: #2e5d94; font-size: 12px;">
+                                <strong><?php echo number_format($grandGuestQty); ?></strong><br>
+                                <small style="font-size: 10px; color: #2e5d94;"><?php echo number_format($grandGuestRevenue, 2); ?></small>
+                              </div>
+                            </th>
+                            <th class="text-center" style="padding: 7px;">
+                              <div style="color: #2d5a2d; font-size: 12px;">
+                                <strong><?php echo number_format($grandCharityQty); ?></strong><br>
+                                <small style="font-size: 10px; color: #2d5a2d;"><?php echo number_format($grandCharityRevenue, 2); ?></small>
+                              </div>
+                            </th>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  <?php else: ?>
+                    <div class="text-center text-muted" style="padding: 30px;">
+                      <h5>📊 No Item Sales Data</h5>
+                      <p>No items were sold during this period.</p>
+                    </div>
+                  <?php endif; ?>
+                </div>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <!-- /printArea -->
@@ -951,300 +1172,278 @@
     </div>
   </div>
 
-
-  
-  <!-- ========================= Two Column Layout for Reports ========================= -->
-  <div class="row">
-    <!-- Left Column: Expenses Report -->
-    <div class="col-md-6" style="float: left; width: 50%;">
-      <div id="expensesPrintArea" class="printable-section" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0; max-width:100%; overflow:hidden; min-height:auto;" class="dense">
-    <div class="report-header">
-      <h3 class="m-b-0">Expenses Report</h3>
-      <p class="report-meta m-b-0">
-        Date: <span id="reportDate"><?php echo date('Y-m-d'); ?></span>
-        <span id="reportFilters" style="margin-left:10px;">Grouped by Category</span>
-      </p>
-    </div>
-    <div id="reportBody">
-      <?php 
-      // Debug information (can be removed in production)
-      if (empty($expensesByCategory)) {
-        echo "<!-- DEBUG: expensesByCategory is empty -->";
-        if (isset($expenses)) {
-          echo "<!-- DEBUG: Total raw expenses count: " . count($expenses) . " -->";
-        }
-      } else {
-        echo "<!-- DEBUG: Found " . count($expensesByCategory) . " expense categories -->";
-        foreach ($expensesByCategory as $cat => $total) {
-          echo "<!-- DEBUG: Category '$cat' = $total -->";
-        }
-      }
-      ?>
-      <?php if (!empty($groupedExpenses)): ?>
-        <?php foreach ($groupedExpenses as $categoryName => $categoryData): ?>
-          <div class="category-block">
-            <h4 class="category-title" style="font-size: 10px; margin-bottom: 1px; margin-top: 3px; padding: 4px 6px; background-color: #f8f9fa; border-left: 3px solid #007bff; color: #495057; line-height: 1.2;"><?php echo htmlspecialchars($categoryName); ?></h4>
-            <div class="table-responsive">
-              <table class="table table-bordered table-striped expenses-table" style="margin-bottom: 6px; font-size: 11px;">
-                <thead>
-                  <tr>
-                    <th class="text-right" style="padding: 3px 4px; line-height: 1.2;">Item Name</th>
-                    <th class="text-right" style="width: 50px; padding: 3px 2px; line-height: 1.2;">Qty</th>
-                    <th class="text-right" style="width: 80px; padding: 3px 2px; line-height: 1.2;">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($categoryData['items'] as $itemName => $itemData): ?>
-                  <tr style="font-size: 10px;">
-                    <td style="padding: 2px 4px; line-height: 1.1;"><?php echo htmlspecialchars($itemName); ?></td>
-                    <td class="text-right" style="padding: 2px; line-height: 1.1;"><?php echo number_format($itemData['quantity'], 2); ?></td>
-                    <td class="text-right" style="padding: 2px; line-height: 1.1;"><strong><?php echo number_format($itemData['total'], 2); ?></strong></td>
-                  </tr>
-                <?php endforeach; ?>
-              </tbody>
-                <tfoot>
-                  <tr style="background-color: #f8f9fa; font-weight: bold; font-size: 10px;">
-                    <th colspan="2" class="text-right" style="padding: 3px 4px; border: 1px solid #ddd; line-height: 1.1;">Category Total:</th>
-                    <th class="text-right" style="padding: 3px 2px; border: 1px solid #ddd; line-height: 1.1;"><?php echo number_format($categoryData['total'], 2); ?></th>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          </div>
-        <?php endforeach; ?>
-      <?php elseif (!empty($expensesByCategory)): ?>
-        <!-- Fallback to old display if groupedExpenses is not available -->
-        <?php foreach ($expensesByCategory as $categoryName => $categoryTotal): ?>
-          <?php 
-          // Get expenses for this category
-          $categoryExpenses = array();
-          if (!empty($expenses)) {
-            foreach ($expenses as $expense) {
-              if (($expense->category_name ?? 'Uncategorized') == $categoryName) {
-                $categoryExpenses[] = $expense;
-              }
-            }
-          }
-          ?>
-          
-          <?php if (!empty($categoryExpenses)): ?>
-          <div class="category-block">
-            <h4 class="category-title" style="font-size: 10px; margin-bottom: 1px; margin-top: 3px; padding: 4px 6px; background-color: #f8f9fa; border-left: 3px solid #007bff; color: #495057; line-height: 1.2;"><?php echo htmlspecialchars($categoryName); ?></h4>
-            <div class="table-responsive">
-              <table class="table table-bordered table-striped expenses-table" style="margin-bottom: 6px; font-size: 11px;">
-                <thead>
-                  <tr>
-                    <th class="text-right" style="padding: 3px 4px; line-height: 1.2;">Item Name</th>
-                    <th class="text-right" style="width: 70px; padding: 3px 2px; line-height: 1.2;">Rate</th>
-                    <th class="text-right" style="width: 50px; padding: 3px 2px; line-height: 1.2;">Qty</th>
-                    <th class="text-right" style="width: 80px; padding: 3px 2px; line-height: 1.2;">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($categoryExpenses as $expense): ?>
-                  <tr style="font-size: 10px;">
-                    <td style="padding: 2px 4px; line-height: 1.1;"><?php 
-                      // Use the display_name field that shows proper names based on category
-                      $itemName = '';
-                      if (isset($expense->display_name) && !empty($expense->display_name)) {
-                        $itemName = $expense->display_name;
-                      } elseif (isset($expense->product_name) && !empty($expense->product_name)) {
-                        $itemName = $expense->product_name;
-                      } elseif (isset($expense->entity_name) && !empty($expense->entity_name)) {
-                        $itemName = $expense->entity_name;
-                      } elseif (isset($expense->item_name) && !empty($expense->item_name)) {
-                        $itemName = $expense->item_name;
-                      } elseif (isset($expense->expense_item) && !empty($expense->expense_item)) {
-                        $itemName = $expense->expense_item;
-                      } elseif (isset($expense->description) && !empty($expense->description)) {
-                        $itemName = $expense->description;
-                      } elseif (isset($expense->expense_name) && !empty($expense->expense_name)) {
-                        $itemName = $expense->expense_name;
-                      } else {
-                        $itemName = 'N/A';
-                      }
-                      echo htmlspecialchars($itemName);
-                    ?></td>
-                    <td class="text-right" style="padding: 2px; line-height: 1.1;"><?php 
-                      // Try different possible fields for rate/price
-                      $itemRate = 0;
-                      if (isset($expense->rate) && !empty($expense->rate)) {
-                        $itemRate = $expense->rate;
-                      } elseif (isset($expense->price) && !empty($expense->price)) {
-                        $itemRate = $expense->price;
-                      } elseif (isset($expense->unit_price) && !empty($expense->unit_price)) {
-                        $itemRate = $expense->unit_price;
-                      } elseif (isset($expense->item_rate) && !empty($expense->item_rate)) {
-                        $itemRate = $expense->item_rate;
-                      } elseif (isset($expense->product_price) && !empty($expense->product_price)) {
-                        $itemRate = $expense->product_price;
-                      } elseif (isset($expense->amount) && isset($expense->quantity) && $expense->quantity > 0) {
-                        $itemRate = $expense->amount / $expense->quantity;
-                      }
-                      echo number_format($itemRate, 2);
-                    ?></td>
-                    <td class="text-right" style="padding: 2px; line-height: 1.1;"><?php echo number_format($expense->quantity ?? 1, 2); ?></td>
-                    <td class="text-right" style="padding: 2px; line-height: 1.1;"><strong><?php echo number_format($expense->total_amount ?? 0, 2); ?></strong></td>
-                  </tr>
-                <?php endforeach; ?>
-              </tbody>
-                <tfoot>
-                  <tr style="background-color: #f8f9fa; font-weight: bold; font-size: 10px;">
-                    <th colspan="3" class="text-right" style="padding: 3px 4px; border: 1px solid #ddd; line-height: 1.1;">Category Total:</th>
-                    <th class="text-right" style="padding: 3px 2px; border: 1px solid #ddd; line-height: 1.1;"><?php echo number_format($categoryTotal, 2); ?></th>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          </div>
-          <?php endif; ?>
-        <?php endforeach; ?>
-      <?php else: ?>
-        <div class="no-data">
-          No categorized expenses to display.
-          <?php if (!empty($expenses)): ?>
-            <br><small>DEBUG: Found <?php echo count($expenses); ?> raw expense records</small>
-            
-            <!-- Show raw expenses for debugging -->
-            <div style="margin-top: 15px; background: #f8f9fa; padding: 10px; border-radius: 4px;">
-              <strong>Raw Expense Data (Debug):</strong>
-              <table class="table table-bordered" style="font-size: 10px; margin-top: 10px;">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Category</th>
-                    <th>Entity</th>
-                    <th>Amount</th>
-                    <th>Created</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php foreach (array_slice($expenses, 0, 10) as $exp): ?>
-                    <tr>
-                      <td><?php echo $exp->expense_id ?? 'N/A'; ?></td>
-                      <td><?php echo $exp->category_name ?? ($exp->category ?? 'N/A'); ?></td>
-                      <td><?php echo $exp->entity_name ?? 'N/A'; ?></td>
-                      <td><?php echo $exp->total_amount ?? ($exp->amount ?? 'N/A'); ?></td>
-                      <td><?php echo isset($exp->created_at) ? date('Y-m-d H:i', strtotime($exp->created_at)) : 'N/A'; ?></td>
-                    </tr>
-                  <?php endforeach; ?>
-                  <?php if (count($expenses) > 10): ?>
-                    <tr><td colspan="5">... and <?php echo count($expenses) - 10; ?> more records</td></tr>
-                  <?php endif; ?>
-                </tbody>
-              </table>
-            </div>
-          <?php endif; ?>
+  <!-- ========================= Employee Orders Details ========================= -->
+  <div class="row" style="margin-top: 20px;">
+    <div class="col-md-12">
+      <div class="printable-section" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0;">
+        <div class="report-header">
+          <h4 class="m-b-0" style="color: #f0ad4e;">👥 Employee Orders Details</h4>
+          <p class="report-meta m-b-0">
+            <small>Detailed List of Employee Orders</small>
+          </p>
         </div>
-      <?php endif; ?>
-    </div>
-    <div class="table-responsive">
-      <table class="table table-bordered" style="margin-top: 10px; font-size: 11px;">
-        <tbody>
-          <tr style="background-color: #d1ecf1; font-weight: bold; font-size: 11px;">
-            <td class="text-right" style="padding: 4px 6px; line-height: 1.1;">Grand Total Expenses:</td>
-            <td class="text-right" style="width: 100px; padding: 4px 6px; line-height: 1.1;"><span id="reportGrandTotal"><?php 
-              // Calculate grand total by summing all category totals
-              $calculatedGrandTotal = 0;
-              if (!empty($expensesByCategory)) {
-                foreach ($expensesByCategory as $categoryName => $categoryTotal) {
-                  $calculatedGrandTotal += $categoryTotal;
-                }
-              }
-              echo number_format($calculatedGrandTotal, 2);
-            ?></span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        <div class="panel panel-warning">
+          <div class="panel-body">
+            <?php if (!empty($employeeOrders) && $totalEmployeeOrders > 0): ?>
+              <div class="table-responsive">
+                <table class="table table-bordered table-condensed">
+                  <thead>
+                    <tr>
+                      <th style="width: 10%;">Order ID</th>
+                      <th style="width: 20%;">Employee Name</th>
+                      <th style="width: 35%;">Items Ordered</th>
+                      <th style="width: 20%;">Notes</th>
+                      <th class="text-right" style="width: 10%;">Value</th>
+                      <th class="text-center" style="width: 5%;">Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php foreach ($employeeOrders as $order): ?>
+                    <tr>
+                      <td>
+                        <a href="<?php echo base_url("ordermanage/order/orderdetails/$order->order_id") ?>" class="btn btn-link btn-sm" style="padding: 0; color: #337ab7;">
+                          <strong><?php echo htmlspecialchars($order->order_id); ?></strong>
+                        </a>
+                      </td>
+                      <td>
+                        <?php echo htmlspecialchars($order->customer_name ?: 'Employee'); ?>
+                      </td>
+                      <td>
+                        <small>
+                        <?php 
+                        if (!empty($order->order_items)) {
+                          echo '<ul style="margin: 0; padding-left: 15px; list-style: disc;">';
+                          foreach ($order->order_items as $item) {
+                            $itemName = $item->ProductName ?? 'Unknown Item';
+                            if (!empty($item->variantName)) {
+                              $itemName .= ' (' . $item->variantName . ')';
+                            }
+                            echo '<li>' . htmlspecialchars($item->menuqty . 'x ' . $itemName) . '</li>';
+                          }
+                          echo '</ul>';
+                        } else {
+                          echo 'No items found';
+                        }
+                        ?>
+                        </small>
+                      </td>
+                      <td>
+                        <small class="text-muted" style="font-style: italic;">
+                          <?php echo htmlspecialchars($order->customer_note ?: 'No notes'); ?>
+                        </small>
+                      </td>
+                      <td class="text-right">
+                        <span class="text-warning"><strong><?php echo number_format($order->totalamount, 2); ?></strong></span>
+                      </td>
+                      <td class="text-center">
+                        <small><?php echo !empty($order->order_time) ? date('H:i', strtotime($order->order_time)) : 'N/A'; ?></small>
+                      </td>
+                    </tr>
+                    <?php endforeach; ?>
+                  </tbody>
+                  <tfoot>
+                    <tr style="background-color: #f9f9f9; font-weight: bold;">
+                      <td colspan="4"><strong>Total Employee Orders</strong></td>
+                      <td class="text-right text-warning"><strong><?php echo number_format($totalEmployeeOrdersValue, 2); ?></strong></td>
+                      <td class="text-center"><strong><?php echo $totalEmployeeOrders; ?> orders</strong></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            <?php else: ?>
+              <div class="text-center text-muted">
+                <h4>📋 No Employee Orders Today</h4>
+                <p>No employee orders were placed during this period.</p>
+              </div>
+            <?php endif; ?>
+          </div>
+        </div>
       </div>
     </div>
-    
-    <!-- Right Column: Summary Report Section -->
-    <div class="col-md-6" style="float: left; width: 50%;">
-      <div id="summaryReportArea" class="printable-section" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0; max-width:100%; overflow:hidden; min-height:auto;">
+  </div>
+
+  <!-- ========================= Guest Orders Details ========================= -->
+  <div class="row" style="margin-top: 20px;">
+    <div class="col-md-12">
+      <div class="printable-section" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0;">
         <div class="report-header">
-          <h3 class="m-b-0">Summary Report</h3>
+          <h4 class="m-b-0" style="color: #5bc0de;">🏨 Guest Orders Details</h4>
           <p class="report-meta m-b-0">
-            Date: <span><?php echo date('Y-m-d'); ?></span>
-            <span style="margin-left:10px;">Quick Overview</span>
+            <small>Detailed List of Guest Orders</small>
           </p>
         </div>
         <div class="panel panel-info">
-          <div class="panel-heading">📋 Daily Summary</div>
           <div class="panel-body">
-            <div class="row">
-              <div class="col-sm-6">
-                <strong>Total Sales:</strong><br>
-                <span class="text-success" style="font-size: 16px;">
-                  <?php 
-                  $totalSalesAmount = 0;
-                  if (!empty($totalamount)) {
-                    foreach ($totalamount as $amount) {
-                      if (is_object($amount) && isset($amount->totalamount)) {
-                        $totalSalesAmount += floatval($amount->totalamount);
-                      } elseif (is_numeric($amount)) {
-                        $totalSalesAmount += floatval($amount);
-                      }
-                    }
-                  }
-                  echo number_format($totalSalesAmount, 2);
-                  ?>
-                </span>
+            <?php if (!empty($guestOrders) && $totalGuestOrders > 0): ?>
+              <div class="table-responsive">
+                <table class="table table-bordered table-condensed">
+                  <thead>
+                    <tr>
+                      <th style="width: 10%;">Order ID</th>
+                      <th style="width: 20%;">Guest Name</th>
+                      <th style="width: 35%;">Items Ordered</th>
+                      <th style="width: 20%;">Notes</th>
+                      <th class="text-right" style="width: 10%;">Value</th>
+                      <th class="text-center" style="width: 5%;">Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php foreach ($guestOrders as $order): ?>
+                    <tr>
+                      <td>
+                        <a href="<?php echo base_url("ordermanage/order/orderdetails/$order->order_id") ?>" class="btn btn-link btn-sm" style="padding: 0; color: #337ab7;">
+                          <strong><?php echo htmlspecialchars($order->order_id); ?></strong>
+                        </a>
+                      </td>
+                      <td>
+                        <?php echo htmlspecialchars($order->customer_name ?: 'Guest'); ?>
+                      </td>
+                      <td>
+                        <small>
+                        <?php 
+                        if (!empty($order->order_items)) {
+                          echo '<ul style="margin: 0; padding-left: 15px; list-style: disc;">';
+                          foreach ($order->order_items as $item) {
+                            $itemName = $item->ProductName ?? 'Unknown Item';
+                            if (!empty($item->variantName)) {
+                              $itemName .= ' (' . $item->variantName . ')';
+                            }
+                            echo '<li>' . htmlspecialchars($item->menuqty . 'x ' . $itemName) . '</li>';
+                          }
+                          echo '</ul>';
+                        } else {
+                          echo 'No items found';
+                        }
+                        ?>
+                        </small>
+                      </td>
+                      <td>
+                        <small class="text-muted" style="font-style: italic;">
+                          <?php echo htmlspecialchars($order->customer_note ?: 'No notes'); ?>
+                        </small>
+                      </td>
+                      <td class="text-right">
+                        <span class="text-info"><strong><?php echo number_format($order->totalamount, 2); ?></strong></span>
+                      </td>
+                      <td class="text-center">
+                        <small><?php echo !empty($order->order_time) ? date('H:i', strtotime($order->order_time)) : 'N/A'; ?></small>
+                      </td>
+                    </tr>
+                    <?php endforeach; ?>
+                  </tbody>
+                  <tfoot>
+                    <tr style="background-color: #f9f9f9; font-weight: bold;">
+                      <td colspan="4"><strong>Total Guest Orders</strong></td>
+                      <td class="text-right text-info"><strong><?php echo number_format($totalGuestOrdersValue, 2); ?></strong></td>
+                      <td class="text-center"><strong><?php echo $totalGuestOrders; ?> orders</strong></td>
+                    </tr>
+                  </tfoot>
+                </table>
               </div>
-              <div class="col-sm-6">
-                <strong>Total Orders:</strong><br>
-                <span class="text-info" style="font-size: 16px;">
-                  <?php echo count($totalamount ?? []); ?>
-                </span>
+            <?php else: ?>
+              <div class="text-center text-muted">
+                <h4>🏨 No Guest Orders Today</h4>
+                <p>No guest orders were placed during this period.</p>
               </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="col-sm-6">
-                <strong>Cancelled Orders:</strong><br>
-                <span class="text-danger" style="font-size: 16px;">
-                  <?php echo $totalCancelledOrders ?? 0; ?>
-                </span>
-              </div>
-              <div class="col-sm-6">
-                <strong>Lost Revenue:</strong><br>
-                <span class="text-danger" style="font-size: 16px;">
-                  <?php echo number_format($totalCancelledValue ?? 0, 2); ?>
-                </span>
-              </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="col-sm-6">
-                <strong>Total Expenses:</strong><br>
-                <span class="text-warning" style="font-size: 16px;">
-                  <?php 
-                  $totalExpensesAmount = 0;
-                  if (!empty($expensesByCategory)) {
-                    foreach ($expensesByCategory as $categoryName => $categoryTotal) {
-                      if (is_numeric($categoryTotal)) {
-                        $totalExpensesAmount += floatval($categoryTotal);
-                      }
-                    }
-                  }
-                  echo number_format($totalExpensesAmount, 2);
-                  ?>
-                </span>
-              </div>
-              <div class="col-sm-6">
-                <strong>Net Income:</strong><br>
-                <span class="<?php echo ($totalSalesAmount - $totalExpensesAmount >= 0) ? 'text-success' : 'text-danger'; ?>" style="font-size: 16px;">
-                  <?php echo number_format($totalSalesAmount - $totalExpensesAmount, 2); ?>
-                </span>
-              </div>
-            </div>
+            <?php endif; ?>
           </div>
         </div>
       </div>
     </div>
-    <div class="clearfix"></div>
   </div>
+
+  <!-- ========================= Charity Orders Details ========================= -->
+  <div class="row" style="margin-top: 20px;">
+    <div class="col-md-12">
+      <div class="printable-section" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0;">
+        <div class="report-header">
+          <h4 class="m-b-0" style="color: #5cb85c;">❤️ Charity Orders Details</h4>
+          <p class="report-meta m-b-0">
+            <small>Detailed List of Charity Orders</small>
+          </p>
+        </div>
+        <div class="panel panel-success">
+          <div class="panel-body">
+            <?php if (!empty($charityOrders) && $totalCharityOrders > 0): ?>
+              <div class="table-responsive">
+                <table class="table table-bordered table-condensed">
+                  <thead>
+                    <tr>
+                      <th style="width: 10%;">Order ID</th>
+                      <th style="width: 20%;">Recipient Name</th>
+                      <th style="width: 35%;">Items Ordered</th>
+                      <th style="width: 20%;">Notes</th>
+                      <th class="text-right" style="width: 10%;">Value</th>
+                      <th class="text-center" style="width: 5%;">Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php foreach ($charityOrders as $order): ?>
+                    <tr>
+                      <td>
+                        <a href="<?php echo base_url("ordermanage/order/orderdetails/$order->order_id") ?>" class="btn btn-link btn-sm" style="padding: 0; color: #337ab7;">
+                          <strong><?php echo htmlspecialchars($order->order_id); ?></strong>
+                        </a>
+                      </td>
+                      <td>
+                        <?php echo htmlspecialchars($order->customer_name ?: 'Charity Recipient'); ?>
+                      </td>
+                      <td>
+                        <small>
+                        <?php 
+                        if (!empty($order->order_items)) {
+                          echo '<ul style="margin: 0; padding-left: 15px; list-style: disc;">';
+                          foreach ($order->order_items as $item) {
+                            $itemName = $item->ProductName ?? 'Unknown Item';
+                            if (!empty($item->variantName)) {
+                              $itemName .= ' (' . $item->variantName . ')';
+                            }
+                            echo '<li>' . htmlspecialchars($item->menuqty . 'x ' . $itemName) . '</li>';
+                          }
+                          echo '</ul>';
+                        } else {
+                          echo 'No items found';
+                        }
+                        ?>
+                        </small>
+                      </td>
+                      <td>
+                        <small class="text-muted" style="font-style: italic;">
+                          <?php echo htmlspecialchars($order->customer_note ?: 'No notes'); ?>
+                        </small>
+                      </td>
+                      <td class="text-right">
+                        <span class="text-success"><strong><?php echo number_format($order->totalamount, 2); ?></strong></span>
+                      </td>
+                      <td class="text-center">
+                        <small><?php echo !empty($order->order_time) ? date('H:i', strtotime($order->order_time)) : 'N/A'; ?></small>
+                      </td>
+                    </tr>
+                    <?php endforeach; ?>
+                  </tbody>
+                  <tfoot>
+                    <tr style="background-color: #f9f9f9; font-weight: bold;">
+                      <td colspan="4"><strong>Total Charity Orders</strong></td>
+                      <td class="text-right text-success"><strong><?php echo number_format($totalCharityOrdersValue, 2); ?></strong></td>
+                      <td class="text-center"><strong><?php echo $totalCharityOrders; ?> orders</strong></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            <?php else: ?>
+              <div class="text-center text-muted">
+                <h4>❤️ No Charity Orders Today</h4>
+                <p>No charity orders were placed during this period.</p>
+              </div>
+            <?php endif; ?>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
   
   <!-- ========================= Kitchen Sales Report ========================= -->
   <div class="row" style="margin-top: 20px;">
