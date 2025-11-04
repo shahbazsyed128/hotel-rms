@@ -399,9 +399,10 @@
           <button type="button" id="btnBuildReport" class="btn btn-default">
             <span class="glyphicon glyphicon-eye-open"></span> Preview Report
           </button>
-          <button type="button" id="btnPrintReport" class="btn btn-primary">
+          <!-- <button type="button" id="btnPrintReport" class="btn btn-primary">
             <span class="glyphicon glyphicon-print"></span> Print Report
-          </button>
+          </button> -->
+          <a class="btn btn-primary" href="/hotel-rms/ordermanage/order/dailycomprehensivereport" target="_blank" rel="noopener noreferrer">Generate Report</a>
         </div>
       </div>
     </div>
