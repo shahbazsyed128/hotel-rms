@@ -475,10 +475,13 @@
     <?php return; ?>
   <?php endif; ?>
 
+  <div id="reportBody">
+
+
   <!-- Printable Area -->
-  <div id="printArea" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0; max-width:100%; overflow:hidden; min-height:auto;">
+  <div id="printArea" class="printable-section" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0; max-width:100%; overflow:hidden; min-height:auto;">
     <div class="report-header">
-      <h3 class="m-b-0">Daily Comprehensive Report</h3>
+      <h3 class="m-b-0 no-print">Daily Comprehensive Report</h3>
       <p class="report-meta m-b-0">
         Generated: <?php echo date('Y-m-d H:i:s'); ?>
         | User: <?php 
@@ -735,8 +738,8 @@
       </div>
           
       <!-- Payment Methods Column -->
-      <div class="col-md-6" style="float: left; width: 50%;">
-        <div id="expensesPrintArea" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; max-width:100%; overflow:hidden; min-height:auto;" class="dense">
+      <div class="col-md-6 last" style="float: left; width: 50%;">
+        <div id="expensesPrintArea" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:0px; max-width:100%; overflow:hidden; min-height:auto;">
           <div class="report-header">
             <h3 class="m-b-0" style="margin-top:0px;">Expenses Report</h3>
             <p class="report-meta m-b-0">
@@ -942,162 +945,8 @@
       </div>
       <div class="clearfix"></div>
     </div>
-    
-    <!-- ========================= Sales by Items Report (Two Column Layout) ========================= -->
-    <div class="row" style="margin-top: 20px;">
-      <div class="col-md-12">
-        <div class="printable-section" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0;">
-          <div class="report-header">
-            <h4 class="m-b-0" style="color: #337ab7;">🍽️ Sales by Items - All Customer Types</h4>
-            <p class="report-meta m-b-0">
-              <small>Detailed breakdown of items sold across all customer types</small>
-            </p>
-          </div>
-          
-          <div class="row">
-            <!-- Left Column: Item Sales Table -->
-            <div class="col-md-12" style="float: left; width: 100%;">
-              <div class="panel panel-primary">
-                <div class="panel-heading">
-                  <h5 style="margin: 0;">Item Sales Analysis</h5>
-                  <small>Shows quantity sold and revenue for each item by customer type</small>
-                </div>
-                <div class="panel-body" style="padding: 10px;">
-                  <?php if (!empty($itemSalesData)): ?>
-                    <div class="table-responsive">
-                      <table class="table table-bordered table-striped table-condensed" style="font-size: 14px;">
-                        <thead style="background-color: #f5f5f5;">
-                          <tr>
-                            <th rowspan="2" style="vertical-align: middle; width: 30%; font-size: 14px; padding: 8px; color: #000;">Item Name</th>
-                            <th rowspan="2" class="text-center" style="vertical-align: middle; width: 10%; font-size: 14px; padding: 8px; color: #000;">Total Qty</th>
-                            <th rowspan="2" class="text-right" style="vertical-align: middle; width: 12%; font-size: 14px; padding: 8px; color: #000;">Total Revenue</th>
-                            <th colspan="4" class="text-center" style="border-bottom: 2px solid #000; font-size: 14px; padding: 8px; color: #000;">Customer Types</th>
-                          </tr>
-                          <tr style="background-color: #e8f4fd;">
-                            <th class="text-center" style="width: 12%; color: #000; font-size: 12px; padding: 6px;">Regular<br><small style="color: #000;">(Qty/Rev)</small></th>
-                            <th class="text-center" style="width: 12%; color: #b8860b; font-size: 12px; padding: 6px;">Employee<br><small style="color: #b8860b;">(Qty/Rev)</small></th>
-                            <th class="text-center" style="width: 12%; color: #2e5d94; font-size: 12px; padding: 6px;">Guest<br><small style="color: #2e5d94;">(Qty/Rev)</small></th>
-                            <th class="text-center" style="width: 12%; color: #2d5a2d; font-size: 12px; padding: 6px;">Charity<br><small style="color: #2d5a2d;">(Qty/Rev)</small></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <?php 
-                          $grandTotalQty = 0;
-                          $grandTotalRevenue = 0;
-                          $grandRegularQty = 0; $grandRegularRevenue = 0;
-                          $grandEmployeeQty = 0; $grandEmployeeRevenue = 0;
-                          $grandGuestQty = 0; $grandGuestRevenue = 0;
-                          $grandCharityQty = 0; $grandCharityRevenue = 0;
-                          
-                          foreach ($itemSalesData as $item): 
-                            $totalItemQty = ($item->regular_qty ?? 0) + ($item->employee_qty ?? 0) + ($item->guest_qty ?? 0) + ($item->charity_qty ?? 0);
-                            $totalItemRevenue = ($item->regular_revenue ?? 0) + ($item->employee_revenue ?? 0) + ($item->guest_revenue ?? 0) + ($item->charity_revenue ?? 0);
-                            
-                            $grandTotalQty += $totalItemQty;
-                            $grandTotalRevenue += $totalItemRevenue;
-                            $grandRegularQty += ($item->regular_qty ?? 0);
-                            $grandRegularRevenue += ($item->regular_revenue ?? 0);
-                            $grandEmployeeQty += ($item->employee_qty ?? 0);
-                            $grandEmployeeRevenue += ($item->employee_revenue ?? 0);
-                            $grandGuestQty += ($item->guest_qty ?? 0);
-                            $grandGuestRevenue += ($item->guest_revenue ?? 0);
-                            $grandCharityQty += ($item->charity_qty ?? 0);
-                            $grandCharityRevenue += ($item->charity_revenue ?? 0);
-                          ?>
-                          <tr style="font-size: 13px;">
-                            <td style="padding: 7px;">
-                              <strong style="color: #000; font-size: 13px;"><?php echo htmlspecialchars($item->item_name ?? 'Unknown Item'); ?></strong>
-                              <?php if (!empty($item->variant_name)): ?>
-                                <br><small style="color: #333; font-size: 11px;"><?php echo htmlspecialchars($item->variant_name); ?></small>
-                              <?php endif; ?>
-                            </td>
-                            <td class="text-center" style="padding: 7px;">
-                              <span class="badge badge-primary" style="font-size: 12px; background-color: #2c3e50; color: #fff; border: 1px solid #000;"><?php echo number_format($totalItemQty); ?></span>
-                            </td>
-                            <td class="text-right" style="padding: 7px;">
-                              <strong style="color: #000; font-size: 13px;"><?php echo number_format($totalItemRevenue, 2); ?></strong>
-                            </td>
-                            <td class="text-center" style="padding: 6px;">
-                              <div style="color: #000; font-size: 12px;">
-                                <strong><?php echo number_format($item->regular_qty ?? 0); ?></strong><br>
-                                <small style="font-size: 10px; color: #333;"><?php echo number_format($item->regular_revenue ?? 0, 2); ?></small>
-                              </div>
-                            </td>
-                            <td class="text-center" style="padding: 6px;">
-                              <div style="color: #b8860b; font-size: 12px;">
-                                <strong><?php echo number_format($item->employee_qty ?? 0); ?></strong><br>
-                                <small style="font-size: 10px; color: #b8860b;"><?php echo number_format($item->employee_revenue ?? 0, 2); ?></small>
-                              </div>
-                            </td>
-                            <td class="text-center" style="padding: 6px;">
-                              <div style="color: #2e5d94; font-size: 12px;">
-                                <strong><?php echo number_format($item->guest_qty ?? 0); ?></strong><br>
-                                <small style="font-size: 10px; color: #2e5d94;"><?php echo number_format($item->guest_revenue ?? 0, 2); ?></small>
-                              </div>
-                            </td>
-                            <td class="text-center" style="padding: 6px;">
-                              <div style="color: #2d5a2d; font-size: 12px;">
-                                <strong><?php echo number_format($item->charity_qty ?? 0); ?></strong><br>
-                                <small style="font-size: 10px; color: #2d5a2d;"><?php echo number_format($item->charity_revenue ?? 0, 2); ?></small>
-                              </div>
-                            </td>
-                          </tr>
-                          <?php endforeach; ?>
-                        </tbody>
-                        <tfoot style="background-color: #f0f0f0; font-weight: bold; border-top: 2px solid #000;">
-                          <tr style="font-size: 13px;">
-                            <th style="padding: 8px; font-size: 14px; color: #000;">Grand Totals</th>
-                            <th class="text-center" style="padding: 8px;">
-                              <span class="badge badge-primary" style="font-size: 13px; background-color: #000; color: #fff; border: 1px solid #000;"><?php echo number_format($grandTotalQty); ?></span>
-                            </th>
-                            <th class="text-right" style="font-size: 14px; color: #000; padding: 8px;">
-                              <?php echo number_format($grandTotalRevenue, 2); ?>
-                            </th>
-                            <th class="text-center" style="padding: 7px;">
-                              <div style="color: #000; font-size: 12px;">
-                                <strong><?php echo number_format($grandRegularQty); ?></strong><br>
-                                <small style="font-size: 10px; color: #333;"><?php echo number_format($grandRegularRevenue, 2); ?></small>
-                              </div>
-                            </th>
-                            <th class="text-center" style="padding: 7px;">
-                              <div style="color: #b8860b; font-size: 12px;">
-                                <strong><?php echo number_format($grandEmployeeQty); ?></strong><br>
-                                <small style="font-size: 10px; color: #b8860b;"><?php echo number_format($grandEmployeeRevenue, 2); ?></small>
-                              </div>
-                            </th>
-                            <th class="text-center" style="padding: 7px;">
-                              <div style="color: #2e5d94; font-size: 12px;">
-                                <strong><?php echo number_format($grandGuestQty); ?></strong><br>
-                                <small style="font-size: 10px; color: #2e5d94;"><?php echo number_format($grandGuestRevenue, 2); ?></small>
-                              </div>
-                            </th>
-                            <th class="text-center" style="padding: 7px;">
-                              <div style="color: #2d5a2d; font-size: 12px;">
-                                <strong><?php echo number_format($grandCharityQty); ?></strong><br>
-                                <small style="font-size: 10px; color: #2d5a2d;"><?php echo number_format($grandCharityRevenue, 2); ?></small>
-                              </div>
-                            </th>
-                          </tr>
-                        </tfoot>
-                      </table>
-                    </div>
-                  <?php else: ?>
-                    <div class="text-center text-muted" style="padding: 30px;">
-                      <h5>📊 No Item Sales Data</h5>
-                      <p>No items were sold during this period.</p>
-                    </div>
-                  <?php endif; ?>
-                </div>
-              </div>
-            </div>
-            <div class="clearfix"></div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
   <!-- /printArea -->
-  
   <!-- ========================= Cancelled Orders Details ========================= -->
   <div class="row" style="margin-top: 20px;">
     <div class="col-md-12">
@@ -1441,10 +1290,159 @@
       </div>
     </div>
   </div>
-
-
-
   
+
+  <div class="row" class="no-print" style="margin-top: 20px;">
+    <div class="col-md-12">
+      <div class="" style="background:#fff; border:1px solid #e6e9ee; border-radius:6px; padding:15px; margin:10px 0;">
+        <div class="report-header">
+          <h4 class="m-b-0" style="color: #337ab7;">🍽️ Sales by Items - All Customer Types</h4>
+          <p class="report-meta m-b-0">
+            <small>Detailed breakdown of items sold across all customer types</small>
+          </p>
+        </div>
+        
+        <div class="row">
+          <!-- Left Column: Item Sales Table -->
+          <div class="col-md-12" style="float: left; width: 100%;">
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h5 style="margin: 0;">Item Sales Analysis</h5>
+                <small>Shows quantity sold and revenue for each item by customer type</small>
+              </div>
+              <div class="panel-body" style="padding: 10px;">
+                <?php if (!empty($itemSalesData)): ?>
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-condensed" style="font-size: 14px;">
+                      <thead style="background-color: #f5f5f5;">
+                        <tr>
+                          <th rowspan="2" style="vertical-align: middle; width: 30%; font-size: 14px; padding: 8px; color: #000;">Item Name</th>
+                          <th rowspan="2" class="text-center" style="vertical-align: middle; width: 10%; font-size: 14px; padding: 8px; color: #000;">Total Qty</th>
+                          <th rowspan="2" class="text-right" style="vertical-align: middle; width: 12%; font-size: 14px; padding: 8px; color: #000;">Total Revenue</th>
+                          <th colspan="4" class="text-center" style="border-bottom: 2px solid #000; font-size: 14px; padding: 8px; color: #000;">Customer Types</th>
+                        </tr>
+                        <tr style="background-color: #e8f4fd;">
+                          <th class="text-center" style="width: 12%; color: #000; font-size: 12px; padding: 6px;">Regular<br><small style="color: #000;">(Qty/Rev)</small></th>
+                          <th class="text-center" style="width: 12%; color: #b8860b; font-size: 12px; padding: 6px;">Employee<br><small style="color: #b8860b;">(Qty/Rev)</small></th>
+                          <th class="text-center" style="width: 12%; color: #2e5d94; font-size: 12px; padding: 6px;">Guest<br><small style="color: #2e5d94;">(Qty/Rev)</small></th>
+                          <th class="text-center" style="width: 12%; color: #2d5a2d; font-size: 12px; padding: 6px;">Charity<br><small style="color: #2d5a2d;">(Qty/Rev)</small></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php 
+                        $grandTotalQty = 0;
+                        $grandTotalRevenue = 0;
+                        $grandRegularQty = 0; $grandRegularRevenue = 0;
+                        $grandEmployeeQty = 0; $grandEmployeeRevenue = 0;
+                        $grandGuestQty = 0; $grandGuestRevenue = 0;
+                        $grandCharityQty = 0; $grandCharityRevenue = 0;
+                        
+                        foreach ($itemSalesData as $item): 
+                          $totalItemQty = ($item->regular_qty ?? 0) + ($item->employee_qty ?? 0) + ($item->guest_qty ?? 0) + ($item->charity_qty ?? 0);
+                          $totalItemRevenue = ($item->regular_revenue ?? 0) + ($item->employee_revenue ?? 0) + ($item->guest_revenue ?? 0) + ($item->charity_revenue ?? 0);
+                          
+                          $grandTotalQty += $totalItemQty;
+                          $grandTotalRevenue += $totalItemRevenue;
+                          $grandRegularQty += ($item->regular_qty ?? 0);
+                          $grandRegularRevenue += ($item->regular_revenue ?? 0);
+                          $grandEmployeeQty += ($item->employee_qty ?? 0);
+                          $grandEmployeeRevenue += ($item->employee_revenue ?? 0);
+                          $grandGuestQty += ($item->guest_qty ?? 0);
+                          $grandGuestRevenue += ($item->guest_revenue ?? 0);
+                          $grandCharityQty += ($item->charity_qty ?? 0);
+                          $grandCharityRevenue += ($item->charity_revenue ?? 0);
+                        ?>
+                        <tr style="font-size: 13px;">
+                          <td style="padding: 7px;">
+                            <strong style="color: #000; font-size: 13px;"><?php echo htmlspecialchars($item->item_name ?? 'Unknown Item'); ?></strong>
+                            <?php if (!empty($item->variant_name)): ?>
+                              - <small style="color: #333; font-size: 11px;"><?php echo htmlspecialchars($item->variant_name); ?></small>
+                            <?php endif; ?>
+                          </td>
+                          <td class="text-center" style="padding: 7px;">
+                            <span class="badge badge-primary" style="font-size: 12px; background-color: #2c3e50; color: #fff; border: 1px solid #000;"><?php echo number_format($totalItemQty); ?></span>
+                          </td>
+                          <td class="text-right" style="padding: 7px;">
+                            <strong style="color: #000; font-size: 13px;"><?php echo number_format($totalItemRevenue, 2); ?></strong>
+                          </td>
+                          <td class="text-center" style="padding: 6px;">
+                            <div style="color: #000; font-size: 12px;">
+                              <strong><?php echo number_format($item->regular_qty ?? 0); ?></strong><br>
+                              <small style="font-size: 10px; color: #333;"><?php echo number_format($item->regular_revenue ?? 0, 2); ?></small>
+                            </div>
+                          </td>
+                          <td class="text-center" style="padding: 6px;">
+                            <div style="color: #b8860b; font-size: 12px;">
+                              <strong><?php echo number_format($item->employee_qty ?? 0); ?></strong><br>
+                              <small style="font-size: 10px; color: #b8860b;"><?php echo number_format($item->employee_revenue ?? 0, 2); ?></small>
+                            </div>
+                          </td>
+                          <td class="text-center" style="padding: 6px;">
+                            <div style="color: #2e5d94; font-size: 12px;">
+                              <strong><?php echo number_format($item->guest_qty ?? 0); ?></strong><br>
+                              <small style="font-size: 10px; color: #2e5d94;"><?php echo number_format($item->guest_revenue ?? 0, 2); ?></small>
+                            </div>
+                          </td>
+                          <td class="text-center" style="padding: 6px;">
+                            <div style="color: #2d5a2d; font-size: 12px;">
+                              <strong><?php echo number_format($item->charity_qty ?? 0); ?></strong><br>
+                              <small style="font-size: 10px; color: #2d5a2d;"><?php echo number_format($item->charity_revenue ?? 0, 2); ?></small>
+                            </div>
+                          </td>
+                        </tr>
+                        <?php endforeach; ?>
+                      </tbody>
+                      <tfoot style="background-color: #f0f0f0; font-weight: bold; border-top: 2px solid #000;">
+                        <tr style="font-size: 13px;">
+                          <th style="padding: 8px; font-size: 14px; color: #000;">Grand Totals</th>
+                          <th class="text-center" style="padding: 8px;">
+                            <span class="badge badge-primary" style="font-size: 13px; background-color: #000; color: #fff; border: 1px solid #000;"><?php echo number_format($grandTotalQty); ?></span>
+                          </th>
+                          <th class="text-right" style="font-size: 14px; color: #000; padding: 8px;">
+                            <?php echo number_format($grandTotalRevenue, 2); ?>
+                          </th>
+                          <th class="text-center" style="padding: 7px;">
+                            <div style="color: #000; font-size: 12px;">
+                              <strong><?php echo number_format($grandRegularQty); ?></strong><br>
+                              <small style="font-size: 10px; color: #333;"><?php echo number_format($grandRegularRevenue, 2); ?></small>
+                            </div>
+                          </th>
+                          <th class="text-center" style="padding: 7px;">
+                            <div style="color: #b8860b; font-size: 12px;">
+                              <strong><?php echo number_format($grandEmployeeQty); ?></strong><br>
+                              <small style="font-size: 10px; color: #b8860b;"><?php echo number_format($grandEmployeeRevenue, 2); ?></small>
+                            </div>
+                          </th>
+                          <th class="text-center" style="padding: 7px;">
+                            <div style="color: #2e5d94; font-size: 12px;">
+                              <strong><?php echo number_format($grandGuestQty); ?></strong><br>
+                              <small style="font-size: 10px; color: #2e5d94;"><?php echo number_format($grandGuestRevenue, 2); ?></small>
+                            </div>
+                          </th>
+                          <th class="text-center" style="padding: 7px;">
+                            <div style="color: #2d5a2d; font-size: 12px;">
+                              <strong><?php echo number_format($grandCharityQty); ?></strong><br>
+                              <small style="font-size: 10px; color: #2d5a2d;"><?php echo number_format($grandCharityRevenue, 2); ?></small>
+                            </div>
+                          </th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                <?php else: ?>
+                  <div class="text-center text-muted" style="padding: 30px;">
+                    <h5>📊 No Item Sales Data</h5>
+                    <p>No items were sold during this period.</p>
+                  </div>
+                <?php endif; ?>
+              </div>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- ========================= Kitchen Sales Report ========================= -->
   <div class="row" style="margin-top: 20px;">
     <div class="col-md-12">
@@ -2008,7 +2006,7 @@
       </div>
     </div>
   </div>
-
+  </div>
 </div><!-- /container -->
 
 <!-- jQuery + Bootstrap JS (matching todaymanageexpenses) -->
@@ -2022,14 +2020,14 @@ $(document).ready(function() {
     });
 });
 
+/**
+ * Print the comprehensive daily report with all sections
+ * This function includes all report sections except Kitchen Sales Report
+ * and prevents duplicate content by using proper section identification
+ */
 function printComprehensiveReport() {
     // Create a new window for printing
-    var printWindow = window.open('', '_blank', 'width=1000,height=800,scrollbars=yes');
-    
-    // Get all printable sections
-    var printArea = document.getElementById('printArea');
-    var expensesArea = document.getElementById('expensesPrintArea');
-    var additionalArea = document.getElementById('additionalReportArea');
+    var printWindow = window.open('', '_blank', 'width=1200,height=900,scrollbars=yes');
     
     // Build the complete print HTML with all sections
     var printHTML = `
@@ -2044,35 +2042,33 @@ function printComprehensiveReport() {
           margin: 15px; 
           font-size: 12px;
           line-height: 1.4;
+          color: #000;
+          background: #fff;
         }
         .print-section { 
-          margin-bottom: 25px; 
+          margin-bottom: 20px; 
           page-break-inside: avoid;
-          border-bottom: 2px solid #eee;
-          padding-bottom: 15px;
-        }
-        .print-title { 
-          font-size: 16px; 
-          font-weight: bold; 
-          text-align: center; 
-          margin-bottom: 15px;
-          color: #333;
+          border-bottom: 1px solid #ddd;
+          padding-bottom: 10px;
         }
         .section-title {
-          font-size: 14px;
+          font-size: 16px;
           font-weight: bold;
           margin: 15px 0 10px 0;
           color: #2c3e50;
-          border-bottom: 1px solid #bdc3c7;
+          border-bottom: 2px solid #3498db;
           padding-bottom: 5px;
+          text-align: center;
         }
-        .section-subtitle {
-          font-size: 12px;
+        .report-header h3, .report-header h4 {
+          color: #000 !important;
           font-weight: bold;
-          margin: 10px 0 8px 0;
-          color: #495057;
-          border-bottom: 1px solid #dee2e6;
-          padding-bottom: 3px;
+          margin: 8px 0;
+        }
+        .report-meta {
+          color: #666 !important;
+          font-size: 11px;
+          margin: 5px 0;
         }
         table { 
           width: 100%; 
@@ -2085,6 +2081,7 @@ function printComprehensiveReport() {
           padding: 6px 8px; 
           text-align: left;
           vertical-align: top;
+          color: #000;
         }
         th { 
           background-color: #f8f9fa; 
@@ -2093,10 +2090,28 @@ function printComprehensiveReport() {
         }
         .text-right { text-align: right; }
         .text-center { text-align: center; }
+        .text-success { color: #28a745 !important; }
+        .text-danger { color: #dc3545 !important; }
+        .text-warning { color: #ffc107 !important; }
+        .text-info { color: #17a2b8 !important; }
         .bg-info { background-color: #e7f3ff !important; }
         .bg-success { background-color: #e8f5e8 !important; }
         .bg-warning { background-color: #fff3cd !important; }
         .bg-danger { background-color: #f8d7da !important; }
+        .panel {
+          border: 1px solid #ddd;
+          margin-bottom: 15px;
+          border-radius: 4px;
+        }
+        .panel-heading {
+          background-color: #f5f5f5;
+          padding: 10px 15px;
+          border-bottom: 1px solid #ddd;
+          font-weight: bold;
+        }
+        .panel-body {
+          padding: 15px;
+        }
         .row { 
           display: flex; 
           width: 100%; 
@@ -2107,112 +2122,168 @@ function printComprehensiveReport() {
           margin-right: 2%;
           padding: 0;
         }
-        .col-md-6:last-child {
+        .col-md-6:last-child, .col-md-6.last {
           margin-right: 0;
         }
-        .summary-box {
-          padding: 10px;
-          margin-bottom: 10px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
+        .col-md-12 {
+          width: 100%;
+        }
+        .clearfix::after {
+          content: "";
+          display: table;
+          clear: both;
         }
         @media print {
           body { 
             margin: 8mm; 
             font-size: 10px;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
           }
           .print-section { 
             page-break-inside: avoid;
             margin-bottom: 15px;
           }
-          .row {
-            display: flex !important;
-            width: 100% !important;
+          .section-title {
+            font-size: 14px !important;
+            margin: 10px 0 8px 0 !important;
           }
-          .col-md-6 {
-            width: 48% !important;
-            margin-right: 2% !important;
-            padding: 0 !important;
+          .report-header h3, .report-header h4 {
+            font-size: 12px !important;
+            margin: 5px 0 !important;
           }
-          .col-md-6:last-child {
-            margin-right: 0 !important;
-          }
-          .section-subtitle {
-            font-size: 11px !important;
-            margin: 8px 0 6px 0 !important;
-            padding-bottom: 2px !important;
+          .report-meta {
+            font-size: 9px !important;
           }
           table {
             font-size: 9px !important;
-            margin-bottom: 8px !important;
+            margin-bottom: 10px !important;
           }
           th, td {
-            padding: 2px 3px !important;
+            padding: 3px 5px !important;
             line-height: 1.1 !important;
           }
-          /* Print-specific column widths for better item name display */
-          .expenses-table th:nth-child(1),
-          .expenses-table td:nth-child(1) {
-            width: 50% !important;
-            min-width: 120px !important;
+          .panel-heading {
+            padding: 5px 10px !important;
+            font-size: 10px !important;
           }
-          .expenses-table th:nth-child(2),
-          .expenses-table td:nth-child(2) {
-            width: 18% !important;
-            max-width: 60px !important;
-          }
-          .expenses-table th:nth-child(3),
-          .expenses-table td:nth-child(3) {
-            width: 15% !important;
-            max-width: 50px !important;
-          }
-          .expenses-table th:nth-child(4),
-          .expenses-table td:nth-child(4) {
-            width: 17% !important;
-            max-width: 70px !important;
+          .panel-body {
+            padding: 8px !important;
           }
           .no-print { display: none !important; }
         }
-      </style>
+        </style>
     </head>
     <body>`;
     
-    // Add main comprehensive report section
-    if (printArea) {
-        printHTML += `
-        <div class="print-section">
-          <div class="section-title">Daily Comprehensive Report</div>
-          ${printArea.innerHTML}
-        </div>`;
+    // Function to check if a section has actual data (not just "no data" messages)
+    function hasActualData(section) {
+        var content = section.innerHTML;
+        
+        // Check for "no data" indicators - if found, section is empty
+        var noDataIndicators = [
+            'No Employee Orders Today',
+            'No employee orders were placed',
+            'No Guest Orders Today', 
+            'No guest orders were placed',
+            'No Charity Orders Today',
+            'No charity orders were placed',
+            'No Cancelled Orders Today',
+            'No cancelled orders',
+            'Excellent customer satisfaction performance',
+            'No categorized expenses to display',
+            'No data available',
+            'No items sold'
+        ];
+        
+        // If any "no data" indicator is found, section is considered empty
+        for (var j = 0; j < noDataIndicators.length; j++) {
+            if (content.includes(noDataIndicators[j])) {
+                return false;
+            }
+        }
+        
+        // Check if section has actual table data (not just headers)
+        var tables = section.querySelectorAll('table');
+        var hasTableData = false;
+        
+        for (var k = 0; k < tables.length; k++) {
+            var table = tables[k];
+            var rows = table.querySelectorAll('tbody tr');
+            
+            // Check if table has data rows (not just "no data" messages)
+            if (rows.length > 0) {
+                for (var l = 0; l < rows.length; l++) {
+                    var rowText = rows[l].textContent || rows[l].innerText;
+                    // If row doesn't contain "no data" type messages, it has data
+                    if (!rowText.includes('No ') && !rowText.includes('no ') && rowText.trim().length > 0) {
+                        hasTableData = true;
+                        break;
+                    }
+                }
+            }
+            
+            if (hasTableData) break;
+        }
+        
+        // For main sections (Financial Overview, Expenses), always include
+        if (section.id === 'printArea' || section.id === 'expensesPrintArea') {
+            return true;
+        }
+        
+        // For Sales by Items section, check if it has actual item data
+        if (content.includes('🍽️ Sales by Items')) {
+            // If it contains "No data to display" or similar, skip it
+            if (content.includes('No data to display') || content.includes('No items sold')) {
+                return false;
+            }
+            return true; // Otherwise include it
+        }
+        
+        // For other sections, include only if they have table data or don't have "no data" messages
+        return hasTableData || (!content.includes('No ') && content.trim().length > 200);
     }
     
-    // Add expenses and additional reports in two-column layout
-    if (expensesArea || additionalArea) {
-        printHTML += `
-        <div class="print-section">
-          <div class="section-title">Daily Reports</div>
-          <div class="row">
-            <div class="col-md-6">
-              ${expensesArea ? `
-                <div class="section-subtitle">Expenses Report</div>
-                ${expensesArea.innerHTML}
-              ` : ''}
-            </div>
-            <div class="col-md-6">
-              ${additionalArea ? `
-                <div class="section-subtitle">Additional Reports</div>
-                ${additionalArea.innerHTML}
-              ` : ''}
-            </div>
-          </div>
-        </div>`;
+    // Get all printable sections and add them in order, excluding Kitchen Sales Report and empty sections
+    var allSections = document.querySelectorAll('.printable-section');
+    var processedSections = new Set(); // Track processed sections to avoid duplicates
+    
+    for (var i = 0; i < allSections.length; i++) {
+        var section = allSections[i];
+        var sectionId = section.id || 'section-' + i;
+
+        // Skip Kitchen Sales Report (has ID 'kitchenSalesArea' or contains kitchen sales text)
+        if (section.id === 'kitchenSalesArea' || 
+            section.innerHTML.includes('🍴 Kitchen Sales Report') ||
+            section.innerHTML.includes('Kitchen Sales Report')) {
+            continue;
+        }
+        
+        // Skip if already processed (avoid duplicates)
+        if (processedSections.has(sectionId)) {
+            continue;
+        }
+        
+        // Skip sections with no actual data
+        if (!hasActualData(section)) {
+            continue;
+        }
+        
+        // Mark as processed
+        processedSections.add(sectionId);
+        
+        // Add section content
+        printHTML += '<div class="print-section">';
+        printHTML += section.innerHTML;
+        printHTML += '</div>';
     }
     
+    // Close HTML
     printHTML += `
     </body>
     </html>`;
     
-    // Write content to print window
+    // Write content to print window and handle printing
     printWindow.document.write(printHTML);
     printWindow.document.close();
     
