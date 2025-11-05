@@ -2240,8 +2240,9 @@ function printComprehensiveReport() {
             return true; // Otherwise include it
         }
         
-        // For other sections, include only if they have table data or don't have "no data" messages
-        return hasTableData || (!content.includes('No ') && content.trim().length > 200);
+        // For other sections, include if they have table data OR if they don't contain specific "no data" messages
+        // Don't use generic "No " check as it's too broad and can exclude valid sections
+        return hasTableData || content.trim().length > 200;
     }
     
     // Get all printable sections and add them in order, excluding Kitchen Sales Report and empty sections
