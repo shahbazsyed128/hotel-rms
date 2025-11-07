@@ -1,3 +1,12 @@
+<?php
+// Initialize shop-related variables to prevent undefined variable warnings
+$shopExpenses = 0;
+$shopEmployeeSales = 0;
+$shopGuestSales = 0;
+$shopCharitySales = 0;
+$shopBeveragesSales = 0;
+$shopRegularSales = 0;
+?>
 
 
 
@@ -93,16 +102,10 @@
               </tr>
               <?php 
               // Calculate shop-related amounts
-              $shopBeveragesSales = 0;
-              $shopExpenses = 0;
               $otherExpenses = 0;
               $totalKitchenSales = 0;
               
               // Get Shop - Beverages sales breakdown by customer type (Kitchen ID: 13)
-              $shopEmployeeSales = 0;
-              $shopGuestSales = 0;
-              $shopCharitySales = 0;
-              $shopRegularSales = 0;
               
               if (!empty($kitchenItemsReport)) {
                 foreach ($kitchenItemsReport as $kitchen) {

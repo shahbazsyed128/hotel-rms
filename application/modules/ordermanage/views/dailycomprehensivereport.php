@@ -583,6 +583,19 @@
               $totalAmountToShop = $totalSalesToShop + $shopExpensesAmount;
               $openingBalance = $registerinfo->opening_balance ?? 0;
               
+              // Initialize variables used in calculations
+              $totalShopAmountToGive = $totalSalesToShop + $shopExpensesAmount;
+              $otherExpensesTotal = 0;
+              
+              // Calculate other expenses total
+              if (!empty($expensesByCategory)) {
+                  foreach ($expensesByCategory as $categoryName => $amount) {
+                      if (strtolower($categoryName) !== 'shop' && strpos(strtolower($categoryName), 'shop') === false) {
+                          $otherExpensesTotal += $amount;
+                      }
+                  }
+              }
+              
               // Final calculations - matching cash register close logic exactly
               // Cash register formula: total_sales + opening_balance - otherExpenses - totalShopAmountToGive
               // where total_sales = totalHotelCashSale (the green highlighted total)
@@ -641,28 +654,12 @@
                 <td align="right">- <?php echo number_format($shopExpensesAmount, 2); ?></td>
               </tr>
               <?php endif; ?>
-              <?php 
-              // Calculate total amount to be given to shop (Total Shop Sales + Shop Expenses)
-              $totalShopAmountToGive = $totalSalesToShop + $shopExpensesAmount;
-              ?>
               <?php if ($totalShopAmountToGive > 0): ?>
               <tr style="background-color: #fff3cd; font-weight: bold;">
                 <td align="right" colspan="2">Total Amount to be Given to Shop</td>
                 <td align="right">- <?php echo number_format($totalShopAmountToGive, 2); ?></td>
               </tr>
               <?php endif; ?>
-              
-              <?php 
-              // Separate other expenses (non-shop expenses)
-              $otherExpensesTotal = 0;
-              if (!empty($expensesByCategory)) {
-                foreach ($expensesByCategory as $categoryName => $amount) {
-                  if (!(strtolower($categoryName) == 'shop' || strpos(strtolower($categoryName), 'shop') !== false)) {
-                    $otherExpensesTotal += $amount;
-                  }
-                }
-              }
-              ?>
               
               <?php if ($otherExpensesTotal > 0): ?>
               <tr>

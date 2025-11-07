@@ -6719,10 +6719,17 @@ private function generate_order_data($list,$type = null)
 		// === SUMMARY CALCULATIONS ===
 		$totalSales = 0;
 		if (isset($data['totalamount'][0]->totalamount)) {
-			$totalSales = $data['totalamount'][0]->totalamount;
+			$totalSales = (float)$data['totalamount'][0]->totalamount;
 		}
 		
 		$totalExpenses = $data['totalexpenses'] ?: 0;
+		// Ensure totalExpenses is a number
+		if (is_object($totalExpenses)) {
+			$totalExpenses = isset($totalExpenses->total) ? (float)$totalExpenses->total : 0;
+		} else {
+			$totalExpenses = (float)$totalExpenses;
+		}
+		
 		$data['netProfit'] = $totalSales - $totalExpenses;
 		$data['reportDate'] = date('Y-m-d');
 		$data['reportTime'] = date('H:i:s');

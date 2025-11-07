@@ -1184,6 +1184,7 @@ DROP TABLE IF EXISTS `products`;
 CREATE TABLE IF NOT EXISTS `products` (
   `product_id` INT(11) NOT NULL AUTO_INCREMENT,
   `entity_id` INT(11) NOT NULL,            -- reference to vendor/entity
+  `kitchen_id` INT(11) DEFAULT NULL,       -- reference to kitchen
   `product_name` VARCHAR(150) NOT NULL,    -- e.g. 'Nestle Milk'
   `unit` VARCHAR(50) NOT NULL,             -- e.g. 'Litre', 'KG'
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -1191,11 +1192,11 @@ CREATE TABLE IF NOT EXISTS `products` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Seed products (entity 14 & 15)
-INSERT INTO `products` (`entity_id`, `product_name`, `unit`, `created_at`) VALUES
-(13, 'Sugar', 'KG',   NOW()),
-(13, 'Oil',   'Litre',NOW()),
-(13, 'Wheat', 'KG',   NOW()),
-(13, 'Daal',  'KG',   NOW());
+INSERT INTO `products` (`entity_id`, `kitchen_id`, `product_name`, `unit`, `created_at`) VALUES
+(13, 1, 'Sugar', 'KG',   NOW()),
+(13, 1, 'Oil',   'Litre',NOW()),
+(13, 1, 'Wheat', 'KG',   NOW()),
+(13, 1, 'Daal',  'KG',   NOW());
 
 -- ===============================
 -- DROP & CREATE: product_prices
@@ -1392,57 +1393,58 @@ CREATE TABLE IF NOT EXISTS `entities` (
     `user_id` int(11),
     `employee_his_id` int(11),
     `customer_id` int(11),
+    `kitchen_id` int(11) DEFAULT NULL,
     `entity_name` varchar(150) NOT NULL,
     `contact_info` varchar(255),
      PRIMARY KEY (`entity_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-INSERT INTO `entities` (`category_id`, `user_id`, `employee_his_id`, `customer_id`, `entity_name`, `contact_info`) VALUES
+INSERT INTO `entities` (`category_id`, `user_id`, `employee_his_id`, `customer_id`, `kitchen_id`, `entity_name`, `contact_info`) VALUES
 -- Milk Vendors (category_id = 1)
-(1, NULL, NULL, NULL, 'Ali Khan Milk Supplier', 'Phone: 0300-1111111, Address: Dairy Colony'),
-(1, NULL, NULL, NULL, 'Nazeer Milk Vendor', 'Phone: 0300-2222222, Address: Milk Market'),
-(1, NULL, NULL, NULL, 'Fresh Dairy Center', 'Phone: 0300-3333333, Address: City Dairy Point'),
+(1, NULL, NULL, NULL, 1, 'Ali Khan Milk Supplier', 'Phone: 0300-1111111, Address: Dairy Colony'),
+(1, NULL, NULL, NULL, 1, 'Nazeer Milk Vendor', 'Phone: 0300-2222222, Address: Milk Market'),
+(1, NULL, NULL, NULL, 1, 'Fresh Dairy Center', 'Phone: 0300-3333333, Address: City Dairy Point'),
 
 -- Employees (category_id = 2)
-(2, NULL, 1001, NULL, 'John Doe - Salesman', 'Email: john@example.com, Phone: 0301-1234567'),
-(2, NULL, 1002, NULL, 'Maryam Bibi - Cashier', 'Email: maryam@example.com, Phone: 0301-2345678'),
-(2, NULL, 1003, NULL, 'Ahmed Khan - Helper', 'Email: ahmed@example.com, Phone: 0301-3456789'),
+(2, NULL, 1001, NULL, NULL, 'John Doe - Salesman', 'Email: john@example.com, Phone: 0301-1234567'),
+(2, NULL, 1002, NULL, NULL, 'Maryam Bibi - Cashier', 'Email: maryam@example.com, Phone: 0301-2345678'),
+(2, NULL, 1003, NULL, NULL, 'Ahmed Khan - Helper', 'Email: ahmed@example.com, Phone: 0301-3456789'),
 
 -- Gas (category_id = 3)
-(3, NULL, NULL, NULL, 'Sui Gas Distributor', 'Phone: 021-4000001, Address: Saddar Karachi'),
-(3, NULL, NULL, NULL, 'Local LPG Vendor', 'Phone: 0302-5555555, Address: Clifton'),
-(3, NULL, NULL, NULL, 'Gas Service Company', 'Phone: 0302-6666666, Address: Korangi'),
+(3, NULL, NULL, NULL, 1, 'Sui Gas Distributor', 'Phone: 021-4000001, Address: Saddar Karachi'),
+(3, NULL, NULL, NULL, 1, 'Local LPG Vendor', 'Phone: 0302-5555555, Address: Clifton'),
+(3, NULL, NULL, NULL, 1, 'Gas Service Company', 'Phone: 0302-6666666, Address: Korangi'),
 
 -- Vegetables (category_id = 4)
-(4, NULL, NULL, NULL, 'Green Market Vegetables', 'Phone: 0303-1111222, Address: Sabzi Mandi'),
-(4, NULL, NULL, NULL, 'Daily Fresh Veggies', 'Phone: 0303-3333444, Address: Gulshan Market'),
-(4, NULL, NULL, NULL, 'Organic Veggie Point', 'Phone: 0303-5555666, Address: Defence'),
+(4, NULL, NULL, NULL, 1, 'Green Market Vegetables', 'Phone: 0303-1111222, Address: Sabzi Mandi'),
+(4, NULL, NULL, NULL, 1, 'Daily Fresh Veggies', 'Phone: 0303-3333444, Address: Gulshan Market'),
+(4, NULL, NULL, NULL, 1, 'Organic Veggie Point', 'Phone: 0303-5555666, Address: Defence'),
 
 -- Shop (category_id = 5)
-(5, NULL, NULL, 2001, 'Ali General Store', 'Phone: 0304-1231231, Address: Main Bazaar'),
-(5, NULL, NULL, 2002, 'City Mart', 'Phone: 0304-2342342, Address: Shahrah-e-Faisal'),
-(5, NULL, NULL, 2003, 'Mega Store', 'Phone: 0304-3453453, Address: Clifton'),
+(5, NULL, NULL, 2001, 1, 'Ali General Store', 'Phone: 0304-1231231, Address: Main Bazaar'),
+(5, NULL, NULL, 2002, 1, 'City Mart', 'Phone: 0304-2342342, Address: Shahrah-e-Faisal'),
+(5, NULL, NULL, 2003, 1, 'Mega Store', 'Phone: 0304-3453453, Address: Clifton'),
 
 -- Chicken (category_id = 6)
-(6, NULL, NULL, NULL, 'Poultry World', 'Phone: 0305-1111000, Address: Shah Faisal Market'),
-(6, NULL, NULL, NULL, 'Chicken Point', 'Phone: 0305-2222000, Address: Gulshan-e-Iqbal'),
-(6, NULL, NULL, NULL, 'Fresh Poultry House', 'Phone: 0305-3333000, Address: Saddar'),
+(6, NULL, NULL, NULL, 1, 'Poultry World', 'Phone: 0305-1111000, Address: Shah Faisal Market'),
+(6, NULL, NULL, NULL, 1, 'Chicken Point', 'Phone: 0305-2222000, Address: Gulshan-e-Iqbal'),
+(6, NULL, NULL, NULL, 1, 'Fresh Poultry House', 'Phone: 0305-3333000, Address: Saddar'),
 
 -- Electricity (category_id = 7)
-(7, NULL, NULL, NULL, 'K-Electric Service', 'Phone: 021-9991111, Address: Civic Center'),
-(7, NULL, NULL, NULL, 'Power Supply Vendor', 'Phone: 0306-4444000, Address: Korangi'),
-(7, NULL, NULL, NULL, 'Electricity Service Co.', 'Phone: 0306-5555000, Address: North Karachi'),
+(7, NULL, NULL, NULL, 1, 'K-Electric Service', 'Phone: 021-9991111, Address: Civic Center'),
+(7, NULL, NULL, NULL, 1, 'Power Supply Vendor', 'Phone: 0306-4444000, Address: Korangi'),
+(7, NULL, NULL, NULL, 1, 'Electricity Service Co.', 'Phone: 0306-5555000, Address: North Karachi'),
 
 -- Fixture (category_id = 8)
-(8, NULL, NULL, NULL, 'Fixture & Fittings Co.', 'Phone: 0307-1111222, Address: Saddar Market'),
-(8, NULL, NULL, NULL, 'Light & Fixture Supplier', 'Phone: 0307-2222333, Address: Tariq Road'),
-(8, NULL, NULL, NULL, 'Modern Fixtures', 'Phone: 0307-3333444, Address: DHA Phase 2'),
+(8, NULL, NULL, NULL, 1, 'Fixture & Fittings Co.', 'Phone: 0307-1111222, Address: Saddar Market'),
+(8, NULL, NULL, NULL, 1, 'Light & Fixture Supplier', 'Phone: 0307-2222333, Address: Tariq Road'),
+(8, NULL, NULL, NULL, 1, 'Modern Fixtures', 'Phone: 0307-3333444, Address: DHA Phase 2'),
 
 -- Others (category_id = 9)
-(9, NULL, NULL, NULL, 'Miscellaneous Vendor A', 'Phone: 0308-1111222, Address: Gulshan Block 5'),
-(9, NULL, NULL, NULL, 'Miscellaneous Vendor B', 'Phone: 0308-2222333, Address: Saddar'),
-(9, NULL, NULL, NULL, 'Miscellaneous Vendor C', 'Phone: 0308-3333444, Address: Gulistan-e-Johar');
+(9, NULL, NULL, NULL, 1, 'Miscellaneous Vendor A', 'Phone: 0308-1111222, Address: Gulshan Block 5'),
+(9, NULL, NULL, NULL, 1, 'Miscellaneous Vendor B', 'Phone: 0308-2222333, Address: Saddar'),
+(9, NULL, NULL, NULL, 1, 'Miscellaneous Vendor C', 'Phone: 0308-3333444, Address: Gulistan-e-Johar');
 -- --------------------------------------------------------
 
 DROP TABLE IF EXISTS `expenses`;
@@ -3746,10 +3748,13 @@ CREATE TABLE IF NOT EXISTS `purchase_details` (
   `detailsid` int(11) NOT NULL AUTO_INCREMENT,
   `purchaseid` int(11) NOT NULL,
   `indredientid` int(11) NOT NULL,
+  `productid` int(11) DEFAULT NULL,
+  `entity_id` int(11) DEFAULT NULL,
   `quantity` decimal(19,3) NOT NULL DEFAULT 0.000,
   `unitname` varchar(80) NOT NULL,
   `price` decimal(19,3) NOT NULL DEFAULT 0.000,
   `totalprice` decimal(19,3) NOT NULL DEFAULT 0.000,
+  `total_amount` decimal(19,3) DEFAULT 0.000,
   `purchaseby` int(11) NOT NULL,
   `purchasedate` date NOT NULL,
   `purchaseexpiredate` date NOT NULL,
@@ -4808,6 +4813,7 @@ DROP TABLE IF EXISTS `tbl_cashcounter`;
 CREATE TABLE IF NOT EXISTS `tbl_cashcounter` (
   `ccid` int(11) NOT NULL AUTO_INCREMENT,
   `counterno` int(11) NOT NULL,
+  `counter_name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`ccid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
@@ -4815,8 +4821,8 @@ CREATE TABLE IF NOT EXISTS `tbl_cashcounter` (
 -- Dumping data for table `tbl_cashcounter`
 --
 
-INSERT INTO `tbl_cashcounter` (`ccid`, `counterno`) VALUES(1, 1);
-INSERT INTO `tbl_cashcounter` (`ccid`, `counterno`) VALUES(2, 2);
+INSERT INTO `tbl_cashcounter` (`ccid`, `counterno`, `counter_name`) VALUES(1, 1, 'Counter 1');
+INSERT INTO `tbl_cashcounter` (`ccid`, `counterno`, `counter_name`) VALUES(2, 2, 'Counter 2');
 
 -- --------------------------------------------------------
 
