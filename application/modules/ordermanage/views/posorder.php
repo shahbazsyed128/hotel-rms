@@ -2,7 +2,24 @@
 <script src="<?php echo base_url(); ?>assets/js/jquery.validate.min.js" type="text/javascript"></script>
 <script src="<?php echo base_url('application/modules/ordermanage/assets/js/postop.js'); ?>" type="text/javascript"></script>
 <?php
-(int)$new_version  = file_get_contents('https://update.bdtask.com/bhojon/autoupdate/update_info');
+// Try to get new version info with error handling
+$new_version = 0;
+try {
+    $context = stream_context_create([
+        'http' => [
+            'timeout' => 5, // 5 seconds timeout
+            'ignore_errors' => true
+        ]
+    ]);
+    $version_data = @file_get_contents('https://update.bdtask.com/bhojon/autoupdate/update_info', false, $context);
+    if ($version_data !== false) {
+        $new_version = (int)$version_data;
+    }
+} catch (Exception $e) {
+    // Silently fail if update server is not reachable
+    $new_version = 0;
+}
+
 $myversion = current_version();
 function current_version()
 {

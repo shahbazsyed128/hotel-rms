@@ -162,9 +162,18 @@ class Auth extends MX_Controller {
 			            'grid' => array(241, 243, 246)
 			    )
 			));
-			$data['captcha_word'] = $captcha['word'];
-			$data['captcha_image'] = $captcha['image'];
-			$this->session->set_userdata('captcha', $captcha['word']);
+			
+			// Check if captcha creation was successful
+			if ($captcha !== false && is_array($captcha)) {
+				$data['captcha_word'] = $captcha['word'];
+				$data['captcha_image'] = $captcha['image'];
+				$this->session->set_userdata('captcha', $captcha['word']);
+			} else {
+				// Fallback if captcha creation fails
+				$data['captcha_word'] = '';
+				$data['captcha_image'] = '';
+				$this->session->set_userdata('captcha', '');
+			}
 
 			echo Modules::run('template/login', $data);
 		}

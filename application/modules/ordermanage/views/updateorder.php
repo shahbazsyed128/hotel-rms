@@ -404,7 +404,7 @@
 								$totalsercharge=$subtotal-$pdiscount;
 								$servicecharge=$settinginfo->servicecharge*$totalsercharge/100;
                             }
-                            $sdamount=$settinginfo->service_charge;
+                            $sdamount=$settinginfo->servicecharge;
                             }
                             ?>
                             <?php $discount=0;

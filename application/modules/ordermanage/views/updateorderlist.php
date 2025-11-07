@@ -18,7 +18,9 @@
 									  $total=$orderinfo->totalamount;
 									  $pdiscount=0;
 									   $discount=0;
+									   $pvat=0; // Initialize $pvat
 									   $multiplletax = array();
+									   $multiplletaxvalue=0; // Initialize $multiplletaxvalue
 									foreach ($iteminfo as $item){
 										$i++;
 										if($item->isgroup==1){
@@ -66,7 +68,7 @@
                                     }
                                   }
 										  else{
-										  $vatcalc=$itemprice*$iteminfo->productvat/100;
+										  $vatcalc=$itemprice*$iteminfor->productvat/100;
 										  $pvat=$pvat+$vatcalc;
 										  }
 										if($iteminfor->OffersRate>0){
@@ -158,6 +160,13 @@
 										 }
 									}
 									 $itemtotal=$subtotal-$pdiscount;
+									 // Calculate total tax value from multiple taxes
+									 $multiplletaxvalue = 0;
+									 if(!empty($multiplletax)){
+									     foreach($multiplletax as $taxvalue){
+									         $multiplletaxvalue += $taxvalue;
+									     }
+									 }
 									 if(empty($taxinfos)){
                                       if($settinginfo->vat>0 ){
                                         $calvat=$itemtotal*$settinginfo->vat/100;

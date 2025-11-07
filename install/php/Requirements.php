@@ -286,13 +286,14 @@ class Requirements
         if ($f !== false) {
             $res = fread($f, 1024) ;
             if (strlen($res) > 0 && strpos($res, '220') === 0) {
+                @fclose($f);
                 return TRUE;
             }
             else {
+                @fclose($f);
                 return FALSE ;
             }
         }
-        @fclose($f);
         return FALSE;
     }
 

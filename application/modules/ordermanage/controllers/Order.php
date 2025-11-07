@@ -1408,7 +1408,7 @@ class Order extends MX_Controller
 				$purchase_date = str_replace('/', '-', $this->input->post('order_date'));
 				$newdate = date('Y-m-d', strtotime($purchase_date));
 				$lastid = $this->db->select("*")->from('customer_order')->order_by('order_id', 'desc')->get()->row();
-				$sl = $lastid->order_id;
+				$sl = ($lastid && $lastid->order_id) ? $lastid->order_id : 0;
 				if (empty($sl)) {
 					$sl = 1;
 				} else {
@@ -1684,6 +1684,10 @@ class Order extends MX_Controller
 				if ($this->order_model->orderitem($orderid)) {
 					$this->logs_model->log_recorded($logData);
 
+					// Ensure customerid is properly defined
+					if (!isset($customerid)) {
+						$customerid = $this->input->post('customer_name', true);
+					}
 					$customer = $this->order_model->customerinfo($customerid);
 					$scan = scandir('application/modules/');
 					$getcus = "";
@@ -3121,6 +3125,9 @@ private function generate_order_data($list,$type = null)
 		$itemname = $this->input->post('itemname', true);
 		$size = $this->input->post('varientname', true);
 		$qty = $this->input->post('qty', true);
+		// For cart updates by clicking items, ensure we only add 1
+		// Force quantity to 1 for cart update clicks to prevent multiplication
+		$qty = 1;
 		$price = $this->input->post('price', true);
 		$addonsid = $this->input->post('addonsid');
 		$allprice = $this->input->post('allprice', true);
@@ -3249,7 +3256,7 @@ private function generate_order_data($list,$type = null)
 				$x = 0;
 				$finaladdonsqty = '';
 				foreach ($adonsarray as $singleaddons) {
-					$totalaqty = $adonsqtyarray[$x] + $adqty[$x];
+					$totalaqty = (float)$adonsqtyarray[$x] + (float)$adqty[$x];
 					$finaladdonsqty .= $totalaqty . ',';
 					$x++;
 				}
@@ -3261,7 +3268,7 @@ private function generate_order_data($list,$type = null)
 				$adprice = array();
 				if ((empty($addonsid)) && ($customqty == 0) && ($totalvarient == 1)) {
 					$udata = array(
-						'menuqty'       => $qty,
+						'menuqty'       => $orderchecked->menuqty + $qty,
 						'add_on_id'     => $aids,
 						'addonsqty'     => $aqty,
 					);
@@ -6024,7 +6031,7 @@ private function generate_order_data($list,$type = null)
 		}
 		$data['allcounter'] = $list;
 		if (empty($checkuser)) {
-			if ($openamount->closing_balance > '0.000') {
+			if ($openamount && $openamount->closing_balance > '0.000') {
 				$data['openingbalance'] = $openamount->closing_balance;
 			} else {
 				$data['openingbalance'] = "0.000";
