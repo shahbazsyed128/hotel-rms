@@ -15,11 +15,16 @@
              return false;
          }
          var dataString = 'email=' + email + '&pass1=' + pass+'&csrf_test_name='+basicinfo.csrftokeng;
+         var loginBtn = $(".classic-login");
+
+    // Show Loader
+        loginBtn.html('Logging in...').prop("disabled", true);
          $.ajax({
              type: "POST",
              url: basicinfo.baseurl+'hungry/userlogin',
              data: dataString,
              success: function(data) {
+                loginBtn.html("Login").prop("disabled", false);
                  var err = data;
                  if (err == '404') {
                      alert(lang.failed_login_msg);

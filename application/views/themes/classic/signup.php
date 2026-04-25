@@ -1,4 +1,4 @@
- 
+
  <!--Start Login Area-->
     <section class="menu_area sect_pad">
         <div class="container wow fadeIn">
@@ -17,12 +17,10 @@
                         <?php echo $this->session->flashdata('exception') ?>
                     </div>
                     <?php } ?>
-                    <?php if (validation_errors()) { ?>
-                    <div class="alert alert-danger alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <?php echo validation_errors() ?>
+                    <div id="ajax-error-box" class="alert alert-danger alert-dismissible" role="alert" style="display: none;">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="$('#ajax-error-box').hide()"><span aria-hidden="true">&times;</span></button>
+                        <div id="error-details"></div>
                     </div>
-                    <?php } ?>
                                     <p>please enter your details in the boxes below.</p>
                                     <div class="rrtt">
                                       <?= form_open_multipart('hungry/submitregister','class="row"') ?>
@@ -63,7 +61,14 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
-                                            <input type="submit" class="btn btn-success btn-sm search" value="Reginter Now">&nbsp; OR &nbsp;<a href="<?php echo base_url().'mylogin'?>" class="btn btn-success btn-sm search">Login</a>
+                                        <button type="button" 
+                                                id="signupBtn"
+                                                onclick="signupcustomer(); return false;" 
+                                                class="btn btn-success btn-sm search">
+                                            Register Now
+                                        </button>
+                                            &nbsp; OR &nbsp;
+                                            <a href="<?php echo base_url().'mylogin'?>" class="btn btn-success btn-sm search">Login</a>
                                         </div>
                                         <?php echo form_close() ?>
                                    
@@ -74,5 +79,9 @@
         </div>
     </section>
     <!--End Login Area-->
+      <?php 
+ $webinfo = $this->webinfo;
+$activethemeinfo = $this->themeinfo;
+$acthemename = $activethemeinfo->themename;?>
     <script src="<?php echo base_url(); ?>application/views/themes/<?php echo $acthemename; ?>/assets_web/js/signup.js"></script>
     
