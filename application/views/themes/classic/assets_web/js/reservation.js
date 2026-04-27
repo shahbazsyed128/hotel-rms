@@ -10,6 +10,7 @@ function submitreserve(){
 		var phone=$("#phone").val();
 		var mail=$("#mail").val();
 		var message=$("#message").val();
+		var submitReservation_btn = $(".confirm_reservation");
 		if(reservation_time==''){
 			alert("Please select End Time!!!");
 			return false;
@@ -28,11 +29,13 @@ function submitreserve(){
 			}
 		var dataString = "email="+mail+'&csrf_test_name='+basicinfo.csrftokeng;
 		var actionurl =basicinfo.baseurl+'hungry/checkemailisexits';
+		submitReservation_btn.html("Confirming...").prop("disabled", true);
 			 $.ajax({
 				 type: "POST",
 				 url: actionurl,
 				 data: dataString,
 				 success: function(data) {
+					submitReservation_btn.html("Confirm Reservation").prop("disabled", false);
 					var err = data;
 						if(err=='404'){
 							alert("Failed: Your Email Already Exits!!! Please Try to Login or Use Another Email Address!!!");

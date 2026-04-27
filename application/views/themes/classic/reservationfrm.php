@@ -58,7 +58,7 @@ $acthemename = $activethemeinfo->themename;?>
                                     </div>
                                     <div class="form-group text-right">
                                         <button type="reset" class="btn btn-danger"><?php echo display('reset') ?></button>
-                                        <button type="button" class="btn btn-success" onclick="submitreserve()"><?php echo display('confirm_reservation') ?></button>
+                                        <button type="button" class="btn btn-success confirm_reservation" onclick="submitreserve()"><?php echo display('confirm_reservation') ?></button>
                                     </div>
                                 </form>
                     <?php echo form_close();?>
