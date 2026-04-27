@@ -16,11 +16,12 @@
                              <?php echo $this->session->flashdata('exception') ?>
                          </div>
                      <?php } ?>
-                     <?php if (validation_errors()) { ?>
+                    
                          <div id="ajax-error-box" class="alert alert-danger alert-dismissible" role="alert" style="display: none;">
                              <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="$('#ajax-error-box').hide()"><span aria-hidden="true">&times;</span></button>
                              <div id="error-details"></div>
-                         <?php } ?>
+                         </div>
+                       
                          <p>please enter your details in the boxes below.</p>
                          <div class="rrtt">
                              <?= form_open_multipart('hungry/submitregister', 'class="row"') ?>
