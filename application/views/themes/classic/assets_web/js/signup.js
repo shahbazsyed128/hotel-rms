@@ -15,7 +15,7 @@ function signupcustomer() {
 
     var btn = $("#signupBtn");
     btn.html("Registering...").prop("disabled", true);
-
+	$('#ajax-error-box').hide();
     $.ajax({
         type: "POST",
         url: basicinfo.baseurl + 'hungry/userregister',
@@ -31,7 +31,8 @@ function signupcustomer() {
             response = response.trim();
 
             if (response == "200") {
-                alert("Registration successful!");
+                alert("Registration successful! Please Login Now");
+                window.location.href = basicinfo.baseurl + 'mylogin';
             } 
             else if (response == "404") {
                 $('#error-details').html("Something went wrong!");
