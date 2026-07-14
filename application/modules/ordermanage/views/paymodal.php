@@ -230,7 +230,8 @@
 							<?php }
 							else{
 							?>
-                            <button type="button" class="btn btn-success w-md m-b-5" id="pay_bill" onfocus="submitmultiplepay()"><?php echo display('pay_print');?></button>
+                            <button type="button" class="btn btn-success w-md m-b-5" id="pay_bill" onclick="$('#get-order-flag').val('2'); submitmultiplepay();"><?php echo display('pay_print');?></button>
+                            <button type="button" style="background-color:#1976d2; color:#fff;" class="btn btn-info w-md m-b-5" id="pay_bill_no_print" onclick="$('#get-order-flag').val('1'); submitmultiplepay();">Pay Without Print</button>
                             <input type="hidden" id="get-order-id" name="orderid" value="<?php echo $order_info->order_id; ?>">
                             <?php }?>
                             </div>
