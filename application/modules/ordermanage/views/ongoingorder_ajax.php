@@ -191,7 +191,7 @@
                   </div>
                   <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:10px; align-items:center;">
                     <button type="button" class="btn btn-success font-weight-bold" style="min-width:100px;" onclick="createMargeorder(<?php echo $onprocess->order_id; ?>, 1); jQuery('#orderitems_<?php echo $onprocess->order_id; ?>').modal('hide');">Complete</button>
-                    <button type="button" class="btn btn-success font-weight-bold" style="min-width:100px;" onclick="">Due Invoice</button>
+                    <a href="javascript:;" class="btn btn-success font-weight-bold due_print"  data-placement="left" title="Due Invoice" data-url="<?php echo base_url('ordermanage/order/dueinvoice/' . $onprocess->order_id); ?>">Due Inovice</a>
                     <button type="button" class="btn btn-primary font-weight-bold" style="min-width:100px;" onclick="editposorder(<?php echo $onprocess->order_id; ?>, 1); jQuery('#orderitems_<?php echo $onprocess->order_id; ?>').modal('hide');">Edit</button>
                     <button type="button" class="btn btn-default font-weight-bold" style="min-width:100px;" data-dismiss="modal">Close</button>
                   </div>
