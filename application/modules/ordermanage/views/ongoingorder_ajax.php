@@ -74,62 +74,6 @@
                 <a href="javascript:;" class="btn btn-xs btn-success btn-sm mr-1 due_mergeprint" data-toggle="tooltip" data-placement="left" title="Due Invoice" data-url="<?php echo base_url('ordermanage/order/checkprintdue/' . $onprocess->marge_order_id); ?>"><i class="fa fa-window-restore"></i></a>
               </div>
             </div>
-            <div class="modal fade" id="orderitems_<?php echo $onprocess->order_id; ?>" tabindex="-1" role="dialog" aria-labelledby="orderitemsLabel_<?php echo $onprocess->order_id; ?>" aria-hidden="true">
-              <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="orderitemsLabel_<?php echo $onprocess->order_id; ?>">Order Details</h4>
-                  </div>
-                  <div class="modal-body">
-                    <div class="row mb-2">
-                      <div class="col-sm-4"><strong>Table:</strong> <?php echo !empty($onprocess->tablename) ? $onprocess->tablename : $onprocess->customer_type; ?></div>
-                      <div class="col-sm-4"><strong>Customer Type:</strong> <?php echo !empty($onprocess->customer_type) ? $onprocess->customer_type : '-'; ?></div>
-                      <div class="col-sm-4"><strong>Waiter:</strong> <?php echo $onprocess->first_name . ' ' . $onprocess->last_name; ?></div>
-                    </div>
-                    <table class="table table-bordered table-striped">
-                      <thead>
-                        <tr>
-                          <th>Item</th>
-                          <th>Qty</th>
-                          <th>Price</th>
-                          <th>Total</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php
-                        $order_items = $this->ordermodel->get_itemlist($onprocess->order_id);
-                        $order_total = 0;
-                        if (!empty($order_items)) {
-                          foreach ($order_items as $item) {
-                            $unit_price = !empty($item->price) ? $item->price : 0;
-                            $line_total = $unit_price * $item->menuqty;
-                            $order_total += $line_total;
-                        ?>
-                          <tr>
-                            <td><?php echo !empty($item->ProductName) ? $item->ProductName : 'Item'; ?><?php echo !empty($item->variantName) ? ' - ' . $item->variantName : ''; ?></td>
-                            <td><?php echo $item->menuqty; ?></td>
-                            <td><?php echo $unit_price; ?></td>
-                            <td><?php echo $line_total; ?></td>
-                          </tr>
-                        <?php }
-                        } else { ?>
-                          <tr><td colspan="4">No item found.</td></tr>
-                        <?php } ?>
-                      </tbody>
-                    </table>
-                    <div class="text-right">
-                      <strong>Total Amount:</strong> <?php echo $order_total; ?>
-                    </div>
-                  </div>
-                  <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:10px; align-items:center;">
-                    <button type="button" class="btn btn-success font-weight-bold" style="min-width:100px;" onclick="duemergeorder(<?php echo $onprocess->order_id; ?>, '<?php echo $onprocess->marge_order_id; ?>'); jQuery('#orderitems_<?php echo $onprocess->order_id; ?>').modal('hide');"><?php echo display('cmplt'); ?></button>
-                    <button type="button" class="btn btn-primary font-weight-bold" style="min-width:100px;" onclick="editposorder(<?php echo $onprocess->order_id; ?>, 1); jQuery('#orderitems_<?php echo $onprocess->order_id; ?>').modal('hide');">Edit</button>
-                    <button type="button" class="btn btn-default font-weight-bold" style="min-width:100px;" data-dismiss="modal">Close</button>
-                  </div>
-                </diva href="javascript:;" class="btn btn-xs btn-success btn-sm mr-1 due_mergeprint" data-toggle="tooltip" data-placement="left" title="Due Invoice" data-url="<?php echo base_url('ordermanage/order/checkprintdue/' . $onprocess->marge_order_id); ?>"><i class="fa fa-window-restore"></i></a>
-              </div>
-            </div>
           <?php } else { ?>
             <div class="hero-widget <?php echo $onprocess->customer_type; ?> well well-sm height-auto">
               <div class="mdjc">
@@ -204,9 +148,10 @@
                   </div>
                   <div class="modal-body">
                     <div class="row mb-2">
-                      <div class="col-sm-4"><strong>Table:</strong> <?php echo !empty($onprocess->tablename) ? $onprocess->tablename : $onprocess->customer_type; ?></div>
-                      <div class="col-sm-4"><strong>Customer Type:</strong> <?php echo !empty($onprocess->customer_type) ? $onprocess->customer_type : '-'; ?></div>
-                      <div class="col-sm-4"><strong>Waiter:</strong> <?php echo $onprocess->first_name . ' ' . $onprocess->last_name; ?></div>
+                      <div class="col-sm-3"><strong>Order No: </strong><?php echo $onprocess->saleinvoice; ?></div>
+                      <div class="col-sm-3"><strong>Table:</strong> <?php echo !empty($onprocess->tablename) ? $onprocess->tablename : $onprocess->customer_type; ?></div>
+                      <div class="col-sm-3"><strong>Customer Type:</strong> <?php echo !empty($onprocess->customer_type) ? $onprocess->customer_type : '-'; ?></div>
+                      <div class="col-sm-3"><strong>Waiter:</strong> <?php echo $onprocess->first_name . ' ' . $onprocess->last_name; ?></div>
                     </div>
                     <table class="table table-bordered table-striped">
                       <thead>
@@ -239,12 +184,14 @@
                         <?php } ?>
                       </tbody>
                     </table>
-                    <div class="text-right">
-                      <strong>Total Amount:</strong> <?php echo $order_total; ?>
+                    <div style="display:flex; justify-content:space-between; width:100%;">
+                      <span><strong>Running Time:</strong> <?php echo $format; ?></span>
+                      <span><strong>Total Amount:</strong> <?php echo $order_total; ?></span>
                     </div>
                   </div>
                   <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:10px; align-items:center;">
                     <button type="button" class="btn btn-success font-weight-bold" style="min-width:100px;" onclick="createMargeorder(<?php echo $onprocess->order_id; ?>, 1); jQuery('#orderitems_<?php echo $onprocess->order_id; ?>').modal('hide');">Complete</button>
+                    <button type="button" class="btn btn-success font-weight-bold" style="min-width:100px;" onclick="">Due Invoice</button>
                     <button type="button" class="btn btn-primary font-weight-bold" style="min-width:100px;" onclick="editposorder(<?php echo $onprocess->order_id; ?>, 1); jQuery('#orderitems_<?php echo $onprocess->order_id; ?>').modal('hide');">Edit</button>
                     <button type="button" class="btn btn-default font-weight-bold" style="min-width:100px;" data-dismiss="modal">Close</button>
                   </div>
