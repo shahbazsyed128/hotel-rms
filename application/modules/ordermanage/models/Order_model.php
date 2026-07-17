@@ -1623,7 +1623,17 @@ class Order_model extends CI_Model
 		$column_search = array('customer_order.saleinvoice', 'customer_info.customer_name', 'customer_type.customer_type', 'employee_history.first_name', 'employee_history.last_name', 'rest_table.tablename', 'customer_order.order_date', 'customer_order.totalamount'); //set column field database for datatable searchable 
 		$order = array('customer_order.order_id' => 'asc');
 	
-		$cdate = date('Y-m-d');
+		// Get the current user's open cash register session
+		$saveid = $this->session->userdata('id');
+		$checkuser = $this->db->select('opendate')->from('tbl_cashregister')->where('userid', $saveid)->where('status', 0)->order_by('id', 'DESC')->get()->row();
+
+		// Use cash register open date if available, otherwise default to today's date
+        if ($checkuser) {
+            $start_datetime = $checkuser->opendate;
+        } else {
+            $start_datetime = date('Y-m-d 00:00:00'); // Fallback to start of today
+        }
+
 		$this->db->select('customer_order.*,customer_info.customer_name,customer_type.customer_type,employee_history.first_name,employee_history.last_name,rest_table.tablename,bill.bill_status');
 		$this->db->from('customer_order');
 		$this->db->join('customer_info', 'customer_order.customer_id=customer_info.customer_id', 'left');
@@ -1631,7 +1641,8 @@ class Order_model extends CI_Model
 		$this->db->join('employee_history', 'customer_order.waiter_id=employee_history.emp_his_id', 'left');
 		$this->db->join('rest_table', 'customer_order.table_no=rest_table.tableid', 'left');
 		$this->db->join('bill', 'customer_order.order_id=bill.order_id', 'left');
-		$this->db->where('customer_order.order_date', $cdate);
+		// Filter by the bill creation time to match the cash counter session
+		$this->db->where('bill.create_at >=', $start_datetime);
 		$this->db->where('bill.bill_status', 1);
 	
 		if ($customer_type === null) {
