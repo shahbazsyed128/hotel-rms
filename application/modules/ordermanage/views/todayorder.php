@@ -17,9 +17,14 @@
     </tbody>
     <tfoot>
         <tr>
+            <th colspan="7" class="text-right">Total Counter Sales:</th>
+            <th class="text-center" id="total_sales_count">0</th>
+            <th></th>
+        </tr>
+        <!-- <tr>
             <th colspan="7" class="text-right"><?php echo display('total'); ?>:</th>
             <th colspan="2" class="text-center"></th>
-        </tr>
+        </tr> -->
     </tfoot>
 </table>
 <script src="<?php echo base_url('application/modules/ordermanage/assets/js/todayorder.js'); ?>" type="text/javascript"></script>
